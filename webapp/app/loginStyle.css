@@ -1,0 +1,34 @@
+:host{
+  display: block;
+}
+
+:root{
+  --paper-input-container-focus-color: #42c2f4;
+}
+
+.container{
+  width: 360px;
+  padding: 8% 0 0;
+  margin: auto;
+}
+
+.container paper-card{
+  padding: 25px;
+  display: block;
+  width: 360px;
+}
+
+paper-input{
+  margin-bottom: 10px;
+}
+
+paper-button{
+  margin: 0;
+  /*background-color: #2196F3;*/
+  width: 100%;
+}
+
+.huLogo{
+  width: 100%;
+  margin-bottom: 20px;
+}

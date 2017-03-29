@@ -1,0 +1,54 @@
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../bower_components/paper-styles/typography.html">
+<link rel="import" href="../../bower_components/paper-toast/paper-toast.html">
+<link rel="import" href="../../bower_components/paper-card/paper-card.html">
+
+<dom-module id="my-login">
+
+  <link rel="import" type="css" href="../../loginStyle.css">
+
+  <template>
+
+    <div class="container">
+      <paper-card elevation="2">
+        <img src="../../images/hulogo.png" class="huLogo">
+        <paper-input id="email" label="E-mail" value="{{username}}"></paper-input>
+        <paper-input id="password" type="password" label="Wachtwoord" value="{{password}}"></paper-input>
+
+        <iron-selector selected="{{pageDate.page}}" attr-for-selected="data-page">
+          <paper-button id="loginButton" on-click="goHome" href="/Home">Login</paper-button>
+        </iron-selector>
+
+      </paper-card>
+    </div>
+
+  </template>
+
+  <script>
+    Polymer({
+
+      is: 'my-login',
+
+      properties: {
+        username:{
+          type: String,
+        },
+        password:{
+          type: String,
+        },
+      },
+
+      goHome: function() {
+          console.log("Username: " + this.username + " Password: " + this.password);
+      },
+
+    })
+  </script>
+
+</dom-module>
