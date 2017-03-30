@@ -1,54 +1,51 @@
 <link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
-<link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
-<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
-<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../bower_components/paper-input/paper-input.html">
-<link rel="import" href="../../bower_components/paper-styles/typography.html">
-<link rel="import" href="../../bower_components/paper-toast/paper-toast.html">
 <link rel="import" href="../../bower_components/paper-card/paper-card.html">
 
 <dom-module id="my-login">
-
-  <link rel="import" type="css" href="../../loginStyle.css">
-
+<link rel="import" type="css" href="../../loginStyle.css">
   <template>
+
+    <app-location route="{{route}}" use-hash-as-path></app-location>
 
     <div class="container">
       <paper-card elevation="2">
         <img src="../../images/hulogo.png" class="huLogo">
-        <paper-input id="email" label="E-mail" value="{{username}}"></paper-input>
-        <paper-input id="password" type="password" label="Wachtwoord" value="{{password}}"></paper-input>
-
-        <iron-selector selected="{{pageDate.page}}" attr-for-selected="data-page">
-          <paper-button id="loginButton" on-click="goHome" href="/Home">Login</paper-button>
-        </iron-selector>
+        <paper-input id="email_element" label="gebruikersnaam" value="{{username}}"></paper-input>
+        <paper-input id="wachtwoord_element" label="wachtwoord" type="password" value="{{_password}}"></paper-input>
+        <paper-button id="login_button_element" on-click="_login">Login</paper-button>
 
       </paper-card>
     </div>
 
+    <iron-ajax
+      id="ajax_login"
+      url="/login"
+      handle-as="json"
+      on-response="_login_response">
+    </iron-ajax>
+
+
   </template>
 
   <script>
-    Polymer({
 
-      is: 'my-login',
+      Polymer({
+        is: 'my-login',
 
-      properties: {
-        username:{
-          type: String,
+        _login: function(){
+          location.href="../../src/my-home/my-home.html"
         },
-        password:{
-          type: String,
+
+        attached: function() {
+          if (!this.route.path) {
+            this.set('route.path', '/login');
+          }
         },
-      },
+      })
 
-      goHome: function() {
-          console.log("Username: " + this.username + " Password: " + this.password);
-      },
-
-    })
   </script>
 
 </dom-module>

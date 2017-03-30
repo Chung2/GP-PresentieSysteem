@@ -20,7 +20,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="/src/my-login/my-login.html">
 
 <dom-module id="my-app">
-
+<link rel="import" type="css" href="../../loginStyle.css">
   <template>
 
     <style>
@@ -28,16 +28,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           display: block;
       }
     </style>
-
-    <app-location route="{{route}}" use-hash-as-path></app-location>
-
-    <app-route id="approuter"
-               route="{{route}}"
-               pattern="/:page"
-               active="{{active}}"
-               data="{{pageData}}"
-               tail="{{pageTail}}">
-    </app-route>
 
     <my-login></my-login>
 
@@ -47,12 +37,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     Polymer({
 
       is: 'my-app',
-
-      attached: function() {
-        if (!this.route.path) {
-          this.set('route.path', '/Login');
-        }
-      },
 
     })
   </script>

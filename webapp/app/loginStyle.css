@@ -32,3 +32,8 @@ paper-button{
   width: 100%;
   margin-bottom: 20px;
 }
+
+a{
+  text-decoration: none;
+  color: black;
+}
