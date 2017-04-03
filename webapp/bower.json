@@ -29,7 +29,8 @@
     "paper-item": "PolymerElements/paper-item#^1.2.1",
     "google-calendar": "GoogleWebComponents/google-calendar#^1.0.3",
     "iron-media-query": "PolymerElements/iron-media-query#^1.0.8",
-    "paper-fab": "PolymerElements/paper-fab#^1.2.1"
+    "paper-fab": "PolymerElements/paper-fab#^1.2.1",
+    "vaadin-grid": "vaadin/vaadin-grid#^1.2.2"
   },
   "devDependencies": {},
   "ignore": []

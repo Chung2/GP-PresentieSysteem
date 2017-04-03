@@ -1,6 +1,7 @@
 <link rel="import" href="../../elements/elements.html">
 
 <link rel="import" href="../../src/my-home/my-home.html">
+<link rel="import" href="../../src/my-klassen/my-klassen.html">
 
 <dom-module id="my-route">
   <link rel="import" type="css" href="../../styles/mainStyle.css">
@@ -28,8 +29,8 @@
             <span>Home</span>
           </a>
 
-          <a name="Page1" class="menuLink" href="#/Page1">
-            <span>Page 1</span>
+          <a name="Klassen" class="menuLink" href="#/Klassen">
+            <span>Klassen</span>
           </a>
 
           <a name="Page2" class="menuLink" href="#/Page2">
@@ -61,12 +62,16 @@
                 <my-home></my-home>
               </section>
 
-              <section name="Page1">
-                <h1>Page 1</h1>
+              <section name="Klassen">
+                <my-klassen></my-klassen>
               </section>
 
               <section name="Page2">
                 <h1>Page 2</h1>
+              </section>
+
+              <section name="Logout">
+                <h1>Logout</h1>
               </section>
 
             </iron-pages>
