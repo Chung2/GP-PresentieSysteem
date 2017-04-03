@@ -1,0 +1,97 @@
+<link rel="import" href="../../elements/elements.html">
+
+<link rel="import" href="../../src/my-home/my-home.html">
+
+<dom-module id="my-route">
+  <link rel="import" type="css" href="../../styles/mainStyle.css">
+  <link rel="import" type="css" href="../../styles/960pxStyle.css">
+  <template>
+
+    <app-location route="{{route}}" use-hash-as-path></app-location>
+
+    <app-route route="{{route}}"
+               pattern="/:page"
+               data="{{data}}">
+    </app-route>
+
+  <paper-drawer-panel force-narrow>
+    <paper-header-panel drawer>
+
+      <paper-toolbar>
+        <paper-icon-button icon="close" paper-drawer-toggle></paper-icon-button>
+        <div style="margin-left: 10px; font-size: 20px;">Menu</div>
+      </paper-toolbar>
+
+      <div class="menu">
+        <iron-selector selected='{{data.page}}' attr-for-selected='name'>
+
+          <a name="Home" class="menuLink" href="#/Home">
+            <span>Home</span>
+          </a>
+
+          <a name="Page1" class="menuLink" href="#/Page1">
+            <span>Page 1</span>
+          </a>
+
+          <a name="Page2" class="menuLink" href="#/Page2">
+            <span>Page 2</span>
+          </a>
+
+          <a name="Logout" class="menuLink" href="#/Logout">
+            <span>Logout</span>
+          </a>
+        </iron-selector>
+      </div>
+
+    </paper-header-panel>
+
+    <paper-header-panel main>
+      <paper-toolbar>
+
+        <paper-icon-button icon="menu" paper-drawer-toggle></paper-icon-button>
+        <div style="font-size: 20px;">StudentHUb</div>
+        <div class="title">{{data.page}}</div>
+
+      </paper-toolbar>
+
+      <div class="container">
+          <div class="content">
+            <iron-pages selected='{{data.page}}' attr-for-selected='name'>
+
+              <section name="Home">
+                <my-home></my-home>
+              </section>
+
+              <section name="Page1">
+                <h1>Page 1</h1>
+              </section>
+
+              <section name="Page2">
+                <h1>Page 2</h1>
+              </section>
+
+            </iron-pages>
+          </div>
+      </div>
+
+    </paper-header-panel>
+  </paper-drawer-panel>
+
+  </template>
+
+  <script>
+
+    Polymer({
+
+      is: 'my-route',
+
+      attached: function() {
+        if (!this.route.path) {
+          this.set('route.path', '/home');
+        }
+      },
+
+    })
+
+  </script>
+</dom-module>
