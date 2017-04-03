@@ -1,9 +1,18 @@
 .holder{
   width: 100%;
   padding: 15px;
-  margin-bottom: 10px
+  margin-bottom: 10px;
+  display: flex;
 }
 
 h2{
   font-size: 15px;
+}
+
+.button{
+  position: absolute;
+  right: 10px;
+  top:7px;
+  background-color: purple;
+  color:green;
 }
