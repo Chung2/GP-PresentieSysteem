@@ -4,7 +4,6 @@
 
 <dom-module id="my-route">
   <link rel="import" type="css" href="../../styles/mainStyle.css">
-  <link rel="import" type="css" href="../../styles/960pxStyle.css">
   <template>
 
     <app-location route="{{route}}" use-hash-as-path></app-location>
@@ -87,7 +86,7 @@
 
       attached: function() {
         if (!this.route.path) {
-          this.set('route.path', '/home');
+          this.set('route.path', '/Home');
         }
       },
 
