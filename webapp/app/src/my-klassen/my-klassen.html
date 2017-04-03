@@ -1,0 +1,40 @@
+<link rel="import" href="../../elements/elements.html">
+
+<dom-module id="my-klassen">
+<link rel="import" type="css" href="../../styles/mainStyle.css">
+  <template>
+
+    <div class="">
+      <paper-card class="holder" elevation="2">
+        <template is="dom-repeat" items="{{klassen}}">
+          <div class=""><span>{{index}}</span></div>
+          <div class="">Klas: <span>{{item.naam}}</span></div>
+          <div class="">aantal leerlingen <span>{{item.aantLeerling}}</span></div>
+        </template>
+      </paper-card>
+    </div>
+
+
+  </template>
+
+  <script>
+
+      Polymer({
+
+        is: 'my-klassen',
+
+        ready: function(){
+          this.klassen = [
+            {naam: 'v1d', aantLeerling: '23'},
+            {naam: 'v1q', aantLeerling: '24'},
+            {naam: 'v1g', aantLeerling: '25'},
+            {naam: 'v1h', aantLeerling: '26'},
+            {naam: 'v19', aantLeerling: '27'},
+          ];
+        },
+
+      })
+
+  </script>
+
+</dom-module>
