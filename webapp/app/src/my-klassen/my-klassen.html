@@ -6,11 +6,16 @@
 
     <div class="">
       <paper-card class="holder" elevation="2">
-        <template is="dom-repeat" items="{{klassen}}">
-          <div class=""><span>{{index}}</span></div>
-          <div class="">Klas: <span>{{item.naam}}</span></div>
-          <div class="">aantal leerlingen <span>{{item.aantLeerling}}</span></div>
-        </template>
+
+          <vaadin-grid items="[[klassen]]">
+           <table>
+             <colgroup>
+               <col name="naam" resizable flex>
+               <col name="aantLeerling" resizable flex>
+             </colgroup>
+           </table>
+          </vaadin-grid>
+          
       </paper-card>
     </div>
 
