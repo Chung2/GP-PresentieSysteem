@@ -1,0 +1,143 @@
+<dom-module id="my-student">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+
+      .student{
+        background-color: whitesmoke;
+        box-shadow: 0px 0px 5px #888888;
+        margin: 1em;
+        padding: 0.5em;
+        width: 300px;
+      }
+
+      paper-button{
+        margin: 0;
+      }
+
+      paper-button.blue {
+        background-color: var(--paper-light-blue-500);
+      }
+
+      paper-button.red {
+        background-color: var(--paper-red-500);
+      }
+
+      paper-button.green {
+        background-color: var(--paper-green-500);
+      }
+
+    </style>
+
+    <div class="student">
+      <div>{{student.voornaam}} {{student.tussenvoegsel}} {{student.achternaam}}</div>
+      <div>{{student.gebruikersnaam}}</div>
+      <div>{{student.groepId}}</div>
+      <template is="dom-if" if="{{status}}">
+        <h3 style="margin: 0;">Statussen:</h3>
+        {{student.statussen.length}}
+      </template>
+      <template is="dom-repeat" items="[[student.statussen]]">
+        <div>{{item.status}}</div>
+        <div>{{item.dagdeel}}</div>
+      </template>
+      <paper-button class="red" on-click="afwezig_handler">Afwezig melden</paper-button>
+    </div>
+
+    <iron-ajax
+      id="ajax_student"
+      method="POST"
+      url="/persoon/info"
+      handle-as="json"
+      on-response="ajax_student_handler">
+    </iron-ajax>
+
+    <iron-ajax
+      id="ajax_status"
+      method="POST"
+      url="/persoon/zetstatus"
+      handle-as="json"
+      on-response="ajax_status_handler">
+    </iron-ajax>
+
+  </template>
+
+  <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+        is: 'my-student',
+
+        properties: {
+          student: {
+          },
+          status: {
+            type: Boolean
+          },
+          gebruikersnaam: {
+            type: String
+          }
+        },
+
+        //Ajax request voor student informatie
+        student_button_handler: function() {
+          this.$.ajax_student.contentType="application/json";
+          this.$.ajax_student.body={
+            "gebruikersnaam":this.gebruikersnaam
+          };
+          this.$.ajax_student.generateRequest();
+        },
+
+        ajax_student_handler: function(request) {
+          this.student = request.detail.response;
+
+          if(this.student.statussen.length > 0){
+            this.status = true;
+          }else{
+            this.status = false;
+          }
+        },
+
+        afwezig_handler: function(){
+          var today = new Date();
+          var dd = today.getDate();
+          var mm = today.getMonth()+1;
+          var yyyy = today.getFullYear();
+
+          if(dd<10) {
+              dd='0'+dd
+          }
+
+          if(mm<10) {
+              mm='0'+mm
+          }
+
+          today = dd+'-'+mm+'-'+yyyy;
+
+          this.$.ajax_status.contentType="application/json";
+          this.$.ajax_status.body={
+            "status":"Afwezig",
+            "gebruikersnaam":this.gebruikersnaam,
+            "datum":today,
+            "dagdeel":"heleDag"
+          };
+          this.$.ajax_status.generateRequest();
+        },
+
+        ajax_status_handler: function(request){
+          this.student_button_handler();
+          console.log(request.detail.response);
+        },
+
+        ready: function() {
+          this.student_button_handler();
+        },
+
+      });
+
+    })();
+  </script>
+</dom-module>

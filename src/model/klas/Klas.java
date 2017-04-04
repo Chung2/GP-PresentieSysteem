@@ -2,17 +2,20 @@ package model.klas;
 
 import java.util.ArrayList;
 
+import model.persoon.Docent;
 import model.persoon.Student;
 
 public class Klas {
 
 	private String klasCode;
 	private String naam;
+	private Docent slbEr;
 	private ArrayList<Student> deStudenten = new ArrayList<Student>();
 
 	public Klas(String klasCode, String naam) {
 		this.klasCode = klasCode;
 		this.naam = naam;
+		//this.slbEr = slbEr;
 	}
 	
 	public String getKlasCode() {
@@ -35,6 +38,8 @@ public class Klas {
 		}
 		return false;
 	}
+	
+	
 
 	public void voegStudentToe(Student pStudent) {
 		if (!this.getStudenten().contains(pStudent)) {
