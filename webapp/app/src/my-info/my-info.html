@@ -1,0 +1,52 @@
+<link rel="import" href="../../elements/elements.html">
+
+<dom-module id="my-info">
+<link rel="import" type="css" href="../../styles/infoStyle.css">
+  <template>
+    <div class="container">
+      <img src="../../images/no-icon.png" class="no-icon">
+    </div>
+
+    <div class="naam">
+      <paper-card>
+        Naam
+      </paper-card>
+    </div>
+
+    <div class="leerlingNummer">
+      <paper-card>
+        Leerlingnummer: 1699599
+      </paper-card>
+    </div>
+
+    <div class="klas">
+      <paper-card>
+        Klas: V1D
+      </paper-card>
+    </div>
+
+    <div class="afwezig">
+      <paper-button>
+        Afwezig melden
+      </paper-button>
+    </div>
+
+    <div class="aanwezig">
+      <paper-button>
+        Aanwezig melden
+      </paper-button>
+    </div>
+
+  </template>
+
+  <script>
+
+      Polymer({
+
+        is: 'my-info',
+
+      })
+
+  </script>
+
+</dom-module>
