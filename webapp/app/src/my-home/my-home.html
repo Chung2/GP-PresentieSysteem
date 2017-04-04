@@ -3,7 +3,6 @@
 <dom-module id="my-home">
 <link rel="import" type="css" href="../../styles/homeStyle.css">
   <template>
-
     <div class="">
       <h2>Maandag</h2>
       <paper-card class="holder" elevation="2">
@@ -12,8 +11,10 @@
         Lokaal
         Begintijd-Eindtijd
         Datum
-        <paper-fab class="button" mini icon="reply">
-        </paper-fab>
+        <a name="test" href="#/home/test">
+          <paper-fab class="button" mini icon="reply"></paper-fab>
+        </a>
+        <!-- <paper-fab class="button" mini icon="reply"></paper-fab> -->
       </paper-card>
       <paper-card class="holder" elevation="2">
         TICT-OODC-V1D
@@ -92,6 +93,14 @@
       Polymer({
 
         is: 'my-home',
+
+        properties: {
+          active: {
+            type: Boolean,
+            value: false,
+            reflectToAttribute: true
+          },
+        },
 
       })
 

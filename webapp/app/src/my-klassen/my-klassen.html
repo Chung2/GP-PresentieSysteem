@@ -9,13 +9,14 @@
 
           <vaadin-grid items="[[klassen]]">
            <table>
-             <colgroup>
-               <col name="naam" resizable flex>
-               <col name="aantLeerling" resizable flex>
-             </colgroup>
+               <colgroup>
+                 <col name="naam" resizable>
+                 <col name="aantLeerling" resizable>
+                 <col name="richting" resizable flex sortable sortable sort-direction="asc">
+               </colgroup>
            </table>
           </vaadin-grid>
-          
+
       </paper-card>
     </div>
 
@@ -28,13 +29,17 @@
 
         is: 'my-klassen',
 
+        _test: function(){
+          console.log("test");
+        },
+
         ready: function(){
           this.klassen = [
-            {naam: 'v1d', aantLeerling: '23'},
-            {naam: 'v1q', aantLeerling: '24'},
-            {naam: 'v1g', aantLeerling: '25'},
-            {naam: 'v1h', aantLeerling: '26'},
-            {naam: 'v19', aantLeerling: '27'},
+            {naam: 'v1d', aantLeerling: '23', richting: 'SIE'},
+            {naam: 'v1q', aantLeerling: '24', richting: 'SNE'},
+            {naam: 'v1g', aantLeerling: '25', richting: 'BIM'},
+            {naam: 'v1h', aantLeerling: '26', richting: 'TI'},
+            {naam: 'v19', aantLeerling: '27', richting: 'SIE'},
           ];
         },
 

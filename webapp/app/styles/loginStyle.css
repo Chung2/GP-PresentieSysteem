@@ -2,6 +2,10 @@
   display: block;
 }
 
+:host([active]){
+  display: none;
+}
+
 :root{
   --paper-input-container-focus-color: #42c2f4;
 }

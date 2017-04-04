@@ -2,17 +2,24 @@
 
 <link rel="import" href="../../src/my-home/my-home.html">
 <link rel="import" href="../../src/my-klassen/my-klassen.html">
+<link rel="import" href="../../src/my-login/my-login.html">
 
 <dom-module id="my-route">
   <link rel="import" type="css" href="../../styles/mainStyle.css">
   <template>
 
-    <app-location route="{{route}}" use-hash-as-path></app-location>
+    <app-location route="{{_route}}" use-hash-as-path></app-location>
 
-    <app-route route="{{route}}"
+    <app-route route="{{_route}}"
                pattern="/:page"
-               data="{{data}}">
-    </app-route>
+               data="{{_routeData}}"
+               tail="{{_routeTail}}"
+               active="{{_active}}"></app-route>
+
+    <app-route route="{{_routeTail}}"
+               pattern="/:subPage"
+               data="{{_subRouteData}}"
+               active="{{_subRouteActive}}"></app-route>
 
   <paper-drawer-panel force-narrow>
     <paper-header-panel drawer>
@@ -23,23 +30,11 @@
       </paper-toolbar>
 
       <div class="menu">
-        <iron-selector selected='{{data.page}}' attr-for-selected='name'>
-
-          <a name="Home" class="menuLink" href="#/Home">
-            <span>Home</span>
-          </a>
-
-          <a name="Klassen" class="menuLink" href="#/Klassen">
-            <span>Klassen</span>
-          </a>
-
-          <a name="Page2" class="menuLink" href="#/Page2">
-            <span>Page 2</span>
-          </a>
-
-          <a name="Logout" class="menuLink" href="#/Logout">
-            <span>Logout</span>
-          </a>
+        <iron-selector selected='[[_routeData.page]]' attr-for-selected='name'>
+          <a name="home" class="menuLink" href="#/home"><span>Home</span></a>
+          <a name="klassen" class="menuLink" href="#/klassen"><span>Klassen</span></a>
+          <a name="page2" class="menuLink" href="#/page2"><span>Page 2</span></a>
+          <a name="logout" class="menuLink" href="#/logout"><span>Logout</span></a>
         </iron-selector>
       </div>
 
@@ -50,31 +45,36 @@
 
         <paper-icon-button icon="menu" paper-drawer-toggle></paper-icon-button>
         <div style="font-size: 20px;">StudentHUb</div>
-        <div class="title">{{data.page}}</div>
+        <div class="title">{{_routeData.page}}</div>
 
       </paper-toolbar>
 
       <div class="container">
           <div class="content">
-            <iron-pages selected='{{data.page}}' attr-for-selected='name'>
+            <section id="main">
+              <iron-pages selected='{{_routeData.page}}' attr-for-selected='name'>
+                  <my-home name="home" active="{{_subRouteActive}}"></my-home>
+                  <my-klassen name="klassen"></my-klassen>
 
-              <section name="Home">
-                <my-home></my-home>
+                  <section name="page2">
+                    <h1>Page 2</h1>
+                  </section>
+
+                  <section name="logout">
+                    <h1>Logout</h1>
+                  </section>
+
+                </iron-pages>
               </section>
 
-              <section name="Klassen">
-                <my-klassen></my-klassen>
+            <template is="dom-if" if="[[_subRouteActive]]" restamp>
+              <section id="sub">
+                <iron-pages attr-for-selected="name" selected="[[_subRouteData.subPage]]">
+                  <my-login name="test"></my-login>
+                </iron-pages>
               </section>
+            </template>
 
-              <section name="Page2">
-                <h1>Page 2</h1>
-              </section>
-
-              <section name="Logout">
-                <h1>Logout</h1>
-              </section>
-
-            </iron-pages>
           </div>
       </div>
 
@@ -89,9 +89,16 @@
 
       is: 'my-route',
 
+      properties: {
+        _route: Object,
+        _routeData: Object,
+        _routeTail: Object,
+        _active: Boolean,
+      },
+
       attached: function() {
-        if (!this.route.path) {
-          this.set('route.path', '/Home');
+        if (!this._route.path) {
+          this.set('_route.path', '/home');
         }
       },
 
