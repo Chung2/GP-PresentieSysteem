@@ -1,0 +1,54 @@
+.container {
+  position:absolute;
+  left:50px;
+  top:50px;
+}
+
+.no-icon {
+  height:300px;
+  width:300px;
+}
+
+.naam {
+  position:absolute;
+  top:370px;
+  left:170px;
+  width:auto;
+  font-size:18px;
+}
+
+.leerlingNummer {
+  position:absolute;
+  top:100px;
+  left:500px;
+  width:auto;
+  font-size:18px;
+}
+
+.klas {
+  position:absolute;
+  top:150px;
+  left:500px;
+  width:auto;
+  font-size:18px;
+}
+
+.afwezig {
+  position:absolute;
+  top:450px;
+  left:500px;
+  width:200px;
+  font-size:18px;
+  border-style: solid;
+  border-width: thin;
+}
+
+.aanwezig {
+  position:absolute;
+  top:510px;
+  left:500px;
+  width:200px;
+  font-size:18px;
+  border-style: solid;
+  border-width: thin;
+}

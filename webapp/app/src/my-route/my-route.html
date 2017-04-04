@@ -3,6 +3,7 @@
 <link rel="import" href="../../src/my-home/my-home.html">
 <link rel="import" href="../../src/my-klassen/my-klassen.html">
 <link rel="import" href="../../src/my-login/my-login.html">
+<link rel="import" href="../../src/my-info/my-info.html">
 
 <dom-module id="my-route">
   <link rel="import" type="css" href="../../styles/mainStyle.css">
@@ -33,7 +34,7 @@
         <iron-selector selected='[[_routeData.page]]' attr-for-selected='name'>
           <a name="home" class="menuLink" href="#/home"><span>Home</span></a>
           <a name="klassen" class="menuLink" href="#/klassen"><span>Klassen</span></a>
-          <a name="page2" class="menuLink" href="#/page2"><span>Page 2</span></a>
+          <a name="studentenInfo" class="menuLink" href="#/studentenInfo"><span>StudentenInfo</span></a>
           <a name="logout" class="menuLink" href="#/logout"><span>Logout</span></a>
         </iron-selector>
       </div>
@@ -53,19 +54,14 @@
           <div class="content">
             <section id="main">
               <iron-pages selected='{{_routeData.page}}' attr-for-selected='name'>
-                  <my-home name="home" active="{{_subRouteActive}}"></my-home>
-                  <my-klassen name="klassen"></my-klassen>
+                <my-home name="home" active="{{_subRouteActive}}"></my-home>
+                <my-klassen name="klassen"></my-klassen>
+                <my-info name=studentenInfo></my-info>
 
-                  <section name="page2">
-                    <h1>Page 2</h1>
-                  </section>
-
-                  <section name="logout">
-                    <h1>Logout</h1>
-                  </section>
-
-                </iron-pages>
-              </section>
+                <section name="logout">
+                  <h1>Logout</h1>
+                </section>
+              </iron-pages>
 
             <template is="dom-if" if="[[_subRouteActive]]" restamp>
               <section id="sub">
