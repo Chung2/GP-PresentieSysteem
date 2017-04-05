@@ -22,3 +22,9 @@ h2{
   right: 10px;
   top:7px;
 }
+
+.ziekLink{
+  float: right;
+  text-decoration: none;
+  color: red;
+}

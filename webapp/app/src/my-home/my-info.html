@@ -1,0 +1,43 @@
+<link rel="import" href="../../elements/elements.html">
+
+<dom-module id="my-info">
+<link rel="import" type="css" href="../../styles/infoStyle.css">
+  <template>
+    <div class="container">
+      <paper-card class="holder" elevation="2">
+
+        <vaadin-grid items="[[leerlingen]]">
+         <table>
+             <colgroup>
+               <col name="naam" resizable>
+               <col name="achterNaam" resizable>
+               <col name="leerlingNr" resizable sortable sortable sort-direction="asc">
+             </colgroup>
+         </table>
+        </vaadin-grid>
+
+      </paper-card>
+    </div>
+  </template>
+
+  <script>
+
+      Polymer({
+
+        is: 'my-info',
+
+        ready: function(){
+          this.leerlingen = [
+            {naam: 'Bart', achterNaam: 'Straaten, van', leerlingNr: '123456'},
+            {naam: 'Thomas', achterNaam: 'Mocellin', leerlingNr: '123457'},
+            {naam: 'Stefan', achterNaam: 'Raad, de', leerlingNr: '123458'},
+            {naam: 'Jan', achterNaam: 'Dekkers', leerlingNr: '123459'},
+            {naam: 'Chung', achterNaam: 'Wong', leerlingNr: '123460'},
+          ];
+        },
+
+      })
+
+  </script>
+
+</dom-module>

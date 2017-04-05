@@ -4,14 +4,16 @@
 <link rel="import" type="css" href="../../styles/homeStyle.css">
   <template>
     <div class="">
-      <h2>Maandag</h2>
+      <h2>Maandag<a href="#/home" class="ziekLink">Ziek melden</a></h2>
       <paper-card class="holder" elevation="2">
         TICT-AUI-V1D
         Docent
         Lokaal
         Begintijd-Eindtijd
         Datum
-        <paper-fab class="button" mini icon="reply"></paper-fab>
+        <a name="klasInfo" href="#/home/klasInfo">
+          <paper-fab class="button" mini icon="reply"></paper-fab>
+        </a>
       </paper-card>
       <paper-card class="holder" elevation="2">
         TICT-OODC-V1D
@@ -90,6 +92,14 @@
       Polymer({
 
         is: 'my-home',
+
+        properties: {
+          active: {
+            type: Boolean,
+            value: false,
+            reflectToAttribute: true
+          },
+        },
 
       })
 
