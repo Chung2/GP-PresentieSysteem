@@ -44,7 +44,8 @@ class LoginController implements Handler {
 		String lRol = informatieSysteem.login(lGebruikersnaam, lWachtwoord);		// inloggen methode aanroepen op domeinmodel...
 		
 		JsonObjectBuilder lJsonObjectBuilder = Json.createObjectBuilder();
-		lJsonObjectBuilder.add("rol", lRol);																	// en teruggekregen gebruikersrol als JSON-object...
+		lJsonObjectBuilder.add("rol", lRol);	
+		lJsonObjectBuilder.add("gebruikersnaam", lGebruikersnaam);// en teruggekregen gebruikersrol als JSON-object...
 		String lJsonOut = lJsonObjectBuilder.build().toString();
 		
 		conversation.sendJSONMessage(lJsonOut);															// terugsturen naar de Polymer-GUI!

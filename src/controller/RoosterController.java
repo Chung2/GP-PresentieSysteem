@@ -74,12 +74,6 @@ public class RoosterController implements Handler {
 	private void ophalenAlleRoostersKlassen(Conversation conversation) {
 		JsonParser parser = new JsonParser();
 		Gson gson = new Gson();
-		
-		if (conversation.getRequestBodyAsString() == null){
-			conversation.sendJSONMessage("{\"error\":\"Geen json data mee gegeven\"}");
-			
-			return;
-		}
 
 		String jsonOut = "";
 
