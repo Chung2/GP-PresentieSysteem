@@ -4,6 +4,8 @@
 <link rel="import" type="css" href="../../styles/homeStyle.css">
   <template>
 
+    <iron-meta id="meta"></iron-meta>
+
     <template is="dom-repeat" items="[[rooster.alleLessen]]">
       <template is="dom-if" if="{{printWeek(item.week)}}">
         <h1>Week {{item.week}}</h1>
@@ -151,10 +153,17 @@
         },
 
         ready: function() {
+          //console.log(app.gebruiker);
 
+          var rol = "Docent";
+          if(rol=="Student"){
+            this.ajax_rooster_student_start();
+          }
 
-          //this.ajax_rooster_student_start();
-          this.ajax_rooster_docent_start();
+          if(rol=="Docent"){
+            this.ajax_rooster_docent_start();
+          }
+
         },
 
       })

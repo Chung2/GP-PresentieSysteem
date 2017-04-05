@@ -3,13 +3,14 @@
 <dom-module id="my-login">
 <link rel="import" type="css" href="../../styles/loginStyle.css">
   <template>
+    <a id="redirect" href="#/home"></a>
 
     <div class="container">
       <paper-card elevation="2">
         <img src="../../images/hulogo.png" class="huLogo">
         <paper-input id="email_element" label="gebruikersnaam" value="{{username}}"></paper-input>
         <paper-input id="wachtwoord_element" label="wachtwoord" type="password" value="{{_password}}"></paper-input>
-        <paper-button on-click="login_onClick" id="login_button_element">Login</paper-button>
+        <paper-button on-tap="loginOnClick" id="login_button_element">Login</paper-button>
 
       </paper-card>
     </div>
@@ -19,7 +20,7 @@
       method="POST"
       url="/login"
       handle-as="json"
-      on-response="ajax_login_handler">
+      on-response="login_handler">
     </iron-ajax>
 
   </template>
@@ -35,22 +36,33 @@
             value: false,
             reflectToAttribute: true
           },
+          gebruiker:{
+            type: Object
+          },
           username:{
             type: String,
-          }
+            value: "stefan.deraadt@student.hu.nl"
+          },
           _password:{
             type: String,
-          },
-          login_onClick: function(){
-            this.$.ajax_login.contentType="application/json";
-            this.$.ajax_login.body={
-              "username":this.username,
-              "password":this._password
-            };
-            this.$.ajax_login.generateRequest();
-          },
-          ajax_login_handler: function(request){
-            console.log(request.detail.response);
+            value: "geheim"
+          }
+        },
+        loginOnClick: function(){
+          this.$.ajax_login.contentType="application/json";
+          this.$.ajax_login.body={
+            "username":this.username,
+            "password":this._password
+          };
+          this.$.ajax_login.generateRequest();
+        },
+        login_handler: function(request){
+          var response = request.detail.response
+
+          if (response.rol != 'undefined'){
+            this.gebruiker = {"gebruikersnaam":response.gebruikersnaam,"rol":response.rol};
+
+            this.$.redirect.click();
           }
         }
 
