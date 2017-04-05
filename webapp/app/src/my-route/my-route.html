@@ -1,9 +1,13 @@
 <link rel="import" href="../../elements/elements.html">
 
 <link rel="import" href="../../src/my-home/my-home.html">
+<link rel="import" href="../../src/my-home/my-info.html">
 <link rel="import" href="../../src/my-klassen/my-klassen.html">
 <link rel="import" href="../../src/my-login/my-login.html">
-<link rel="import" href="../../src/my-info/my-info.html">
+<link rel="import" href="../../src/my-admin/my-admin.html">
+<link rel="import" href="../../src/my-admin/my-klassen.html">
+<link rel="import" href="../../src/my-admin/my-docenten.html">
+<link rel="import" href="../../src/my-admin/my-roosters.html">
 
 <dom-module id="my-route">
   <link rel="import" type="css" href="../../styles/mainStyle.css">
@@ -33,9 +37,7 @@
       <div class="menu">
         <iron-selector selected='[[_routeData.page]]' attr-for-selected='name'>
           <a name="home" class="menuLink" href="#/home"><span>Home</span></a>
-          <a name="klassen" class="menuLink" href="#/klassen"><span>Klassen</span></a>
-          <a name="studentenInfo" class="menuLink" href="#/studentenInfo"><span>StudentenInfo</span></a>
-          <a name="logout" class="menuLink" href="#/logout"><span>Logout</span></a>
+          <a name="admin" class="menuLink" href="#/admin"><span>Admin</span></a>
         </iron-selector>
       </div>
 
@@ -56,18 +58,16 @@
               <iron-pages selected='[[_routeData.page]]' attr-for-selected='name'>
                 <my-login name="login"></my-login>
                 <my-home name="home" active="{{_subRouteActive}}"></my-home>
-                <my-klassen name="klassen"></my-klassen>
-                <my-info name="studentenInfo"></my-info>
-
-                <section name="logout">
-                  <h1>Logout</h1>
-                </section>
+                <my-admin name="admin" active="{{_subRouteActive}}"></my-admin>
               </iron-pages>
 
             <template is="dom-if" if="[[_subRouteActive]]" restamp>
               <section id="sub">
                 <iron-pages attr-for-selected="name" selected="[[_subRouteData.subPage]]">
-                  <!-- sub route elements go here -->
+                  <my-info name="klasInfo"></my-info>
+                  <my-klassen name="klassen"></my-klassen>
+                  <my-docenten name="docenten"></my-docenten>
+                  <my-roosters name="roosters"></my-roosters>
                 </iron-pages>
               </section>
             </template>

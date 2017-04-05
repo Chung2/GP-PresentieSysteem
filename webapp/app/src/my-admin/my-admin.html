@@ -1,0 +1,41 @@
+<link rel="import" href="../../elements/elements.html">
+
+<dom-module id="my-admin">
+<!-- <link rel="import" type="css" href="../../styles/.css"> -->
+  <template>
+
+    <style>
+      :host{
+        display: block;
+      }
+
+      :host([active]){
+        display: none;
+      }
+    </style>
+
+    <h1>admin</h1>
+    <a naam="klassen" href="#/admin/klassen">klassen</a>
+    <a naam="roosters" href="#/admin/roosters">roosters</a>
+    <a naam="docenten" href="#/admin/docenten">docenten</a>
+  </template>
+
+  <script>
+
+      Polymer({
+
+        is: 'my-admin',
+
+        properties: {
+          active: {
+            type: Boolean,
+            value: false,
+            reflectToAttribute: true
+          },
+        },
+
+      })
+
+  </script>
+
+</dom-module>
