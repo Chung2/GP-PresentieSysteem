@@ -218,7 +218,6 @@ public class PrIS {
 	}
 
 	public Student getStudent(String pGebruikersnaam) {
-		// used
 		Student lGevondenStudent = null;
 
 		for (Student lStudent : deStudenten) {
@@ -409,10 +408,13 @@ public class PrIS {
 
 				// use comma as separator
 				String[] element = line.split(cvsSplitBy);
-				String naam = element[5];
+				String[] lokaal = element[5].split(" ");
+				
+				String naam = lokaal[0];
+				int capaciteit = Integer.parseInt(lokaal[1].replace("(", "").replace(")", ""));
 
 				if (getLokaal(naam) == null)
-					pLokalen.add(new Lokaal(naam));
+					pLokalen.add(new Lokaal(naam, capaciteit));
 
 			}
 
@@ -465,7 +467,8 @@ public class PrIS {
 				String eindTijd = element[2];
 				String vakNaam = element[3];
 				String docentGebruikersnaam = element[4];
-				String lokaalCode = element[5];
+				String[] lokaal = element[5].split(" ");
+				String lokaalCode  = lokaal[0];
 				String klasNaam = element[6];
 
 				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");

@@ -9,12 +9,18 @@
         <img src="../../images/hulogo.png" class="huLogo">
         <paper-input id="email_element" label="gebruikersnaam" value="{{username}}"></paper-input>
         <paper-input id="wachtwoord_element" label="wachtwoord" type="password" value="{{_password}}"></paper-input>
-        <a name="home" href="#/home">
-          <paper-button id="login_button_element">Login</paper-button>
-        </a>
+        <paper-button on-click="login_onClick" id="login_button_element">Login</paper-button>
 
       </paper-card>
     </div>
+
+    <iron-ajax
+      id="ajax_login"
+      method="POST"
+      url="/login"
+      handle-as="json"
+      on-response="ajax_login_handler">
+    </iron-ajax>
 
   </template>
 
@@ -23,6 +29,30 @@
       Polymer({
 
         is: 'my-login',
+        properties: {
+          active: {
+            type: Boolean,
+            value: false,
+            reflectToAttribute: true
+          },
+          username:{
+            type: String,
+          }
+          _password:{
+            type: String,
+          },
+          login_onClick: function(){
+            this.$.ajax_login.contentType="application/json";
+            this.$.ajax_login.body={
+              "username":this.username,
+              "password":this._password
+            };
+            this.$.ajax_login.generateRequest();
+          },
+          ajax_login_handler: function(request){
+            console.log(request.detail.response);
+          }
+        }
 
       })
 

@@ -3,85 +3,44 @@
 <dom-module id="my-home">
 <link rel="import" type="css" href="../../styles/homeStyle.css">
   <template>
-    <div class="">
-      <h2>Maandag<a href="#/home" class="ziekLink">Ziek melden</a></h2>
+
+    <template is="dom-repeat" items="[[rooster.alleLessen]]">
+      <template is="dom-if" if="{{printWeek(item.week)}}">
+        <h1>Week {{item.week}}</h1>
+      </template>
+
+      <template is="dom-if" if="{{printDag(item.dag)}}">
+        <h2>{{getDag(item.dag)}}</h2>
+      </template>
+
       <paper-card class="holder" elevation="2">
-        TICT-AUI-V1D
-        Docent
-        Lokaal
-        Begintijd-Eindtijd
-        Datum
+        {{item.klasCode}}<br>
+        {{item.huidigeDocent.gebruikersnaam}}<br>
+        {{item.huidigeLokaal.naam}}<br>
+        {{padNummer(item.beginTijd.time.hour)}}:{{padNummer(item.beginTijd.time.minute)}}-{{padNummer(item.eindTijd.time.hour)}}:{{padNummer(item.eindTijd.time.minute)}}<br>
+        {{padNummer(item.beginTijd.date.day)}}-{{padNummer(item.beginTijd.date.month)}}-{{item.beginTijd.date.year}}<br>
         <a name="klasInfo" href="#/home/klasInfo">
           <paper-fab class="button" mini icon="reply"></paper-fab>
         </a>
       </paper-card>
-      <paper-card class="holder" elevation="2">
-        TICT-OODC-V1D
-        Docent
-        Lokaal
-        Begintijd-Eindtijd
-        Datum
-        <paper-fab class="button" mini icon="reply">
-        </paper-fab>
-      </paper-card>
-    </div>
+    </template>
 
-    <div class="">
-      <h2>Dinsdag</h2>
-      <paper-card class="holder" elevation="2">
-        TICT-AUI-V1D
-        Docent
-        Lokaal
-        Begintijd-Eindtijd
-        Datum
-        <paper-fab class="button" mini icon="reply">
-        </paper-fab>
-      </paper-card>
-    </div>
 
-    <div class="">
-      <h2>Woensdag</h2>
-      <paper-card class="holder" elevation="2">
-        Geen lessen
-      </paper-card>
-    </div>
+    <iron-ajax
+      id="ajax_rooster_student"
+      method="POST"
+      url="/rooster/student"
+      handle-as="json"
+      on-response="ajax_rooster_student_handler">
+    </iron-ajax>
 
-    <div class="">
-      <h2>Donderdag</h2>
-      <paper-card class="holder" elevation="2">
-        TICT-OODC-V1D
-        Docent
-        Lokaal
-        Begintijd-Eindtijd
-        Datum
-        <paper-fab class="button" mini icon="reply">
-        </paper-fab>
-        <paper-fab class="button" mini icon="reply">
-        </paper-fab>
-      </paper-card>
-    </div>
-
-    <div class="">
-      <h2>Vrijdag</h2>
-      <paper-card class="holder" elevation="2">
-        TICT-OODC-V1D
-        Docent
-        Lokaal
-        Begintijd-Eindtijd
-        Datum
-        <paper-fab class="button" mini icon="reply">
-        </paper-fab>
-      </paper-card>
-      <paper-card class="holder" elevation="2">
-        TICT-AUI-V1D
-        Docent
-        Lokaal
-        Begintijd-Eindtijd
-        Datum
-        <paper-fab class="button" mini icon="reply">
-        </paper-fab>
-      </paper-card>
-    </div>
+    <iron-ajax
+      id="ajax_rooster_docent"
+      method="POST"
+      url="/rooster/docent"
+      handle-as="json"
+      on-response="ajax_rooster_docent_handler">
+    </iron-ajax>
 
 
 
@@ -99,6 +58,103 @@
             value: false,
             reflectToAttribute: true
           },
+          klascode: {
+            type: String,
+            value: "TICT-SIE-V1D"
+          },
+          gebruikersnaam: {
+            type: String,
+            value: "peter.schuler@hu.nl"
+          },
+          rooster:{
+            type: Array,
+            value: []
+          },
+          weekDagenVertalingen:{
+            type: Object,
+            value:
+              {
+                'MONDAY':'Maandag',
+                'TUESDAY':'Dinsdag',
+                'WEDNESDAY':'Woensdag',
+                'THURSDAY':'Donderdag',
+                'FRIDAY':'Vrijdag',
+                'SATURDAY':'Zaterdag',
+                'SUNDAY':'Zondag'
+              }
+          },
+          vorigedag:{
+            type: String
+          },
+          vorigeweek:{
+            type: Number
+          }
+        },
+
+        ajax_rooster_student_start: function() {
+
+          this.$.ajax_rooster_student.contentType="application/json";
+          this.$.ajax_rooster_student.body={
+            "klascode":this.klascode
+          };
+          this.$.ajax_rooster_student.generateRequest();
+        },
+
+        ajax_rooster_student_handler: function(request) {
+          this.rooster = request.detail.response;
+        },
+
+        ajax_rooster_docent_start: function() {
+
+          this.$.ajax_rooster_docent.contentType="application/json";
+          this.$.ajax_rooster_docent.body={
+            "gebruikersnaam":this.gebruikersnaam
+          };
+          this.$.ajax_rooster_docent.generateRequest();
+        },
+
+        ajax_rooster_docent_handler: function(request) {
+          this.rooster = request.detail.response;
+        },
+
+        getDag: function(dag){
+          return this.weekDagenVertalingen[dag];
+        },
+
+        printDag: function(dag){
+          var printdag = true;
+
+          if (dag == this.vorigedag){
+            printdag = false;
+          }
+
+          this.vorigedag = dag;
+
+          return printdag;
+        },
+        printWeek: function(week){
+          var printweek = true;
+
+          if(week == this.vorigeweek){
+            printweek = false;
+          }
+
+          this.vorigeweek = week;
+
+          return printweek;
+        },
+
+        padNummer(nr){
+          var str = "" + nr;
+          var pad = "00";
+          return pad.substring(0, pad.length - str.length) + str;
+        },
+
+        ready: function() {
+
+
+          //this.ajax_rooster_student_start();
+          this.ajax_rooster_docent_start();
         },
 
       })
