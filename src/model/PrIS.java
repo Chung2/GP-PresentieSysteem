@@ -20,6 +20,8 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Locale;
 
@@ -61,7 +63,7 @@ public class PrIS {
 		deLokalen = new ArrayList<Lokaal>();
 		deVakken = new ArrayList<Vak>();
 		deLessen = new ArrayList<Les>();
-		
+
 		// Inladen klassen
 		vulKlassen(deKlassen);
 
@@ -132,15 +134,6 @@ public class PrIS {
 		return resultaat;
 	}
 
-	
-	//public Docent getSlber(String klascode) { //TBA
-		
-
-//		for(Klas k : deKlassen) {
-//			if()
-//		}
-//	}
-
 	public Klas getKlasVanStudent(Student pStudent) {
 		// used
 		for (Klas lKlas : deKlassen) {
@@ -167,16 +160,16 @@ public class PrIS {
 
 	public Rooster getRoosterDocent(String gebruikersNaam) {
 		ArrayList<Les> docentLessen = new ArrayList<Les>();
-		
+
 		for (Les les : deLessen) {
 			if (les.getHuidigeDocent().getGebruikersnaam().equals(gebruikersNaam)) {
 				docentLessen.add(les);
-				
+
 			}
 
 		}
 		Rooster roosterDocent = new Rooster(docentLessen);
-		
+
 		return roosterDocent;
 	}
 
@@ -193,11 +186,16 @@ public class PrIS {
 		return roosterKlas;
 	}
 
-	public Les getLes(Calendar beginTijd, Calendar eindTijd, String klasCode, String vakCode) {
+	public Les getLes(String datum, String beginTijd, String eindTijd, String klasCode, String vakCode) {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+		formatter = formatter.withLocale(Locale.GERMANY);
 
+		LocalDateTime beginDatum = LocalDateTime.parse(datum + " " + beginTijd, formatter);
+		LocalDateTime eindDatum = LocalDateTime.parse(datum + " " + eindTijd, formatter);
+		
 		for (Les les : deLessen) {
-			if (les.getBeginTijd().equals(beginTijd) && les.getEindTijd().equals(eindTijd)
-					&& les.getHuidigeKlas().getKlasCode().equals(klasCode) && les.getHuidigeVak().getCode().equals(vakCode)) {
+			if (les.getBeginTijd().equals(beginDatum) && les.getEindTijd().equals(eindDatum)
+					&& les.getHuidigeKlas().getKlasCode().equals(klasCode)	&& les.getHuidigeVak().getCode().equals(vakCode)){
 				return les;
 			}
 		}
@@ -249,7 +247,7 @@ public class PrIS {
 
 	public Vak getVak(String naam) {
 		for (Vak v : deVakken) {
-			if (v.getNaam().equals(naam)) {
+			if (v.getCode().equals(naam)) {
 				return v;
 			}
 		}
@@ -266,12 +264,12 @@ public class PrIS {
 
 		return null;
 	}
-	
-	public ArrayList<Student> getStudenten(){
+
+	public ArrayList<Student> getStudenten() {
 		return deStudenten;
 	}
-	
-	public ArrayList<Docent> getDocenten(){
+
+	public ArrayList<Docent> getDocenten() {
 		return deDocenten;
 	}
 
@@ -311,12 +309,12 @@ public class PrIS {
 				String voornaam = element[1];
 				String tussenvoegsel = element[2];
 				String achternaam = element[3];
-				
-				//deStatussen.get(0) = standaard aanwezig
+
+				// deStatussen.get(0) = standaard aanwezig
 				pDocenten.add(new Docent(voornaam, tussenvoegsel, achternaam, "geheim", gebruikersnaam, 1));
-				
-				//System.out.println(gebruikersnaam);
-		
+
+				// System.out.println(gebruikersnaam);
+
 			}
 
 		} catch (FileNotFoundException e) {
@@ -366,9 +364,15 @@ public class PrIS {
 					gebruikersnaam = gebruikersnaam.replace(" ", "");
 					String lStudentNrString = element[0];
 					int lStudentNr = Integer.parseInt(lStudentNrString);
-					
-					//deStatussen.get(0) = standaard aanwezig
-					lStudent = new Student(element[3], element[2], element[1], "geheim", gebruikersnaam, lStudentNr, k.getNaam()); //Volgorde 3-2-1 = voornaam, tussenvoegsel en achternaam
+
+					// deStatussen.get(0) = standaard aanwezig
+					lStudent = new Student(element[3], element[2], element[1], "geheim", gebruikersnaam, lStudentNr, k.getNaam()); // Volgorde
+																																																												 // 3-2-1
+																																																												 // =
+																																																												 // voornaam,
+																																																												 // tussenvoegsel
+																																																												 // en
+																																																												 // achternaam
 
 					pStudenten.add(lStudent);
 					k.voegStudentToe(lStudent);
@@ -464,12 +468,11 @@ public class PrIS {
 				String lokaalCode = element[5];
 				String klasNaam = element[6];
 
-				Calendar beginDatum = Calendar.getInstance();
-				Calendar eindDatum = Calendar.getInstance();
-				SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yy hh:mm", Locale.GERMANY);
-				beginDatum.setTime(sdf.parse(dag + " " + beginTijd));
-				eindDatum.setTime(sdf.parse(dag + " " + eindTijd));
+				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+				formatter = formatter.withLocale(Locale.GERMANY);
 
+				LocalDateTime beginDatum = LocalDateTime.parse(dag + " " + beginTijd, formatter);
+				LocalDateTime eindDatum = LocalDateTime.parse(dag + " " + eindTijd, formatter);
 				pLessen.add(new Les(getVak(vakNaam), getKlas(klasNaam), getDocent(docentGebruikersnaam), getLokaal(lokaalCode),
 						beginDatum, eindDatum));
 
@@ -480,8 +483,6 @@ public class PrIS {
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (ParseException e) {
 			e.printStackTrace();
 		}
 	}

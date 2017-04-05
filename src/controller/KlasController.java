@@ -31,29 +31,7 @@ public class KlasController implements Handler{
 		if (conversation.getRequestedURI().startsWith("/klassen/info")) {
 			alleKlassenOphalen(conversation);
 		}
-		
-		//opdracht toegewijzen aan les
-			// controleer rooster
-		 
-  			// controleer bijbehorende studenten 
-  		  // controleer 
-        // controleer bijbehorende 
-        // controleer huidige 
-        // controleer huidige 
-  		  // controleer huidige 
-  		  // controleer huidige 
-		// klas eruit halen
-		// 
 	}
-	
-//	private void ophalenSlb(Conversation conversation) {
-//		Gson gson = new Gson();
-//		String jsonOut = "";
-//		
-//		jsonOut = gson.toJson(informatieSysteem.getDocent("V1A")); //hardcoded een klas, als voorbeeld
-//		
-//		conversation.sendJSONMessage(jsonOut);		
-//	}
 	
 	private void alleKlassenOphalen(Conversation conversation) {
 		//TODO:getAlleKlasCodes: informatieSysteem.getKlas(klascode);
@@ -62,7 +40,7 @@ public class KlasController implements Handler{
 		
 		jsonOut = gson.toJson(informatieSysteem.getKlassen()); //hardcoded een klas, als voorbeeld
 		
-		conversation.sendJSONMessage(jsonOut);		
+		conversation.sendJSONMessage(jsonOut);
 
 	}
 	
@@ -85,6 +63,12 @@ public class KlasController implements Handler{
 			jsonOut = "{\"error\":\"Klas niet gevonden\"}";
 		}
 		
-		conversation.sendJSONMessage(jsonOut);
+		if(informatieSysteem.getKlas(request.get("klascode").getAsString()) != null){
+			jsonOut = gson.toJson(informatieSysteem.getKlas(request.get("klascode").getAsString()));
+		} else {
+			jsonOut = gson.toJson("{\"error\":\"klas bestaat niet\"}");
+		}
+		
+		conversation.sendJSONMessage(jsonOut);	
 	}
 }

@@ -1,4 +1,5 @@
 package model.rooster;
+import java.time.LocalDateTime;
 import java.util.Calendar;
 
 import model.klas.Klas;
@@ -11,10 +12,10 @@ public class Les {
 	private String klasCode;
 	private Docent huidigeDocent;
 	private Lokaal huidigeLokaal;
-	private Calendar beginTijd;
-	private Calendar eindTijd;
+	private LocalDateTime beginTijd;
+	private LocalDateTime eindTijd;
 	
-	public Les(Vak hV, Klas hK, Docent hD, Lokaal hL, Calendar bT, Calendar eT){
+	public Les(Vak hV, Klas hK, Docent hD, Lokaal hL, LocalDateTime bT, LocalDateTime eT){
 		huidigeVak = hV;
 		huidigeKlas = hK;
 		klasCode = hK.getKlasCode();
@@ -60,19 +61,19 @@ public class Les {
 		this.huidigeLokaal = huidigeLokaal;
 	}
 
-	public Calendar getBeginTijd() {
+	public LocalDateTime getBeginTijd() {
 		return beginTijd;
 	}
 
-	public void setBeginTijd(Calendar beginTijd) {
+	public void setBeginTijd(LocalDateTime beginTijd) {
 		this.beginTijd = beginTijd;
 	}
 
-	public Calendar getEindTijd() {
+	public LocalDateTime getEindTijd() {
 		return eindTijd;
 	}
 
-	public void setEindTijd(Calendar eindTijd) {
+	public void setEindTijd(LocalDateTime eindTijd) {
 		this.eindTijd = eindTijd;
 	}
 }
