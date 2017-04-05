@@ -46,17 +46,18 @@
 
         <paper-icon-button icon="menu" paper-drawer-toggle></paper-icon-button>
         <div style="font-size: 20px;">StudentHUb</div>
-        <div class="title">{{_routeData.page}}</div>
+        <div class="title">[[_routeData.page]]</div>
 
       </paper-toolbar>
 
       <div class="container">
           <div class="content">
             <section id="main">
-              <iron-pages selected='{{_routeData.page}}' attr-for-selected='name'>
+              <iron-pages selected='[[_routeData.page]]' attr-for-selected='name'>
+                <my-login name="login"></my-login>
                 <my-home name="home" active="{{_subRouteActive}}"></my-home>
                 <my-klassen name="klassen"></my-klassen>
-                <my-info name=studentenInfo></my-info>
+                <my-info name="studentenInfo"></my-info>
 
                 <section name="logout">
                   <h1>Logout</h1>
@@ -66,7 +67,7 @@
             <template is="dom-if" if="[[_subRouteActive]]" restamp>
               <section id="sub">
                 <iron-pages attr-for-selected="name" selected="[[_subRouteData.subPage]]">
-                  <my-login name="test"></my-login>
+                  <!-- sub route elements go here -->
                 </iron-pages>
               </section>
             </template>
@@ -94,7 +95,7 @@
 
       attached: function() {
         if (!this._route.path) {
-          this.set('_route.path', '/home');
+          this.set('_route.path', '/login');
         }
       },
 
