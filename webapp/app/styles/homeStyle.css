@@ -28,9 +28,13 @@ hr{
 }
 
 .afwezig{
-  float: right;
+  display: -webkit-inline-box;
   margin-bottom: 10px;
   margin-right: 0;
+}
+
+paper-dropdown-menu, paper-input-date-picker{
+  margin-left: 15px;
 }
 
 paper-button.blue{
@@ -46,4 +50,8 @@ paper-button.red {
 paper-button.green {
   background-color: var(--paper-light-green-500);
   color: #ffffff;
+}
+
+paper-button.red[disabled], paper-button.green[disabled]{
+  opacity: 0.3;
 }
