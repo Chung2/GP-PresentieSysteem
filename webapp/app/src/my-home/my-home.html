@@ -8,6 +8,7 @@
     <paper-button id="btn_beter_melden" class="green" on-tap="ajax_beter_melden_onClick" disabled$="{{not(persoon.ziek)}}">Beter melden</paper-button>
 
     <div class="afwezig-keuze">
+
       <paper-button class="blue" on-tap="ajax_zet_status_onClick">Afwezig melden</paper-button>
 
       <paper-dropdown-menu id="dd_dagdeel" label="Dagdeel" on-iron-select="_itemSelected">

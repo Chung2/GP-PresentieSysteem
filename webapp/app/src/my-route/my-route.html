@@ -8,10 +8,7 @@
 <link rel="import" href="../../src/my-admin/my-docenten.html">
 <link rel="import" href="../../src/my-admin/my-roosters.html">
 
-<link rel="import" href="../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
-<link rel="import" href="../../bower_components/paper-item/paper-item.html">
-<link rel="import" href="../../bower_components/paper-listbox/paper-listbox.html">
-<link rel="import" href="../../bower_components/paper-input-date-picker/paper-input-date-picker.html">
+
 
 <dom-module id="my-route">
   <link rel="import" type="css" href="../../styles/mainStyle.css">
@@ -43,6 +40,7 @@
         <iron-selector selected='[[_routeData.page]]' attr-for-selected='name'>
           <a name="home" class="menuLink" href="#/home"><span>Home</span></a>
           <a name="admin" class="menuLink" href="#/admin"><span>Admin</span></a>
+          <a name="logout" class="menuLink" href="#/login"><span>Logout</span></a>
         </iron-selector>
       </div>
 
