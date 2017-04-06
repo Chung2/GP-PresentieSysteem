@@ -4,7 +4,9 @@
 <link rel="import" type="css" href="../../styles/homeStyle.css">
   <template>
 
-    <iron-meta id="meta"></iron-meta>
+    <paper-button class="blue">Ziek melden</paper-button>
+
+    <hr>
 
     <template is="dom-repeat" items="[[rooster.alleLessen]]">
       <template is="dom-if" if="{{printWeek(item.week)}}">
@@ -16,10 +18,8 @@
       </template>
 
       <paper-card class="holder" elevation="2">
-        {{item.klasCode}}<br>
-        {{item.huidigeDocent.gebruikersnaam}}<br>
-        {{item.huidigeLokaal.naam}}<br>
-        {{padNummer(item.beginTijd.time.hour)}}:{{padNummer(item.beginTijd.time.minute)}}-{{padNummer(item.eindTijd.time.hour)}}:{{padNummer(item.eindTijd.time.minute)}}<br>
+        {{item.klasCode}} | {{item.huidigeDocent.gebruikersnaam}}<br>
+        {{padNummer(item.beginTijd.time.hour)}}:{{padNummer(item.beginTijd.time.minute)}}-{{padNummer(item.eindTijd.time.hour)}}:{{padNummer(item.eindTijd.time.minute)}} | {{item.huidigeLokaal.naam}}<br>
         {{padNummer(item.beginTijd.date.day)}}-{{padNummer(item.beginTijd.date.month)}}-{{item.beginTijd.date.year}}<br>
         <a name="klasInfo" href="#/home/klasInfo">
           <paper-fab class="button" mini icon="reply"></paper-fab>
