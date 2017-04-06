@@ -27,10 +27,14 @@ hr{
   top:7px;
 }
 
-.afwezig{
+.afwezig-keuze{
   float: right;
   margin-bottom: 10px;
   margin-right: 0;
+}
+
+.afwezig{
+  background-color: var(--paper-red-500);
 }
 
 paper-button.blue{
