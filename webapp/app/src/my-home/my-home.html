@@ -4,9 +4,11 @@
 <link rel="import" type="css" href="../../styles/homeStyle.css">
   <template>
 
-    <div class="afwezig">
-      <paper-button id="btn_ziek_melden" class="red" on-tap="ajax_ziek_melden_onClick" disabled$="{{persoon.ziek}}">Ziek melden</paper-button>
-      <paper-button id="btn_beter_melden" class="green" on-tap="ajax_beter_melden_onClick" disabled$="{{not(persoon.ziek)}}">Beter melden</paper-button>
+    <paper-button id="btn_ziek_melden" class="red" on-tap="ajax_ziek_melden_onClick" disabled$="{{persoon.ziek}}">Ziek melden</paper-button>
+    <paper-button id="btn_beter_melden" class="green" on-tap="ajax_beter_melden_onClick" disabled$="{{not(persoon.ziek)}}">Beter melden</paper-button>
+
+    <div class="afwezig-keuze">
+
       <paper-button class="blue" on-tap="ajax_zet_status_onClick">Afwezig melden</paper-button>
 
       <paper-dropdown-menu id="dd_dagdeel" label="Dagdeel" on-iron-select="_itemSelected">
@@ -20,9 +22,7 @@
     </div>
     <hr>
 
-    <template is="dom-repeat" items="[[rooster.alleLessen]]">
-
-      <h1>{{docentAanwezig(item.huidigeDocent, item.beginTijd, item.eindTijd)}}</h1>
+    <template is="dom-repeat" items="{{rooster.alleLessen}}">
 
       <template is="dom-if" if="{{printWeek(item.week)}}">
         <h1>Week {{item.week}}</h1>
@@ -32,7 +32,7 @@
         <h2>{{getDag(item.dag)}}</h2>
       </template>
 
-      <paper-card class="holder" elevation="2">
+      <paper-card class$="{{docentAanwezig(item.huidigeDocent, item.beginTijd, item.eindTijd)}} holder" elevation="2">
         {{item.klasCode}} | {{item.huidigeDocent.gebruikersnaam}}<br>
         {{padNummer(item.beginTijd.time.hour)}}:{{padNummer(item.beginTijd.time.minute)}}-{{padNummer(item.eindTijd.time.hour)}}:{{padNummer(item.eindTijd.time.minute)}} | {{item.huidigeLokaal.naam}}<br>
         {{padNummer(item.beginTijd.date.day)}}-{{padNummer(item.beginTijd.date.month)}}-{{item.beginTijd.date.year}}<br>
@@ -251,7 +251,7 @@
           this.$.ajax_zet_status.body={
             "gebruikersnaam":this.gebruikersnaam,
             "dagdeel":this.dagDeel,
-            "datum":this.padNummer(this.gekozenDatum.getDay())+"-"+this.padNummer(this.gekozenDatum.getMonth()+1)+"-"+this.gekozenDatum.getFullYear(),
+            "datum":this.padNummer(this.gekozenDatum.getDate())+"-"+this.padNummer(this.gekozenDatum.getMonth()+1)+"-"+this.gekozenDatum.getFullYear(),
             "status":"Afwezig"
           };
           this.$.ajax_zet_status.generateRequest();
@@ -280,9 +280,31 @@
           }
         },
 
+        //Functie om te kijken of de docent aanwezig is via de statussen en begin/eind datum/tijd van de les
         docentAanwezig: function(docent, beginDatum, eindDatum){
-          if(docent.ziek) return false;
+          if(docent.ziek) return "afwezig";
 
+          for (var i = 0; i < docent.statussen.length; i++) {
+              if((docent.statussen[i].datum.day == beginDatum.date.day &&
+                docent.statussen[i].datum.month == beginDatum.date.month &&
+                docent.statussen[i].datum.year == beginDatum.date.year) ||
+                (docent.statussen[i].datum.day == eindDatum.date.day &&
+                docent.statussen[i].datum.month == eindDatum.date.month &&
+                docent.statussen[i].datum.year == eindDatum.date.year)){
+
+                  if(docent.statussen[i].dagdeel=="Hele dag") return "afwezig";
+
+                  if(docent.statussen[i].dagdeel=="Ochtend"){
+                    if((beginDatum.time.hour>=8 && beginDatum.time.hour<12) || (eindDatum.time.hour>=8 && eindDatum.time.hour<12)) return "afwezig";
+                  }
+
+                  if(docent.statussen[i].dagdeel=="Middag"){
+                    if((beginDatum.time.hour>=12 && beginDatum.time.hour<19) || (eindDatum.time.hour>=12 && eindDatum.time.hour<19)) return "afwezig";
+                  }
+              }
+          }
+
+          return "";
         },
 
         ready: function() {
