@@ -1,6 +1,9 @@
 package model.rooster;
 import java.time.LocalDateTime;
+import java.time.temporal.TemporalField;
+import java.time.temporal.WeekFields;
 import java.util.Calendar;
+import java.util.Locale;
 
 import model.klas.Klas;
 import model.persoon.Docent;
@@ -14,6 +17,8 @@ public class Les {
 	private Lokaal huidigeLokaal;
 	private LocalDateTime beginTijd;
 	private LocalDateTime eindTijd;
+	private String dag;
+	private int week;
 	
 	public Les(Vak hV, Klas hK, Docent hD, Lokaal hL, LocalDateTime bT, LocalDateTime eT){
 		huidigeVak = hV;
@@ -23,6 +28,13 @@ public class Les {
 		huidigeLokaal = hL;
 		beginTijd = bT;
 		eindTijd = eT;
+		
+		//Dag ophalen
+		dag = beginTijd.getDayOfWeek().toString();
+		
+		//Weeknummer ophalen
+		TemporalField woy = WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear(); 
+		week = beginTijd.get(woy);
 	}
 
 	public Vak getHuidigeVak() {

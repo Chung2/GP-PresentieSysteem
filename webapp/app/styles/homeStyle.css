@@ -17,14 +17,24 @@ h2{
   font-size: 15px;
 }
 
+hr{
+  width: 100%;
+}
+
 .button{
   position: absolute;
   right: 10px;
   top:7px;
 }
 
-.ziekLink{
+paper-button.blue{
+  background-color: var(--paper-light-blue-500);
+  color: #ffffff;
   float: right;
-  text-decoration: none;
-  color: red;
+  margin-bottom: 10px;
+  margin-right: 0;
+}
+
+paper-button.blue {
+  background-color: var(--paper-light-blue-500);
 }

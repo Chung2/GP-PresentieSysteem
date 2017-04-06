@@ -22,10 +22,6 @@ public class RoosterController implements Handler {
 	}
 
 	public void handle(Conversation conversation) {
-		if (conversation.getRequestedURI().startsWith("/rooster")) {
-			// ophalenRoosterKlas(conversation);
-		}
-
 		if (conversation.getRequestedURI().startsWith("/rooster/docent")) {
 			ophalenRoosterDocent(conversation);
 		}
@@ -38,7 +34,7 @@ public class RoosterController implements Handler {
 			ophalenRoosterKlas(conversation);
 		}
 		if (conversation.getRequestedURI().startsWith("/roosters/overzicht")) {
-			ophalenAlleRoostersKlassen(conversation);
+			ophalenAlleRoosters(conversation);
 		}
 
 	}
@@ -71,7 +67,7 @@ public class RoosterController implements Handler {
 		}
 	}
 
-	private void ophalenAlleRoostersKlassen(Conversation conversation) {
+	private void ophalenAlleRoosters(Conversation conversation) {
 		JsonParser parser = new JsonParser();
 		Gson gson = new Gson();
 
@@ -93,33 +89,18 @@ public class RoosterController implements Handler {
 		}
 
 		JsonObject request = parser.parse(conversation.getRequestBodyAsString()).getAsJsonObject();
-		System.out.println(request.get("gebruikersnaamDocent").getAsString());
+		System.out.println(request.get("gebruikersnaam").getAsString());
 		String jsonOut = "";
 
-		if (request.get("gebruikersnaamDocent") != null) {
-			if (informatieSysteem.getRoosterDocent(request.get("gebruikersnaamDocent").getAsString()) != null) {
-				jsonOut = gson.toJson(informatieSysteem.getRoosterDocent(request.get("gebruikersnaamDocent").getAsString()));
+		if (request.get("gebruikersnaam") != null) {
+			if (informatieSysteem.getRoosterDocent(request.get("gebruikersnaam").getAsString()) != null) {
+				jsonOut = gson.toJson(informatieSysteem.getRoosterDocent(request.get("gebruikersnaam").getAsString()));
 
 				conversation.sendJSONMessage(jsonOut);
 
 				return;
 			}
 		}
-	}
-
-	private void ophalenAlleRoostersDocenten(Conversation conversation) {
-		Gson gson = new Gson();
-		String jsonOut = "";
-		
-		if (conversation.getRequestBodyAsString() == null){
-			conversation.sendJSONMessage("{\"error\":\"Geen json data mee gegeven\"}");
-			
-			return;
-		}
-
-		jsonOut = gson.toJson(informatieSysteem.getRooster());
-
-		conversation.sendJSONMessage(jsonOut);
 	}
 
 	private void ophalenLes(Conversation conversation) {

@@ -37,6 +37,8 @@ class LoginController implements Handler {
 	 * @param conversation - alle informatie over het request
 	 */
 	private void login(Conversation conversation) {
+		System.out.println(conversation.getRequestBodyAsString());
+		
 		JsonObject lJsonObjIn = (JsonObject) conversation.getRequestBodyAsJSON();
 		
 		String lGebruikersnaam = lJsonObjIn.getString("username");						// Uitlezen van opgestuurde inloggegevens... 
@@ -45,7 +47,9 @@ class LoginController implements Handler {
 		
 		JsonObjectBuilder lJsonObjectBuilder = Json.createObjectBuilder();
 		lJsonObjectBuilder.add("rol", lRol);	
-		lJsonObjectBuilder.add("gebruikersnaam", lGebruikersnaam);// en teruggekregen gebruikersrol als JSON-object...
+		if (lRol != "undefined"){
+			lJsonObjectBuilder.add("gebruikersnaam", lGebruikersnaam);
+		} 
 		String lJsonOut = lJsonObjectBuilder.build().toString();
 		
 		conversation.sendJSONMessage(lJsonOut);															// terugsturen naar de Polymer-GUI!
