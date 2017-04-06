@@ -4,11 +4,10 @@
 <link rel="import" type="css" href="../../styles/homeStyle.css">
   <template>
 
-    <paper-button id="btn_ziek_melden" class="red" on-tap="ajax_ziek_melden_onClick" disabled$="{{persoon.ziek}}">Ziek melden</paper-button>
-    <paper-button id="btn_beter_melden" class="green" on-tap="ajax_beter_melden_onClick" disabled$="{{not(persoon.ziek)}}">Beter melden</paper-button>
-
     <div class="afwezig-keuze">
 
+      <paper-button id="btn_ziek_melden" class="red" on-tap="ajax_ziek_melden_onClick" disabled$="{{persoon.ziek}}">Ziek melden</paper-button>
+      <paper-button id="btn_beter_melden" class="green" on-tap="ajax_beter_melden_onClick" disabled$="{{not(persoon.ziek)}}">Beter melden</paper-button>
       <paper-button class="blue" on-tap="ajax_zet_status_onClick">Afwezig melden</paper-button>
 
       <paper-dropdown-menu id="dd_dagdeel" label="Dagdeel" on-iron-select="_itemSelected">

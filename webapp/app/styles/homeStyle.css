@@ -28,17 +28,17 @@ hr{
 }
 
 .afwezig-keuze{
-  float: right;
   display: -webkit-inline-box;
   margin-bottom: 10px;
   margin-right: 0;
 }
 
-.afwezig{
-  background-color: var(--paper-red-500);
+paper-dropdown-menu, paper-input-date-picker{
+  margin-left: 15px;
 }
 
-paper-dropdown-menu, paper-input-date-picker{
+.afwezig{
+  background-color: var(--paper-red-500);
   margin-left: 15px;
 }
 
