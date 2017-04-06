@@ -34,13 +34,12 @@ hr{
   margin-right: 0;
 }
 
-<<<<<<< HEAD
 .afwezig{
   background-color: var(--paper-red-500);
-=======
+}
+
 paper-dropdown-menu, paper-input-date-picker{
   margin-left: 15px;
->>>>>>> da26932a578292a286d45031ad2b3f41c6eee83e
 }
 
 paper-button.blue{

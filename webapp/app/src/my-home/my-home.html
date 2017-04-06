@@ -224,7 +224,7 @@
         ajax_ziek_melden_handler: function(request) {
           var response = request.detail.response;
           if("succes" in response){
-            this.ajax_haal_persoon();
+            this.ready();
           }
         },
 
@@ -240,7 +240,7 @@
         ajax_beter_melden_handler: function(request) {
           var response = request.detail.response;
           if("succes" in response){
-            this.ajax_haal_persoon();
+            this.ready();
           }
         },
 
@@ -258,7 +258,10 @@
         },
 
         ajax_zet_status_handler: function(request) {
-          console.log(request.detail.response);
+          var response = request.detail.response;
+          if("succes" in response){
+            this.ready();
+          }
         },
 
         ajax_haal_persoon: function(){
@@ -308,6 +311,8 @@
         },
 
         ready: function() {
+
+          console.log("ready");
 
           var rol = "Docent";
 
