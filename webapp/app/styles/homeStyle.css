@@ -28,3 +28,7 @@ h2{
   text-decoration: none;
   color: red;
 }
+
+paper-button.blue {
+  background-color: var(--paper-light-blue-500);
+}

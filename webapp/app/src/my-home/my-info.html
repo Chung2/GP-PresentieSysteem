@@ -4,9 +4,11 @@
 <link rel="import" type="css" href="../../styles/infoStyle.css">
   <template>
     <div class="container">
+      <h2>[[klas.klasCode]]</h2>
+
       <paper-card class="holder" elevation="2">
 
-        <vaadin-grid items="[[klas.deStudenten]]">
+        <vaadin-grid items="[[klas.deStudenten]]" visible-rows="[[klas.deStudenten.length]]">
          <table>
              <colgroup>
                <col name="voornaam" resizable>
@@ -43,8 +45,7 @@
             reflectToAttribute: true
           },
           klascode: {
-            type: String,
-            value: "TICT-SIE-V1D"
+            type: String
           },
           klas: {
             type: Object
@@ -64,6 +65,7 @@
         },
 
         ready: function(){
+          this.klascode = window.location.href.split("/").pop();
           this.ajax_klas_start();
         },
 
