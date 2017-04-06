@@ -1,8 +1,6 @@
 <link rel="import" href="../../elements/elements.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 
-<template is="dom-repeat" items="[[klassen]]">
-
 <!-- <h1>{{klas.naam}}</h1>
 <template is="dom-repeat" items="[[klas.deStudenten]]">
   <my-student gebruikersnaam="{{item.gebruikersnaam}}">
@@ -23,19 +21,26 @@
 
     <div class="">
       <paper-card class="holder" elevation="2">
-        <template is="dom-repeat" items="[[klassen]]">
-          <!-- <h1>[[item.naam]]</h1> -->
-          <vaadin-grid items="[[item.deStudenten]]" visible-rows="[[klas.deStudenten.length]]">
-           <table>
-          <vaadin-grid items="[[klassen]]">
-           <table>
+        <template is="dom-repeat" items="{{klassen}}">
+          <h1>{{item.naam}}</h1>
+          <h3>aantal studenten: &nbsp;{{item.deStudenten.length}} &nbsp;&nbsp;
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+             klascode:&nbsp;{{item.klasCode}} </h3>
+          <vaadin-grid items="[[item.deStudenten]]">
+             <!-- <vaadin-grid items="{{item.deStudenten}}"> -->
+             <table>
                <colgroup>
-                 <col name="naam" resizable>
-                 <col name="aantLeerling" resizable>
-                 <col name="richting" resizable flex sortable sortable sort-direction="asc">
+                 <col name="voornaam" resizable>
+                 <col name="tussenvoegsel" resizable>
+                 <col name="achternaam" resizable>
+                 <col name="studentNummer" resizable>
+                 <col name="ziek" resizable>
+                 <!-- <col name="aantLeerling" resizable>
+                 <col name="richting" resizable flex sortable sortable sort-direction="asc"> -->
                </colgroup>
-           </table>
-          </vaadin-grid>
+             </table>
+          </vaading-grid>
+        </template>
 
       </paper-card>
     </div>
@@ -56,9 +61,6 @@
           };
 
             this.$.ajax_klassen.generateRequest();
-
-
-
         },
 
         ajax_klassen_handler: function(request){
@@ -66,31 +68,13 @@
           this.klassen =
             request.detail.response;
             console.log(this.klassen + this.klassen.deStudenten);
-            // console.log(
-            //   "naam: "
-            //   + this.naam);
         },
 
         ready: function() {
           console.log("test");
           this.ajax_klassen_start();
-
         }
-
-
       })
-
-
-      //   function myFunction(arr) {
-      //     var out = "";
-      //     var i;
-      //     for(i = 0; i<arr.length; i++) {
-      //         out += '<a href="' + arr[i].url + '">' + arr[i].display + '</a><br>';
-      //     }
-      //     document.getElementById(this.klassen).innerHTML = out;
-      //
-      // })
-
 
   </script>
 
