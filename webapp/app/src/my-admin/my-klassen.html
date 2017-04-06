@@ -1,8 +1,18 @@
 <link rel="import" href="../../elements/elements.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+
 
 <dom-module id="my-klassen">
 <link rel="import" type="css" href="../../styles/mainStyle.css">
   <template>
+
+    <iron-ajax
+        id="ajax_klassen"
+        method="POST"
+        url="/klassen/info"
+        handle-as="json"
+        on-response="ajax_klassen_handler">
+      </iron-ajax>
 
     <div class="">
       <paper-card class="holder" elevation="2">
@@ -29,17 +39,45 @@
 
         is: 'my-klassen',
 
-        ready: function(){
-          this.klassen = [
-            {naam: 'v1d', aantLeerling: '23', richting: 'SIE'},
-            {naam: 'v1q', aantLeerling: '24', richting: 'SNE'},
-            {naam: 'v1g', aantLeerling: '25', richting: 'BIM'},
-            {naam: 'v1h', aantLeerling: '26', richting: 'TI'},
-            {naam: 'v19', aantLeerling: '27', richting: 'SIE'},
-          ];
+        ajax_klassen_start: function(){
+          this.$.ajax_klassen.contentType="application/json";
+          this.$.ajax_klassen.body={
+          };
+
+            this.$.ajax_klassen.generateRequest();
+
+
+
         },
 
+        ajax_klassen_handler: function(request){
+          this.klassen =
+            request.detail.response;
+            console.log(this.klassen + this.klassen.deStudenten);
+            // console.log(
+            //   "naam: "
+            //   + this.naam);
+        },
+
+        ready: function() {
+          this.ajax_klassen_start();
+
+        }
+
+
       })
+
+
+      //   function myFunction(arr) {
+      //     var out = "";
+      //     var i;
+      //     for(i = 0; i<arr.length; i++) {
+      //         out += '<a href="' + arr[i].url + '">' + arr[i].display + '</a><br>';
+      //     }
+      //     document.getElementById(this.klassen).innerHTML = out;
+      //
+      // })
+
 
   </script>
 
