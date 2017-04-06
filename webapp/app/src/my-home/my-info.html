@@ -4,20 +4,32 @@
 <link rel="import" type="css" href="../../styles/infoStyle.css">
   <template>
     <div class="container">
+      <h2>[[klas.klasCode]]</h2>
+
       <paper-card class="holder" elevation="2">
 
-        <vaadin-grid items="[[leerlingen]]">
+        <vaadin-grid items="[[klas.deStudenten]]" visible-rows="[[klas.deStudenten.length]]">
          <table>
              <colgroup>
-               <col name="naam" resizable>
-               <col name="achterNaam" resizable>
-               <col name="leerlingNr" resizable sortable sortable sort-direction="asc">
+               <col name="voornaam" resizable>
+               <col name="tussenvoegsel" resizable>
+               <col name="achternaam" resizable>
+               <col name="gebruikersnaam" resizable>
+               <col name="studentNummer" resizable sortable sortable sort-direction="asc">
              </colgroup>
          </table>
         </vaadin-grid>
 
       </paper-card>
     </div>
+
+    <iron-ajax
+      id="ajax_klas"
+      method="POST"
+      url="/klas/info"
+      handle-as="json"
+      on-response="ajax_klas_handler">
+    </iron-ajax>
   </template>
 
   <script>
@@ -26,14 +38,35 @@
 
         is: 'my-info',
 
+        properties: {
+          active: {
+            type: Boolean,
+            value: false,
+            reflectToAttribute: true
+          },
+          klascode: {
+            type: String
+          },
+          klas: {
+            type: Object
+          }
+        },
+
+        ajax_klas_start: function(){
+          this.$.ajax_klas.contentType="application/json";
+          this.$.ajax_klas.body={
+            "klascode":this.klascode
+          };
+          this.$.ajax_klas.generateRequest();
+        },
+
+        ajax_klas_handler: function(request){
+          this.klas = request.detail.response;
+        },
+
         ready: function(){
-          this.leerlingen = [
-            {naam: 'Bart', achterNaam: 'Straaten, van', leerlingNr: '123456'},
-            {naam: 'Thomas', achterNaam: 'Mocellin', leerlingNr: '123457'},
-            {naam: 'Stefan', achterNaam: 'Raad, de', leerlingNr: '123458'},
-            {naam: 'Jan', achterNaam: 'Dekkers', leerlingNr: '123459'},
-            {naam: 'Chung', achterNaam: 'Wong', leerlingNr: '123460'},
-          ];
+          this.klascode = window.location.href.split("/").pop();
+          this.ajax_klas_start();
         },
 
       })
