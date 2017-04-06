@@ -4,6 +4,7 @@
 <link rel="import" type="css" href="../../styles/homeStyle.css">
   <template>
 
+<<<<<<< HEAD
     <paper-button class="blue" on-tap="ajax_ziek_melden_onClick">Ziek melden</paper-button>
     <paper-button class="blue" on-tap="ajax_beter_melden_onClick">Beter melden</paper-button>
 
@@ -18,6 +19,8 @@
     </paper-dropdown-menu>
     <paper-input-date-picker value="[[vandaag]]"></paper-input-date-picker>
 
+    <hr>
+
     <template is="dom-repeat" items="[[rooster.alleLessen]]">
       <template is="dom-if" if="{{printWeek(item.week)}}">
         <h1>Week {{item.week}}</h1>
@@ -28,10 +31,8 @@
       </template>
 
       <paper-card class="holder" elevation="2">
-        {{item.klasCode}}<br>
-        {{item.huidigeDocent.gebruikersnaam}}<br>
-        {{item.huidigeLokaal.naam}}<br>
-        {{padNummer(item.beginTijd.time.hour)}}:{{padNummer(item.beginTijd.time.minute)}}-{{padNummer(item.eindTijd.time.hour)}}:{{padNummer(item.eindTijd.time.minute)}}<br>
+        {{item.klasCode}} | {{item.huidigeDocent.gebruikersnaam}}<br>
+        {{padNummer(item.beginTijd.time.hour)}}:{{padNummer(item.beginTijd.time.minute)}}-{{padNummer(item.eindTijd.time.hour)}}:{{padNummer(item.eindTijd.time.minute)}} | {{item.huidigeLokaal.naam}}<br>
         {{padNummer(item.beginTijd.date.day)}}-{{padNummer(item.beginTijd.date.month)}}-{{item.beginTijd.date.year}}<br>
         <a name="klasInfo" href="#/home/klasInfo/{{item.klasCode}}">
           <paper-fab class="button" mini icon="reply"></paper-fab>
