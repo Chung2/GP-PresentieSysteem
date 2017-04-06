@@ -412,7 +412,7 @@ public class PrIS {
 				
 				String naam = lokaal[0];
 				int capaciteit = Integer.parseInt(lokaal[1].replace("(", "").replace(")", ""));
-
+				
 				if (getLokaal(naam) == null)
 					pLokalen.add(new Lokaal(naam, capaciteit));
 
