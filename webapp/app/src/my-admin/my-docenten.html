@@ -1,19 +1,94 @@
 <link rel="import" href="../../elements/elements.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+
+<!-- <h1>{{klas.naam}}</h1>
+<template is="dom-repeat" items="[[klas.deStudenten]]">
+<my-student gebruikersnaam="{{item.gebruikersnaam}}">
+</my-student>
+</template> -->
 
 <dom-module id="my-docenten">
-<!-- <link rel="import" type="css" href="../../styles/.css"> -->
+  <link rel="import" type="css" href="../../styles/mainStyle.css">
   <template>
-    <h1>Docenten</h1>
-  </template>
 
-  <script>
+    <iron-ajax
+    id="ajax_docenten"
+    method="POST"
+    url="/docenten/info"
+    handle-as="json"
+    on-response="ajax_docenten_handler">
+  </iron-ajax>
 
-      Polymer({
+  <div class="">
+    <paper-card class="holder" elevation="2">
+      <template is="dom-repeat" items="{{docenten}}">
+        <vaadin-grid items="{{docenten}}">
+           <table>
+             <colgroup>
+               <col name="voornaam" resizable>
+               <col name="tussenvoegsel" resizable>
+               <col name="achternaam" resizable>
+               <col name="ziek" resizable>
+             </colgroup>
+           </table>
+        </vaading-grid>
+      </template>
 
-        is: 'my-docenten',
+    </paper-card>
+  </div>
 
-      })
 
-  </script>
+</template>
+
+<script>
+
+Polymer({
+
+  is: 'my-docenten',
+
+  ajax_docenten_start: function(){
+    console.log("start");
+    this.$.ajax_docenten.contentType="application/json";
+    this.$.ajax_docenten.body={
+    };
+
+    this.$.ajax_docenten.generateRequest();
+
+
+
+  },
+
+  ajax_docenten_handler: function(request){
+
+    this.docenten =
+    request.detail.response;
+    console.log(this.docenten + this.docenten.deStudenten);
+    // console.log(
+    //   "naam: "
+    //   + this.naam);
+  },
+
+  ready: function() {
+    console.log("test");
+    this.ajax_docenten_start();
+
+  }
+
+
+})
+
+
+//   function myFunction(arr) {
+//     var out = "";
+//     var i;
+//     for(i = 0; i<arr.length; i++) {
+//         out += '<a href="' + arr[i].url + '">' + arr[i].display + '</a><br>';
+//     }
+//     document.getElementById(this.docenten).innerHTML = out;
+//
+// })
+
+
+</script>
 
 </dom-module>
