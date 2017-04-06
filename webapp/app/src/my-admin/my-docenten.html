@@ -21,18 +21,16 @@
 
   <div class="">
     <paper-card class="holder" elevation="2">
-      <template is="dom-repeat" items="{{docenten}}">
-        <vaadin-grid items="{{docenten}}">
+        <vaadin-grid items="[[docenten]]" visible-rows="[[docenten.length]]">
            <table>
              <colgroup>
                <col name="voornaam" resizable>
                <col name="tussenvoegsel" resizable>
-               <col name="achternaam" resizable>
+               <col name="achternaam" resizable sortable sort-direction="asc">
                <col name="ziek" resizable>
              </colgroup>
            </table>
         </vaading-grid>
-      </template>
 
     </paper-card>
   </div>
