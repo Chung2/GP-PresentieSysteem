@@ -1,6 +1,13 @@
 <link rel="import" href="../../elements/elements.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 
+<template is="dom-repeat" items="[[klassen]]">
+
+<!-- <h1>{{klas.naam}}</h1>
+<template is="dom-repeat" items="[[klas.deStudenten]]">
+  <my-student gebruikersnaam="{{item.gebruikersnaam}}">
+  </my-student>
+</template> -->
 
 <dom-module id="my-klassen">
 <link rel="import" type="css" href="../../styles/mainStyle.css">
@@ -16,7 +23,10 @@
 
     <div class="">
       <paper-card class="holder" elevation="2">
-
+        <template is="dom-repeat" items="[[klassen]]">
+          <!-- <h1>[[item.naam]]</h1> -->
+          <vaadin-grid items="[[item.deStudenten]]" visible-rows="[[klas.deStudenten.length]]">
+           <table>
           <vaadin-grid items="[[klassen]]">
            <table>
                <colgroup>
@@ -40,6 +50,7 @@
         is: 'my-klassen',
 
         ajax_klassen_start: function(){
+          console.log("start");
           this.$.ajax_klassen.contentType="application/json";
           this.$.ajax_klassen.body={
           };
@@ -51,6 +62,7 @@
         },
 
         ajax_klassen_handler: function(request){
+
           this.klassen =
             request.detail.response;
             console.log(this.klassen + this.klassen.deStudenten);
@@ -60,6 +72,7 @@
         },
 
         ready: function() {
+          console.log("test");
           this.ajax_klassen_start();
 
         }
