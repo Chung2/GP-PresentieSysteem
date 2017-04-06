@@ -4,23 +4,27 @@
 <link rel="import" type="css" href="../../styles/homeStyle.css">
   <template>
 
-    <paper-button class="blue" on-tap="ajax_ziek_melden_onClick">Ziek melden</paper-button>
-    <paper-button class="blue" on-tap="ajax_beter_melden_onClick">Beter melden</paper-button>
+    <paper-button id="btn_ziek_melden" class="red" on-tap="ajax_ziek_melden_onClick" disabled$="{{persoon.ziek}}">Ziek melden</paper-button>
+    <paper-button id="btn_beter_melden" class="green" on-tap="ajax_beter_melden_onClick" disabled$="{{not(persoon.ziek)}}">Beter melden</paper-button>
 
-    <paper-button class="blue" on-tap="ajax_zet_status_onClick">Afwezig melden</paper-button>
+    <div class="afwezig">
+      <paper-button class="blue" on-tap="ajax_zet_status_onClick">Afwezig melden</paper-button>
 
-    <paper-dropdown-menu label="Dagdeel">
-      <paper-listbox class="dropdown-content">
-        <paper-item>Ochtend</paper-item>
-        <paper-item>Middag</paper-item>
-        <paper-item>Hele dag</paper-item>
-      </paper-listbox>
-    </paper-dropdown-menu>
-    <paper-input-date-picker value="[[vandaag]]"></paper-input-date-picker>
-
+      <paper-dropdown-menu id="dd_dagdeel" label="Dagdeel" on-iron-select="_itemSelected">
+        <paper-listbox class="dropdown-content">
+          <paper-item>Ochtend</paper-item>
+          <paper-item>Middag</paper-item>
+          <paper-item>Hele dag</paper-item>
+        </paper-listbox>
+      </paper-dropdown-menu>
+      <paper-input-date-picker label="Kies een datum" value="{{gekozenDatum}}"></paper-input-date-picker>
+    </div>
     <hr>
 
     <template is="dom-repeat" items="[[rooster.alleLessen]]">
+
+      <h1>{{docentAanwezig(item.huidigeDocent, item.beginTijd, item.eindTijd)}}</h1>
+
       <template is="dom-if" if="{{printWeek(item.week)}}">
         <h1>Week {{item.week}}</h1>
       </template>
@@ -80,6 +84,14 @@
       on-response="ajax_zet_status_handler">
     </iron-ajax>
 
+    <iron-ajax
+      id="ajax_haal_persoon"
+      method="POST"
+      url="/persoon/info"
+      handle-as="json"
+      on-response="ajax_persoon_handler">
+    </iron-ajax>
+
 
 
   </template>
@@ -96,6 +108,9 @@
             value: false,
             reflectToAttribute: true
           },
+          persoon: {
+            type: Object
+          },
           klascode: {
             type: String,
             value: "TICT-SIE-V1D"
@@ -103,10 +118,6 @@
           gebruikersnaam: {
             type: String,
             value: "peter.schuler@hu.nl"
-          },
-          vandaag:{
-            type: Date,
-            value: new Date()
           },
           rooster:{
             type: Array,
@@ -130,6 +141,13 @@
           },
           vorigeweek:{
             type: Number
+          },
+          gekozenDatum:{
+            type: Date,
+            value: new Date()
+          },
+          dagDeel:{
+            type: String
           }
         },
 
@@ -185,6 +203,9 @@
 
           return printweek;
         },
+        not: function(bool){
+          return !bool;
+        },
 
         padNummer(nr){
           var str = "" + nr;
@@ -202,7 +223,10 @@
         },
 
         ajax_ziek_melden_handler: function(request) {
-          console.log(request.detail.response);
+          var response = request.detail.response;
+          if("succes" in response){
+            this.ajax_haal_persoon();
+          }
         },
 
         ajax_beter_melden_onClick: function(){
@@ -215,15 +239,21 @@
         },
 
         ajax_beter_melden_handler: function(request) {
-          console.log(request.detail.response);
+          var response = request.detail.response;
+          if("succes" in response){
+            this.ajax_haal_persoon();
+          }
         },
 
         ajax_zet_status_onClick: function(){
+          if(this.dagDeel=="") alert("geen dagdeel gekozen!");
+
           this.$.ajax_zet_status.contentType="application/json";
           this.$.ajax_zet_status.body={
             "gebruikersnaam":this.gebruikersnaam,
-            "dagdeel":"Ochtend",
-            "datum":"25-12-2017"
+            "dagdeel":this.dagDeel,
+            "datum":this.padNummer(this.gekozenDatum.getDay())+"-"+this.padNummer(this.gekozenDatum.getMonth()+1)+"-"+this.gekozenDatum.getFullYear(),
+            "status":"Afwezig"
           };
           this.$.ajax_zet_status.generateRequest();
         },
@@ -232,10 +262,34 @@
           console.log(request.detail.response);
         },
 
+        ajax_haal_persoon: function(){
+          this.$.ajax_haal_persoon.contentType="application/json";
+          this.$.ajax_haal_persoon.body={
+            "gebruikersnaam":this.gebruikersnaam
+          };
+          this.$.ajax_haal_persoon.generateRequest();
+        },
+
+        ajax_persoon_handler: function(request){
+          this.persoon = request.detail.response;
+        },
+
+        _itemSelected : function(e) {
+          var selectedItem = e.target.selectedItem;
+          if (selectedItem) {
+            this.dagDeel = selectedItem.innerText;
+          }
+        },
+
+        docentAanwezig: function(docent, beginDatum, eindDatum){
+          if(docent.ziek) return false;
+          
+        },
+
         ready: function() {
 
-
           var rol = "Docent";
+
           if(rol=="Student"){
             this.ajax_rooster_student_start();
           }
@@ -243,6 +297,8 @@
           if(rol=="Docent"){
             this.ajax_rooster_docent_start();
           }
+
+          this.ajax_haal_persoon();
 
         },
 

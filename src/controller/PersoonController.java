@@ -137,6 +137,8 @@ public class PersoonController implements Handler{
 
           	break;
         }
+			}else{
+				conversation.sendJSONMessage("{\"error\":\"Geen status of gebruikersnaam gevonden\"}");
 			}
     } catch (Exception ex) {
     	ex.printStackTrace();

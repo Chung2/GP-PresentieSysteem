@@ -27,14 +27,23 @@ hr{
   top:7px;
 }
 
-paper-button.blue{
-  background-color: var(--paper-light-blue-500);
-  color: #ffffff;
+.afwezig{
   float: right;
   margin-bottom: 10px;
   margin-right: 0;
 }
 
-paper-button.blue {
+paper-button.blue{
   background-color: var(--paper-light-blue-500);
+  color: #ffffff;
+}
+
+paper-button.red {
+  background-color: var(--paper-red-500);
+  color: #ffffff;
+}
+
+paper-button.green {
+  background-color: var(--paper-light-green-500);
+  color: #ffffff;
 }
