@@ -3,6 +3,8 @@
 <dom-module id="my-home">
 <link rel="import" type="css" href="../../styles/homeStyle.css">
   <template>
+    <a id="redirect_login" href="#/login"></a>
+    <a id="redirect_admin" href="#/admin"></a>
 
     <div class="afwezig-keuze">
 
@@ -32,10 +34,11 @@
       </template>
 
       <paper-card class$="{{docentAanwezig(item.huidigeDocent, item.beginTijd, item.eindTijd)}} holder" elevation="2">
+        {{item.huidigeVak.code}}<br>
         {{item.klasCode}} | {{item.huidigeDocent.gebruikersnaam}}<br>
         {{padNummer(item.beginTijd.time.hour)}}:{{padNummer(item.beginTijd.time.minute)}}-{{padNummer(item.eindTijd.time.hour)}}:{{padNummer(item.eindTijd.time.minute)}} | {{item.huidigeLokaal.naam}}<br>
         {{padNummer(item.beginTijd.date.day)}}-{{padNummer(item.beginTijd.date.month)}}-{{item.beginTijd.date.year}}<br>
-        <a name="klasInfo" href="#/home/klasInfo/{{item.klasCode}}">
+        <a name="klasInfo" href="#/home/klasInfo/{{item.beginTijd.date.year}}-{{padNummer(item.beginTijd.date.month)}}-{{padNummer(item.beginTijd.date.day)}}/{{padNummer(item.beginTijd.time.hour)}}:{{padNummer(item.beginTijd.time.minute)}}/{{padNummer(item.eindTijd.time.hour)}}:{{padNummer(item.eindTijd.time.minute)}}/{{item.klasCode}}/{{item.huidigeVak.code}}">
           <paper-fab class="button" mini icon="reply"></paper-fab>
         </a>
       </paper-card>
@@ -109,9 +112,8 @@
           persoon: {
             type: Object
           },
-          gebruikersnaam: {
-            type: String,
-            value: "peter.schuler@hu.nl"
+          gebruiker:{
+            type: Object
           },
           rooster:{
             type: Array,
@@ -314,9 +316,24 @@
         },
 
         update: function() {
-
+          //Ingelogde gebruiker ophalen
           this.gebruiker = JSON.parse(localStorage.getItem("gebruiker"));
 
+          //Als gebruiker niet is ingelogd terug sturen naar login scherm
+          if(this.gebruiker == null) {
+            this.$.redirect_login.click();
+
+            return;
+          }
+
+          //Admin naar admin scherm toe sturen
+          if(this.gebruiker.rol == 'admin'){
+            this.$.redirect_admin.click();
+
+            return;
+          }
+
+          //Meer informatie over ingelogde gebruiker ophalen
           this.ajax_haal_persoon();
 
         },

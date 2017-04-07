@@ -54,10 +54,12 @@ public class KlasController implements Handler{
 			return;
 		}
 		
+		System.out.println(conversation.getRequestBodyAsString());
+		
 	  JsonObject request = parser.parse(conversation.getRequestBodyAsString()).getAsJsonObject();
 		String jsonOut = "";
 
-		if(informatieSysteem.getKlas(request.get("klascode").getAsString()) != null){
+		if(request.get("klascode") != null && informatieSysteem.getKlas(request.get("klascode").getAsString()) != null){
 			jsonOut = gson.toJson(informatieSysteem.getKlas(request.get("klascode").getAsString())); 
 		}else{
 			jsonOut = "{\"error\":\"Klas niet gevonden\"}";

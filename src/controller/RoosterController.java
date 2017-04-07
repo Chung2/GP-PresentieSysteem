@@ -124,6 +124,8 @@ public class RoosterController implements Handler {
 		
 		if (datum != null || beginTijd != null || eindTijd != null || vakCode != null || klasCode != null) {
 			jsonOut = gson.toJson(informatieSysteem.getLes(datum, beginTijd, eindTijd, klasCode, vakCode));
+		}else{
+			jsonOut = "{\"error\":\"Data niet goed mee gegeven\"}";
 		}
 		conversation.sendJSONMessage(jsonOut);
 	}

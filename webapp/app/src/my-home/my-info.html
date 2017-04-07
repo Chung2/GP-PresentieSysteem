@@ -3,26 +3,52 @@
 <dom-module id="my-info">
 <link rel="import" type="css" href="../../styles/infoStyle.css">
   <template>
+    <a id="redirect_login" href="#/login"></a>
+    <a id="redirect_home" href="#/home"></a>
+    <a id="redirect_admin" href="#/admin"></a>
+
     <div class="container">
       <h2>[[klas.klasCode]]</h2>
 
       <paper-card class="holder" elevation="2">
 
-        <vaadin-grid items="[[klas.deStudenten]]" visible-rows="[[klas.deStudenten.length]]">
-         <table>
-             <colgroup>
-               <col name="voornaam" resizable>
-               <col name="tussenvoegsel" resizable>
-               <col name="achternaam" resizable>
-               <col name="gebruikersnaam" resizable>
-               <col name="studentNummer" resizable sortable sortable sort-direction="asc">
-               <col>test</col>
-             </colgroup>
-         </table>
-        </vaadin-grid>
+        {{les.huidigeVak.code}}<br>
+        {{les.klasCode}} | {{les.huidigeDocent.gebruikersnaam}}<br>
+        {{padNummer(les.beginTijd.time.hour)}}:{{padNummer(les.beginTijd.time.minute)}}-{{padNummer(les.eindTijd.time.hour)}}:{{padNummer(les.eindTijd.time.minute)}} | {{les.huidigeLokaal.naam}}<br>
+        {{padNummer(les.beginTijd.date.day)}}-{{padNummer(les.beginTijd.date.month)}}-{{les.beginTijd.date.year}}<br>
+
+        <table>
+          <tr>
+            <th>Voornaam</th>
+            <th>Tussenvoegsel</th>
+            <th>Achternaam</th>
+            <th>Gebruikersnaam</th>
+            <th>StudentNummer</th>
+            <th>Aanwezig?</th>
+          </tr>
+          <template is="dom-repeat" items="{{klas.deStudenten}}">
+            <tr class$="{{studentAanwezig(item)}}">
+              <td>{{item.voornaam}}</td>
+              <td>{{item.tussenvoegsel}}</td>
+              <td>{{item.achternaam}}</td>
+              <td>{{item.gebruikersnaam}}</td>
+              <td>{{item.studentNummer}}</td>
+              <td><paper-button class="red" on-tap="ajax_zet_status_onClick">Afwezig melden</paper-button></td>
+              <td><paper-button class="green" on-tap="ajax_beter_melden_onClick">Beter melden</paper-button></td>
+            </tr>
+          </template>
+        </table>
 
       </paper-card>
     </div>
+
+    <iron-ajax
+      id="ajax_les"
+      method="POST"
+      url="/rooster/les"
+      handle-as="json"
+      on-response="ajax_les_handler">
+    </iron-ajax>
 
     <iron-ajax
       id="ajax_klas"
@@ -30,6 +56,22 @@
       url="/klas/info"
       handle-as="json"
       on-response="ajax_klas_handler">
+    </iron-ajax>
+
+    <iron-ajax
+      id="ajax_zet_status"
+      method="POST"
+      url="/persoon/zetstatus"
+      handle-as="json"
+      on-response="ajax_zet_status_handler">
+    </iron-ajax>
+
+    <iron-ajax
+      id="ajax_beter_melden"
+      method="POST"
+      url="/persoon/zetstatus"
+      handle-as="json"
+      on-response="ajax_beter_melden_handler">
     </iron-ajax>
   </template>
 
@@ -45,18 +87,38 @@
             value: false,
             reflectToAttribute: true
           },
+          gebruiker: {
+            type: Object
+          },
           klascode: {
             type: String
           },
           klas: {
             type: Object
+          },
+          les: {
+            type: Object
           }
+        },
+
+        padNummer(nr){
+          var str = "" + nr;
+          var pad = "00";
+          return pad.substring(0, pad.length - str.length) + str;
+        },
+
+        getDagdeel(){
+          if((this.les.beginTijd.time.hour>=8 && this.les.beginTijd.time.hour<12) || (this.les.eindTijd.time.hour>=8 && this.les.eindTijd.time.hour<12)) return "Ochtend";
+
+          if((this.les.beginTijd.time.hour>=12 && this.les.beginTijd.time.hour<19) || (this.les.eindTijd.time.hour>=12 && this.les.eindTijd.time.hour<19)) return "Avond";
+
+          return "Hele dag";
         },
 
         ajax_klas_start: function(){
           this.$.ajax_klas.contentType="application/json";
           this.$.ajax_klas.body={
-            "klascode":this.klascode
+            "klascode":this.les.klasCode
           };
           this.$.ajax_klas.generateRequest();
         },
@@ -65,9 +127,116 @@
           this.klas = request.detail.response;
         },
 
-        ready: function(){
-          this.klascode = window.location.href.split("/").pop();
+        ajax_les_start: function(){
+          //Data uit URL lezen
+          var url = window.location.href.split("/").slice(6, 12);
+
+          this.$.ajax_les.contentType="application/json";
+          this.$.ajax_les.body={
+            "datum":url[0],
+            "beginTijd":url[1],
+            "eindTijd":url[2],
+            "klasCode":url[3],
+            "vakCode":url[4]
+          };
+          this.$.ajax_les.generateRequest();
+        },
+
+        ajax_les_handler: function(request){
+          this.les = request.detail.response;
+
           this.ajax_klas_start();
+        },
+
+        //Functie om te kijken of een student aanwezig is
+        studentAanwezig: function(student){
+          if(student.ziek) return "afwezig";
+
+          for (var i = 0; i < student.statussen.length; i++) {
+              if((student.statussen[i].datum.day == this.les.beginTijd.date.day &&
+                student.statussen[i].datum.month == this.les.beginTijd.date.month &&
+                student.statussen[i].datum.year == this.les.beginTijd.date.year) ||
+                (student.statussen[i].datum.day == this.les.eindTijd.date.day &&
+                student.statussen[i].datum.month == this.les.eindTijd.date.month &&
+                student.statussen[i].datum.year == this.les.eindTijd.date.year)){
+
+                  if(student.statussen[i].dagdeel=="Hele dag") return "afwezig";
+
+                  if(student.statussen[i].dagdeel=="Ochtend"){
+                    if((this.les.beginTijd.time.hour>=8 && this.les.beginTijd.time.hour<12) || (this.les.eindTijd.time.hour>=8 && this.les.eindTijd.time.hour<12)) return "afwezig";
+                  }
+
+                  if(student.statussen[i].dagdeel=="Middag"){
+                    if((this.les.beginTijd.time.hour>=12 && this.les.beginTijd.time.hour<19) || (this.les.eindTijd.time.hour>=12 && this.les.eindTijd.time.hour<19)) return "afwezig";
+                  }
+              }
+          }
+
+          return "";
+        },
+
+        ajax_zet_status_onClick: function(e){
+          if(this.dagDeel=="") alert("geen dagdeel gekozen!");
+
+          this.$.ajax_zet_status.contentType="application/json";
+          this.$.ajax_zet_status.body={
+            "gebruikersnaam":e.model.item.gebruikersnaam,
+            "dagdeel":this.getDagdeel(),
+            "datum":this.padNummer(this.les.beginTijd.date.day)+"-"+this.padNummer(this.les.beginTijd.date.month)+"-"+this.les.beginTijd.date.year,
+            "status":"Afwezig"
+          };
+          this.$.ajax_zet_status.generateRequest();
+        },
+
+        ajax_zet_status_handler: function(request) {
+          var response = request.detail.response;
+          if("succes" in response){
+            this.update();
+          }
+        },
+
+        ajax_beter_melden_onClick: function(e){
+          this.$.ajax_beter_melden.contentType="application/json";
+          this.$.ajax_beter_melden.body={
+            "gebruikersnaam":e.model.item.gebruikersnaam,
+            "status":"Beter"
+          };
+          this.$.ajax_beter_melden.generateRequest();
+        },
+
+        ajax_beter_melden_handler: function(request) {
+          var response = request.detail.response;
+          if("succes" in response){
+            this.update();
+          }
+        },
+
+        update: function(){
+          //Ingelogde gebruiker ophalen
+          this.gebruiker = JSON.parse(localStorage.getItem("gebruiker"));
+
+          //Als gebruiker niet is ingelogd terug sturen naar login scherm
+          if(this.gebruiker == null) {
+            this.$.redirect_login.click();
+
+            return;
+          }
+
+          //Student terug naar home sturen
+          if(this.gebruiker.rol == 'student'){
+            this.$.redirect_home.click();
+
+            return;
+          }
+
+          //Admin naar admin scherm toe sturen
+          if(this.gebruiker.rol == 'admin'){
+            this.$.redirect_admin.click();
+
+            return;
+          }
+
+          this.ajax_les_start();
         },
 
       })

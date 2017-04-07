@@ -41,18 +41,19 @@
           <div class="content">
             <section id="main">
               <iron-pages selected='[[_routeData.page]]' attr-for-selected='name'>
-                <my-login id="my_login" name="login" gebruiker={{gebruiker}}></my-login>
-                <my-home id="my_home" name="home" active="{{_subRouteActive}}" gebruiker={{gebruiker}}></my-home>
-                <my-admin id="my_admin" name="admin" active="{{_subRouteActive}}" gebruiker={{gebruiker}}></my-admin>
+                <my-login id="my_login" name="login"></my-login>
+                <my-home id="my_home" name="home" active="{{_subRouteActive}}"></my-home>
+                <my-admin id="my_admin" name="admin" active="{{_subRouteActive}}"></my-admin>
               </iron-pages>
+            </section>
 
-            <template is="dom-if" if="[[_subRouteActive]]" restamp>
+            <template is="dom-if" if="[[_subRouteActive]]" on-dom-change="_domChanged" restamp>
               <section id="sub">
-                <iron-pages attr-for-selected="name" selected="[[_subRouteData.subPage]]">
-                  <my-info name="klasInfo"></my-info>
-                  <my-klassen name="klassen"></my-klassen>
-                  <my-docenten name="docenten"></my-docenten>
-                  <my-roosters name="roosters"></my-roosters>
+                <iron-pages id="test" attr-for-selected="name" selected="[[_subRouteData.subPage]]">
+                  <my-info id="my_info" name="klasInfo"></my-info>
+                  <my-klassen id="my_klassen" name="klassen"></my-klassen>
+                  <my-docenten id="my_docenten" name="docenten"></my-docenten>
+                  <my-roosters id="my_roosters" name="roosters"></my-roosters>
                 </iron-pages>
               </section>
             </template>
@@ -84,9 +85,21 @@
       },
 
       routeChanged: function(){
-        console.log(this._routeData.page);
+        //Array maken van path
+        var route = this._route.path.split("/");
 
-        switch(this._routeData.page) {
+        //Lege path string aanmaken
+        var path = "";
+
+        //Array kleiner maken
+        route.shift();
+        if(route.length == 3) route.pop();
+
+        for(var i = 0;i<route.length;i++){
+          path += route[i];
+        }
+
+        switch(path) {
             case "Login":
                 //this.$.my_login.update();
                 break;
@@ -96,6 +109,39 @@
             case "admin":
                 this.$.my_admin.update();
                 break;
+        }
+      },
+
+      _domChanged: function(e){
+        if (e.returnValue){
+          //Array maken van path
+          var route = this._route.path.split("/");
+
+          //Lege path string aanmaken
+          var path = "";
+
+          //Array kleiner maken
+          route.shift();
+          if(route.length > 1) route = route.slice(0, 2);
+
+          for(var i = 0;i<route.length;i++){
+            path += route[i];
+          }
+
+          switch(path) {
+              case "homeklasInfo":
+                  this.$$("#my_info").update();
+                  break;
+              case "adminklassen":
+                  this.$$("my_klassen").update();
+                  break;
+              case "admindocenten":
+                  this.$$("my_docenten").update();
+                  break;
+              case "adminroosters":
+                  this.$$("my_roosters").update();
+                  break;
+          }
         }
       },
 

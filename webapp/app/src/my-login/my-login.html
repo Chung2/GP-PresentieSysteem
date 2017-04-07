@@ -3,7 +3,8 @@
 <dom-module id="my-login">
 <link rel="import" type="css" href="../../styles/loginStyle.css">
   <template>
-    <a id="redirect" href="#/home"></a>
+    <a id="redirect_home" href="#/home"></a>
+    <a id="redirect_admin" href="#/admin"></a>
 
     <div class="container">
       <paper-card elevation="2">
@@ -40,7 +41,7 @@
           },
           username:{
             type: String,
-            value: "stefan.deraadt@student.hu.nl"
+            value: "peter.schuler@hu.nl"
           },
           _password:{
             type: String,
@@ -64,7 +65,11 @@
 
             localStorage.setItem("gebruiker", '{"gebruikersnaam":"'+response.gebruikersnaam+'","rol":"'+response.rol+'"}');
 
-            this.$.redirect.click();
+            if(response.rol != 'admin'){
+              this.$.redirect_home.click();
+            }else{
+              this.$.redirect_admin.click();
+            }
           }
         }
 

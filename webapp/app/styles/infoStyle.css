@@ -18,6 +18,20 @@
   padding-right: 20px;
 }
 
+.afwezig{
+  background-color: red;
+}
+
+paper-button.red {
+  background-color: var(--paper-red-500);
+  color: #ffffff;
+}
+
+paper-button.green {
+  background-color: var(--paper-light-green-500);
+  color: #ffffff;
+}
+
 /*.info{
   width: 100%;
   display: flex;
