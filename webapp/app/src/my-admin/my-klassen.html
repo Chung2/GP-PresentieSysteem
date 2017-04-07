@@ -17,12 +17,16 @@
         url="/klassen/info"
         handle-as="json"
         on-response="ajax_klassen_handler">
-      </iron-ajax>
+    </iron-ajax>
 
-    <div class="">
+    <div class="test">
+
+      <paper-spinner id="spinner"></paper-spinner>
+    </div>
+
+
+    <div>
       <paper-card class="holder" elevation="2">
-        <paper-spinner class="blue" active></paper-spinner>
-
         <template is="dom-repeat" items="{{klassen}}">
           <h1>{{item.naam}}</h1>
           Klascode: {{item.klasCode}}<br>
@@ -56,6 +60,7 @@
         is: 'my-klassen',
 
         ajax_klassen_start: function(){
+          this.$.spinner.active = true;
           console.log("start");
           this.$.ajax_klassen.contentType="application/json";
           this.$.ajax_klassen.body={
@@ -69,6 +74,7 @@
           this.klassen =
             request.detail.response;
             console.log(this.klassen + this.klassen.deStudenten);
+
         },
 
         ready: function() {
