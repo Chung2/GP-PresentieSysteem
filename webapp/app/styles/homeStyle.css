@@ -21,6 +21,11 @@ hr{
   width: 100%;
 }
 
+a[hidden]{
+  display: none;
+  visibility: hidden;
+}
+
 .button{
   position: absolute;
   right: 10px;
@@ -28,8 +33,7 @@ hr{
 }
 
 .afwezig-keuze{
-  display: -webkit-inline-box;
-  margin-bottom: 10px;
+  display: flex;
   margin-right: 0;
 }
 
@@ -58,4 +62,30 @@ paper-button.green {
 
 paper-button.red[disabled], paper-button.green[disabled]{
   opacity: 0.3;
+}
+
+.keuze-drop{
+  margin-top: -10px;
+  margin-left: 20px;
+  display: flex;
+}
+
+.afwezig-keuze[tablet-layout]{
+  display: block;
+}
+
+.afwezig-keuze[tablet-layout] paper-input-date-picker, paper-dropdown-menu{
+  margin: 0;
+  margin-bottom: 10px;
+}
+
+.afwezig-keuze[phone-layout] paper-button{
+  width: 100%;
+  margin: 0;
+  margin-bottom: 10px;
+}
+
+.afwezig-keuze[tablet-layout] .keuze-drop{
+  margin-top: 10px;
+  margin-left: 0;
 }

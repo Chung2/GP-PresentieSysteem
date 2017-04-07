@@ -3,22 +3,31 @@
 <dom-module id="my-home">
 <link rel="import" type="css" href="../../styles/homeStyle.css">
   <template>
+    
+    <iron-media-query query="(max-width: 980px)" query-matches="{{tablet}}"></iron-media-query>
+    <iron-media-query query="(max-width: 510px)" query-matches="{{phone}}"></iron-media-query>
 
-    <div class="afwezig-keuze">
+    <div class="afwezig-keuze" tablet-layout$="{{tablet}}" phone-layout$="{{phone}}">
+      <div class="keuze-button">
+        <paper-button id="btn_ziek_melden" class="red" on-tap="ajax_ziek_melden_onClick" disabled$="{{persoon.ziek}}">Ziek melden</paper-button>
+        <paper-button id="btn_beter_melden" class="green" on-tap="ajax_beter_melden_onClick" disabled$="{{not(persoon.ziek)}}">Beter melden</paper-button>
+        <paper-button class="blue" on-tap="ajax_zet_status_onClick">Afwezig melden</paper-button>
+      </div>
 
-      <paper-button id="btn_ziek_melden" class="red" on-tap="ajax_ziek_melden_onClick" disabled$="{{persoon.ziek}}">Ziek melden</paper-button>
-      <paper-button id="btn_beter_melden" class="green" on-tap="ajax_beter_melden_onClick" disabled$="{{not(persoon.ziek)}}">Beter melden</paper-button>
-      <paper-button class="blue" on-tap="ajax_zet_status_onClick">Afwezig melden</paper-button>
+      <div class="keuze-drop">
+        <paper-dropdown-menu id="dd_dagdeel" label="Dagdeel" on-iron-select="_itemSelected">
+          <paper-listbox class="dropdown-content">
+            <paper-item>Ochtend</paper-item>
+            <paper-item>Middag</paper-item>
+            <paper-item>Hele dag</paper-item>
+          </paper-listbox>
+        </paper-dropdown-menu>
+        <paper-input-date-picker label="Kies een datum" value="{{gekozenDatum}}"></paper-input-date-picker>
+        <!-- <paper-date-picker-item icon="icons:today" date="{{gekozenDatum}}" date-format="ll"></paper-date-picker-item> -->
+      </div>
 
-      <paper-dropdown-menu id="dd_dagdeel" label="Dagdeel" on-iron-select="_itemSelected">
-        <paper-listbox class="dropdown-content">
-          <paper-item>Ochtend</paper-item>
-          <paper-item>Middag</paper-item>
-          <paper-item>Hele dag</paper-item>
-        </paper-listbox>
-      </paper-dropdown-menu>
-      <paper-input-date-picker label="Kies een datum" value="{{gekozenDatum}}"></paper-input-date-picker>
     </div>
+
     <hr>
 
     <template is="dom-repeat" items="{{rooster.alleLessen}}">
@@ -35,12 +44,11 @@
         {{item.klasCode}} | {{item.huidigeDocent.gebruikersnaam}}<br>
         {{padNummer(item.beginTijd.time.hour)}}:{{padNummer(item.beginTijd.time.minute)}}-{{padNummer(item.eindTijd.time.hour)}}:{{padNummer(item.eindTijd.time.minute)}} | {{item.huidigeLokaal.naam}}<br>
         {{padNummer(item.beginTijd.date.day)}}-{{padNummer(item.beginTijd.date.month)}}-{{item.beginTijd.date.year}}<br>
-        <a name="klasInfo" href="#/home/klasInfo/{{item.klasCode}}">
-          <paper-fab class="button" mini icon="reply"></paper-fab>
+        <a name="klasInfo" href="#/home/klasInfo/{{item.klasCode}}"  hidden$="[[check_rol(_rol, 'student')]]">
+          <paper-fab class="button" mini icon="reply" disabled$="[[check_rol(_rol, 'student')]]"></paper-fab>
         </a>
       </paper-card>
     </template>
-
 
     <iron-ajax
       id="ajax_rooster_student"
@@ -112,6 +120,9 @@
           gebruikersnaam: {
             type: String,
             value: "peter.schuler@hu.nl"
+          },
+          _rol: {
+            type: String,
           },
           rooster:{
             type: Array,
@@ -314,12 +325,16 @@
         },
 
         update: function() {
-
           this.gebruiker = JSON.parse(localStorage.getItem("gebruiker"));
-
           this.ajax_haal_persoon();
-
+          this._rol = this.gebruiker.rol;
+          console.log(this._rol);
         },
+
+        check_rol: function(str1, str2) {
+	        // console.log("check_rol: " + str1 + " met: " + str2);
+	        return (str1==str2);
+	      },
 
       })
 
