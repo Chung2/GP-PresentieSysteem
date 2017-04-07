@@ -45,15 +45,11 @@ Polymer({
   is: 'my-docenten',
 
   ajax_docenten_start: function(){
-    console.log("start");
     this.$.ajax_docenten.contentType="application/json";
     this.$.ajax_docenten.body={
     };
 
     this.$.ajax_docenten.generateRequest();
-
-
-
   },
 
   ajax_docenten_handler: function(request){
@@ -67,9 +63,7 @@ Polymer({
   },
 
   ready: function() {
-    console.log("test");
     this.ajax_docenten_start();
-
   }
 
 
