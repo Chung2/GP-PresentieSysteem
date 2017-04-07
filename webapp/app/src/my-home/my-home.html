@@ -109,14 +109,6 @@
           persoon: {
             type: Object
           },
-          klascode: {
-            type: String,
-            value: "TICT-SIE-V1D"
-          },
-          gebruiker: {
-            type: Object,
-            observer: 'gebruikerChanged'
-          },
           gebruikersnaam: {
             type: String,
             value: "peter.schuler@hu.nl"
@@ -157,7 +149,7 @@
 
           this.$.ajax_rooster_student.contentType="application/json";
           this.$.ajax_rooster_student.body={
-            "klascode":this.klascode
+            "klascode":"TICT-SIE-"+this.persoon.groepId
           };
           this.$.ajax_rooster_student.generateRequest();
         },
@@ -170,7 +162,7 @@
 
           this.$.ajax_rooster_docent.contentType="application/json";
           this.$.ajax_rooster_docent.body={
-            "gebruikersnaam":this.gebruikersnaam
+            "gebruikersnaam":this.gebruiker.gebruikersnaam
           };
           this.$.ajax_rooster_docent.generateRequest();
         },
@@ -218,7 +210,7 @@
         ajax_ziek_melden_onClick: function(){
           this.$.ajax_ziek_melden.contentType="application/json";
           this.$.ajax_ziek_melden.body={
-            "gebruikersnaam":this.gebruikersnaam,
+            "gebruikersnaam":this.gebruiker.gebruikersnaam,
             "status":"Ziek"
           };
           this.$.ajax_ziek_melden.generateRequest();
@@ -227,14 +219,14 @@
         ajax_ziek_melden_handler: function(request) {
           var response = request.detail.response;
           if("succes" in response){
-            this.ready();
+            this.update();
           }
         },
 
         ajax_beter_melden_onClick: function(){
           this.$.ajax_beter_melden.contentType="application/json";
           this.$.ajax_beter_melden.body={
-            "gebruikersnaam":this.gebruikersnaam,
+            "gebruikersnaam":this.gebruiker.gebruikersnaam,
             "status":"Beter"
           };
           this.$.ajax_beter_melden.generateRequest();
@@ -243,7 +235,7 @@
         ajax_beter_melden_handler: function(request) {
           var response = request.detail.response;
           if("succes" in response){
-            this.ready();
+            this.update();
           }
         },
 
@@ -252,7 +244,7 @@
 
           this.$.ajax_zet_status.contentType="application/json";
           this.$.ajax_zet_status.body={
-            "gebruikersnaam":this.gebruikersnaam,
+            "gebruikersnaam":this.gebruiker.gebruikersnaam,
             "dagdeel":this.dagDeel,
             "datum":this.padNummer(this.gekozenDatum.getDate())+"-"+this.padNummer(this.gekozenDatum.getMonth()+1)+"-"+this.gekozenDatum.getFullYear(),
             "status":"Afwezig"
@@ -263,20 +255,28 @@
         ajax_zet_status_handler: function(request) {
           var response = request.detail.response;
           if("succes" in response){
-            this.ready();
+            this.update();
           }
         },
 
         ajax_haal_persoon: function(){
           this.$.ajax_haal_persoon.contentType="application/json";
           this.$.ajax_haal_persoon.body={
-            "gebruikersnaam":this.gebruikersnaam
+            "gebruikersnaam":this.gebruiker.gebruikersnaam
           };
           this.$.ajax_haal_persoon.generateRequest();
         },
 
         ajax_persoon_handler: function(request){
           this.persoon = request.detail.response;
+
+          if(this.gebruiker.rol=="student"){
+            this.ajax_rooster_student_start();
+          }
+
+          if(this.gebruiker.rol=="docent"){
+            this.ajax_rooster_docent_start();
+          }
         },
 
         _itemSelected : function(e) {
@@ -313,23 +313,9 @@
           return "";
         },
 
-        gebruikerChanged: function(){
-          alert(this.gebruiker);
-        },
+        update: function() {
 
-        ready: function() {
-
-          //this.gebruiker = localStorage.getItem("gebruiker");
-
-          var rol = "Docent";
-
-          if(rol=="Student"){
-            this.ajax_rooster_student_start();
-          }
-
-          if(rol=="Docent"){
-            this.ajax_rooster_docent_start();
-          }
+          this.gebruiker = JSON.parse(localStorage.getItem("gebruiker"));
 
           this.ajax_haal_persoon();
 

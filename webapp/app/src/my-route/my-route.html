@@ -58,8 +58,9 @@
           <div class="content">
             <section id="main">
               <iron-pages selected='[[_routeData.page]]' attr-for-selected='name'>
-                <my-home name="home" active="{{_subRouteActive}}" gebruiker={{gebruiker}}></my-home>
-                <my-admin name="admin" active="{{_subRouteActive}}" gebruiker={{gebruiker}}></my-admin>
+                <my-login id="my_login" name="login" gebruiker={{gebruiker}}></my-login>
+                <my-home id="my_home" name="home" active="{{_subRouteActive}}" gebruiker={{gebruiker}}></my-home>
+                <my-admin id="my_admin" name="admin" active="{{_subRouteActive}}" gebruiker={{gebruiker}}></my-admin>
               </iron-pages>
 
             <template is="dom-if" if="[[_subRouteActive]]" restamp>
@@ -88,8 +89,13 @@
       is: 'my-route',
 
       properties: {
-        _route: Object,
-        _routeData: Object,
+        _route: {
+          type:  Object,
+        },
+        _routeData:{
+          type: Object,
+          observer: "routeChanged"
+        },
         _routeTail: Object,
         _active: Boolean,
         gebruiker: {
@@ -97,9 +103,23 @@
         }
       },
 
+      routeChanged: function(){
+        switch(this._routeData.page) {
+            case "Login":
+                //this.$.my_login.update();
+                break;
+            case "home":
+                this.$.my_home.update();
+                break;
+            case "admin":
+                this.$.my_admin.update();
+                break;
+        }
+      },
+
       attached: function() {
         if (!this._route.path) {
-          this.set('_route.path', '/home');
+          this.set('_route.path', '/login');
         }
       },
 
