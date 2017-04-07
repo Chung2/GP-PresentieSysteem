@@ -5,7 +5,7 @@
   <link rel="import" type="css" href="../../styles/mainStyle.css">
   <template>
 
-    <iron-ajax
+  <iron-ajax
     id="ajax_docenten"
     method="POST"
     url="/docenten/info"
@@ -13,7 +13,39 @@
     on-response="ajax_docenten_handler">
   </iron-ajax>
 
-  <div class="">
+  <paper-card class="holder" elevation="2">
+    <brainy-table items="[[docenten]]" page-size="6" details-enabled>
+      <brainy-table-column name="voornaam" filter-by="docenten.voornaam">
+        <template>[[item.docenten.voornaam]]</template>
+      </brainy-table-column>
+      <!-- <brainy-table-column name="tussenvoegsel" filter-by="docenten.tussenvoegsel">
+        <template>[[item.docenten.tussenvoegsel]]</template>
+      </brainy-table-column> -->
+      <!-- <brainy-table-column name="achternaam" filter-by="docenten.achternaam">
+        <template>[[item.docenten.achternaam]]</template>
+      </brainy-table-column> -->
+      <brainy-table-column width="30px" align-right flex="0">
+        <template>
+          <template is="dom-if" if="[[!expanded]]">
+            <iron-icon icon="icons:expand-more"></iron-icon>
+          </template>
+          <template is="dom-if" if="[[expanded]]">
+            <iron-icon icon="icons:expand-less"></iron-icon>
+          </template>
+        </template>
+      </brainy-table-column>
+       <template is="row-detail">
+         <div>
+           [[item.docenten.ziek]]
+         </div>
+       </template>
+       <div no-results>No records found</div>
+    </brainy-table>
+  </paper-card>
+
+  <!-- vaadin grid wordt vervangen door brainy grid -->
+  <!-- <div class="">
+
     <paper-card class="holder" elevation="2">
         <vaadin-grid items="[[docenten]]" visible-rows="[[docenten.length]]">
            <table>
@@ -26,8 +58,7 @@
            </table>
         </vaading-grid>
     </paper-card>
-  </div>
-
+  </div> -->
 
 </template>
 
