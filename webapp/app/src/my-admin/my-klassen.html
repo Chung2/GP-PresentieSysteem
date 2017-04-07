@@ -34,8 +34,6 @@
                  <col name="achternaam" resizable sortable sort-direction="asc">
                  <col name="studentNummer" resizable>
                  <col name="ziek" resizable>
-                 <!-- <col name="aantLeerling" resizable>
-                 <col name="richting" resizable flex sortable sortable sort-direction="asc"> -->
                </colgroup>
              </table>
           </vaading-grid>
@@ -54,7 +52,6 @@
         is: 'my-klassen',
 
         ajax_klassen_start: function(){
-          console.log("start");
           this.$.ajax_klassen.contentType="application/json";
           this.$.ajax_klassen.body={
           };
@@ -71,7 +68,6 @@
         },
 
         ready: function() {
-          console.log("test");
           this.ajax_klassen_start();
         }
       })
