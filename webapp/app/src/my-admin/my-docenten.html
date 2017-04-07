@@ -1,25 +1,55 @@
 <link rel="import" href="../../elements/elements.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 
-<!-- <h1>{{klas.naam}}</h1>
-<template is="dom-repeat" items="[[klas.deStudenten]]">
-<my-student gebruikersnaam="{{item.gebruikersnaam}}">
-</my-student>
-</template> -->
-
 <dom-module id="my-docenten">
   <link rel="import" type="css" href="../../styles/mainStyle.css">
   <template>
 
-    <iron-ajax
+  <iron-ajax
     id="ajax_docenten"
     method="POST"
     url="/docenten/info"
     handle-as="json"
     on-response="ajax_docenten_handler">
+
+    <!-- brainy element -->
+    <brainy-table items="[[docenten]]" page-size="5" details-enabled>
+      <brainy-table-column name="voornaam" filter-by="docenten.voornaam" sort-by="docenten.voornaam">
+        <template>[[item.docenten.voornaam]]</template>
+      </brainy-table-column>
+      <brainy-table-column name="tussenvoegsel" filter-by="docenten.tussenvoegsel" sort-by="docenten.tussenvoegsel">
+        <template>[[item.docenten.tussenvoegsel]]</template>
+      </brainy-table-column>
+      <brainy-table-column name="achternaam" filter-by="docenten.achternaam" sort-by="docenten.tussenvoegsel">
+        <template>[[item.docenten.achternaam]]</template>
+      </brainy-table-column>
+      <brainy-table-column name="achternaam" filter-by="docenten.achternaam" sort-by="docenten.tussenvoegsel">
+        <template>[[item.docenten.status]]</template>
+      </brainy-table-column>
+      <!-- <template is="row-detail">
+      <div class="afwezig-keuze">
+
+        <paper-button id="btn_ziek_melden" class="red" on-tap="ajax_ziek_melden_onClick" disabled$="{{persoon.ziek}}">Ziek melden</paper-button>
+        <paper-button id="btn_beter_melden" class="green" on-tap="ajax_beter_melden_onClick" disabled$="{{not(persoon.ziek)}}">Beter melden</paper-button>
+        <paper-button class="blue" on-tap="ajax_zet_status_onClick">Afwezig melden</paper-button>
+
+        <paper-dropdown-menu id="dd_dagdeel" label="Dagdeel" on-iron-select="_itemSelected">
+          <paper-listbox class="dropdown-content">
+            <paper-item>Ochtend</paper-item>
+            <paper-item>Middag</paper-item>
+            <paper-item>Hele dag</paper-item>
+          </paper-listbox>
+        </paper-dropdown-menu>
+        <paper-input-date-picker label="Kies een datum" value="{{gekozenDatum}}"></paper-input-date-picker>
+      </div>
+    </brainy-table>
+  </template> -->
+
   </iron-ajax>
 
-  <div class="">
+  <!-- vaadin grid wordt vervangen door brainy grid -->
+  <!-- <div class="">
+
     <paper-card class="holder" elevation="2">
         <vaadin-grid items="[[docenten]]" visible-rows="[[docenten.length]]">
            <table>
@@ -33,8 +63,7 @@
         </vaading-grid>
 
     </paper-card>
-  </div>
-
+  </div> -->
 
 </template>
 
@@ -57,9 +86,6 @@ Polymer({
     this.docenten =
     request.detail.response;
     console.log(this.docenten + this.docenten.deStudenten);
-    // console.log(
-    //   "naam: "
-    //   + this.naam);
   },
 
   ready: function() {
@@ -68,18 +94,6 @@ Polymer({
 
 
 })
-
-
-//   function myFunction(arr) {
-//     var out = "";
-//     var i;
-//     for(i = 0; i<arr.length; i++) {
-//         out += '<a href="' + arr[i].url + '">' + arr[i].display + '</a><br>';
-//     }
-//     document.getElementById(this.docenten).innerHTML = out;
-//
-// })
-
 
 </script>
 
