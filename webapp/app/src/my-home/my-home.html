@@ -3,36 +3,7 @@
 <dom-module id="my-home">
 <link rel="import" type="css" href="../../styles/homeStyle.css">
   <template>
-
-    <style>
-      .keuze-drop{
-        margin-top: -10px;
-        margin-left: 20px;
-        display: flex;
-      }
-
-      .afwezig-keuze[tablet-layout]{
-        display: block;
-      }
-
-      .afwezig-keuze[tablet-layout] paper-input-date-picker, paper-dropdown-menu{
-        margin: 0;
-        margin-bottom: 10px;
-      }
-
-      .afwezig-keuze[phone-layout] paper-button{
-        width: 100%;
-        margin: 0;
-        margin-bottom: 10px;
-      }
-
-      .afwezig-keuze[tablet-layout] .keuze-drop{
-        margin-top: 10px;
-        margin-left: 0;
-      }
-
-    </style>
-
+    
     <iron-media-query query="(max-width: 980px)" query-matches="{{tablet}}"></iron-media-query>
     <iron-media-query query="(max-width: 510px)" query-matches="{{phone}}"></iron-media-query>
 
