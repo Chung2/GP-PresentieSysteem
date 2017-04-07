@@ -1,42 +1,11 @@
 <link rel="import" href="../../elements/elements.html">
 
 <dom-module id="my-admin">
-<!-- <link rel="import" type="css" href="../../styles/.css"> -->
+<link rel="import" type="css" href="../../styles/adminStyle.css">
   <template>
 
-    <style>
-      :host{
-        display: block;
-      }
-
-      :host([active]){
-        display: none;
-      }
-
-      .container{
-        max-width: 360px;
-        padding: 2% 0 0;
-        padding-top: 0;
-        margin: auto;
-        display: block;
-        text-align: center;
-      }
-
-      a{
-        text-decoration: none;
-        color: #ffffff;
-        text-align: center;
-      }
-
-      paper-button{
-        background-color: var(--paper-light-blue-500);
-        margin: 10px;
-        width: 300px;
-      }
-    </style>
-
     <div class="container">
-      <h1>admin</h1>
+      <h1>Admin</h1>
       <a naam="klassen" href="#/admin/klassen"><paper-button raised>klassen</paper-button></a>
       <a naam="roosters" href="#/admin/roosters"><paper-button raised>roosters</paper-button></a>
       <a naam="docenten" href="#/admin/docenten"><paper-button raised>docenten</paper-button></a>

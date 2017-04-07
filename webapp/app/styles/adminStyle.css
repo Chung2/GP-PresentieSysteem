@@ -1,0 +1,28 @@
+:host{
+  display: block;
+}
+
+:host([active]){
+  display: none;
+}
+
+.container{
+  max-width: 360px;
+  padding: 2% 0 0;
+  padding-top: 0;
+  margin: auto;
+  display: block;
+  text-align: center;
+}
+
+a{
+  text-decoration: none;
+  color: #ffffff;
+  text-align: center;
+}
+
+paper-button{
+  background-color: var(--paper-light-blue-500);
+  margin: 10px;
+  width: 300px;
+}

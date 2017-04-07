@@ -21,13 +21,14 @@
 
     <div class="">
       <paper-card class="holder" elevation="2">
+        <paper-spinner class="blue" active></paper-spinner>
+
         <template is="dom-repeat" items="{{klassen}}">
           <h1>{{item.naam}}</h1>
-          <h3>aantal studenten: &nbsp;{{item.deStudenten.length}} &nbsp;&nbsp;
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-             klascode:&nbsp;{{item.klasCode}} </h3>
+          Klascode: {{item.klasCode}}<br>
+          Aantal studenten: {{item.deStudenten.length}}
+          <hr>
           <vaadin-grid items="[[item.deStudenten]]">
-             <!-- <vaadin-grid items="{{item.deStudenten}}"> -->
              <table>
                <colgroup>
                  <col name="voornaam" resizable>

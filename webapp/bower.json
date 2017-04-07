@@ -30,7 +30,8 @@
     "google-calendar": "GoogleWebComponents/google-calendar#^1.0.3",
     "iron-media-query": "PolymerElements/iron-media-query#^1.0.8",
     "paper-fab": "PolymerElements/paper-fab#^1.2.1",
-    "vaadin-grid": "vaadin/vaadin-grid#^1.2.2"
+    "vaadin-grid": "vaadin/vaadin-grid#^1.2.2",
+    "paper-spinner": "PolymerElements/paper-spinner#^1.2.1"
   },
   "devDependencies": {},
   "ignore": []
