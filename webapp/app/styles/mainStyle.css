@@ -47,3 +47,11 @@ iron-icon{
 paper-toolbar{
   background-color: var(--paper-light-blue-500);
 }
+
+.test{
+  width: 10px;
+  padding: 2% 0 0;
+  padding-top: 0;
+  margin: auto;
+  z-index: 5;
+}

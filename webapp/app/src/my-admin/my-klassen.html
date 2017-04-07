@@ -17,11 +17,10 @@
         url="/klassen/info"
         handle-as="json"
         on-response="ajax_klassen_handler">
-      </iron-ajax>
+    </iron-ajax>
 
     <div class="">
       <paper-card class="holder" elevation="2">
-
         <template is="dom-repeat" items="{{klassen}}">
           <h1>{{item.naam}}</h1>
           Klascode: {{item.klasCode}}<br>
@@ -68,6 +67,7 @@
           this.klassen =
             request.detail.response;
             console.log(this.klassen + this.klassen.deStudenten);
+
         },
 
         ready: function() {
