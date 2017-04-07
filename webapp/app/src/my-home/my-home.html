@@ -113,6 +113,10 @@
             type: String,
             value: "TICT-SIE-V1D"
           },
+          gebruiker: {
+            type: Object,
+            observer: 'gebruikerChanged'
+          },
           gebruikersnaam: {
             type: String,
             value: "peter.schuler@hu.nl"
@@ -309,9 +313,13 @@
           return "";
         },
 
+        gebruikerChanged: function(){
+          alert(this.gebruiker);
+        },
+
         ready: function() {
 
-          console.log("ready");
+          //this.gebruiker = localStorage.getItem("gebruiker");
 
           var rol = "Docent";
 

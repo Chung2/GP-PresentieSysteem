@@ -56,11 +56,18 @@
           };
           this.$.ajax_login.generateRequest();
         },
+
+        gebruikerChanged: function(){
+          alert(this.gebruiker);
+        },
+
         login_handler: function(request){
           var response = request.detail.response
 
           if (response.rol != 'undefined'){
             this.gebruiker = {"gebruikersnaam":response.gebruikersnaam,"rol":response.rol};
+
+            //localStorage.setItem("gebruiker", '{"gebruikersnaam":'+response.gebruikersnaam+',"rol":'+response.rol+'}');
 
             this.$.redirect.click();
           }
