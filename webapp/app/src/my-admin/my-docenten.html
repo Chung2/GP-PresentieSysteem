@@ -13,17 +13,22 @@
     on-response="ajax_docenten_handler">
   </iron-ajax>
 
+  <h1>Docenten</h1>
+
   <paper-card class="holder" elevation="2">
-    <brainy-table items="[[docenten]]" page-size="6" details-enabled>
-      <brainy-table-column name="voornaam" filter-by="docenten.voornaam">
-        <template>[[item.docenten.voornaam]]</template>
+    <brainy-table items="[[docenten]]" page-size="[[docenten.length]]" details-enabled>
+      <brainy-table-column name="Voornaam" sort-by="item.voornaam">
+        <template>[[item.voornaam]]</template>
       </brainy-table-column>
-      <!-- <brainy-table-column name="tussenvoegsel" filter-by="docenten.tussenvoegsel">
-        <template>[[item.docenten.tussenvoegsel]]</template>
-      </brainy-table-column> -->
-      <!-- <brainy-table-column name="achternaam" filter-by="docenten.achternaam">
-        <template>[[item.docenten.achternaam]]</template>
-      </brainy-table-column> -->
+      <brainy-table-column name="Tussenvoegsel">
+        <template>[[item.tussenvoegsel]]</template>
+      </brainy-table-column>
+      <brainy-table-column name="Achternaam">
+        <template>[[item.achternaam]]</template>
+      </brainy-table-column>
+      <brainy-table-column name="Ziek">
+        <template>[[item.ziek]]</template>
+      </brainy-table-column>
       <brainy-table-column width="30px" align-right flex="0">
         <template>
           <template is="dom-if" if="[[!expanded]]">
@@ -36,29 +41,12 @@
       </brainy-table-column>
        <template is="row-detail">
          <div>
-           [[item.docenten.ziek]]
+           <paper-button>test</paper-button>
          </div>
        </template>
        <div no-results>No records found</div>
     </brainy-table>
   </paper-card>
-
-  <!-- vaadin grid wordt vervangen door brainy grid -->
-  <!-- <div class="">
-
-    <paper-card class="holder" elevation="2">
-        <vaadin-grid items="[[docenten]]" visible-rows="[[docenten.length]]">
-           <table>
-             <colgroup>
-               <col name="voornaam" resizable>
-               <col name="tussenvoegsel" resizable>
-               <col name="achternaam" resizable sortable sort-direction="asc">
-               <col name="ziek" resizable>
-             </colgroup>
-           </table>
-        </vaading-grid>
-    </paper-card>
-  </div> -->
 
 </template>
 
