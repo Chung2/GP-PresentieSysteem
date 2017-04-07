@@ -56,6 +56,7 @@
         is: 'my-klassen',
 
         ajax_klassen_start: function(){
+          this.$.spinner.active = true;
           console.log("start");
           this.$.ajax_klassen.contentType="application/json";
           this.$.ajax_klassen.body={
