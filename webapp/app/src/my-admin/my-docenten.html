@@ -1,12 +1,6 @@
 <link rel="import" href="../../elements/elements.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 
-<!-- <h1>{{klas.naam}}</h1>
-<template is="dom-repeat" items="[[klas.deStudenten]]">
-<my-student gebruikersnaam="{{item.gebruikersnaam}}">
-</my-student>
-</template> -->
-
 <dom-module id="my-docenten">
   <link rel="import" type="css" href="../../styles/mainStyle.css">
   <template>
@@ -31,7 +25,6 @@
              </colgroup>
            </table>
         </vaading-grid>
-
     </paper-card>
   </div>
 
@@ -57,9 +50,6 @@ Polymer({
     this.docenten =
     request.detail.response;
     console.log(this.docenten + this.docenten.deStudenten);
-    // console.log(
-    //   "naam: "
-    //   + this.naam);
   },
 
   ready: function() {
@@ -68,18 +58,6 @@ Polymer({
 
 
 })
-
-
-//   function myFunction(arr) {
-//     var out = "";
-//     var i;
-//     for(i = 0; i<arr.length; i++) {
-//         out += '<a href="' + arr[i].url + '">' + arr[i].display + '</a><br>';
-//     }
-//     document.getElementById(this.docenten).innerHTML = out;
-//
-// })
-
 
 </script>
 
