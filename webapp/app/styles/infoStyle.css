@@ -19,7 +19,7 @@
 }
 
 .afwezig{
-  background-color: red;
+  color: red;
 }
 
 paper-button.red {
@@ -31,6 +31,10 @@ paper-button.green {
   background-color: var(--paper-light-green-500);
   color: #ffffff;
 }
+
+/*brainy-tr[afwezig]{
+  background-color: red;
+}*/
 
 /*.info{
   width: 100%;
