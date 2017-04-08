@@ -55,3 +55,17 @@ paper-toolbar{
   margin: auto;
   z-index: 5;
 }
+
+paper-button.red {
+  background-color: var(--paper-red-500);
+  color: #ffffff;
+}
+
+paper-button.green {
+  background-color: var(--paper-light-green-500);
+  color: #ffffff;
+}
+
+brainy-tr-detail{
+  padding: 10px;
+}
