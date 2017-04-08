@@ -7,6 +7,7 @@
 <link rel="import" href="../../src/my-admin/my-klassen.html">
 <link rel="import" href="../../src/my-admin/my-docenten.html">
 <link rel="import" href="../../src/my-admin/my-roosters.html">
+<link rel="import" href="../../src/my-404/my-404.html">
 
 
 <dom-module id="my-route">
@@ -39,20 +40,22 @@
       <div class="container">
           <div class="content">
             <section id="main">
-              <iron-pages selected='[[_routeData.page]]' attr-for-selected='name'>
+              <iron-pages selected='[[_routeData.page]]' attr-for-selected='name' fallback-selection="404">
                 <my-login id="my_login" name="login"></my-login>
                 <my-home id="my_home" name="home" active="{{_subRouteActive}}"></my-home>
                 <my-admin id="my_admin" name="admin" active="{{_subRouteActive}}"></my-admin>
+                <my-404 name="404"></my-404>
               </iron-pages>
             </section>
 
             <template is="dom-if" if="[[_subRouteActive]]" on-dom-change="_domChanged" restamp>
               <section id="sub">
-                <iron-pages id="test" attr-for-selected="name" selected="[[_subRouteData.subPage]]">
+                <iron-pages id="test" attr-for-selected="name" selected="[[_subRouteData.subPage]]" fallback-selection="404">
                   <my-info id="my_info" name="klasInfo"></my-info>
                   <my-klassen id="my_klassen" name="klassen"></my-klassen>
                   <my-docenten id="my_docenten" name="docenten"></my-docenten>
                   <my-roosters id="my_roosters" name="roosters"></my-roosters>
+                  <my-404 name="404"></my-404>
                 </iron-pages>
               </section>
             </template>
