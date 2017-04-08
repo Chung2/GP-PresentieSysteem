@@ -1,49 +1,217 @@
 <link rel="import" href="../../elements/elements.html">
 
 <dom-module id="my-roosters">
-<!-- <link rel="import" type="css" href="../../styles/.css"> -->
-  <template>
-    <a id="redirect_login" href="#/login"></a>
-    <a id="redirect_home" href="#/home"></a>
+<link rel="import" type="css" href="../../styles/roostersStyle.css">
 
-    <h1>Roosters</h1>
-  </template>
+<iron-ajax
+  id="ajax_rooster_student"
+  method="POST"
+  url="/rooster/student"
+  handle-as="json"
+  on-response="ajax_rooster_student_handler">
+</iron-ajax>
 
-  <script>
+<iron-ajax
+  id="ajax_rooster_docent"
+  method="POST"
+  url="/rooster/docent"
+  handle-as="json"
+  on-response="ajax_rooster_docent_handler">
+</iron-ajax>
 
-      Polymer({
+<template>
+  <brainy-table items="[[item.rooster]]">
+            <brainy-table-column name="huidigeVak" sort-by="item.huidigeVak" width="35px">
+              <template>[[item]]</template>
+</brainy-table-column>
+</template>
 
-        is: 'my-roosters',
+<script>
 
-        properties: {
-          gebruiker:{
-            type: Object
-          }
+    Polymer({
+
+      is: 'my-roosters',
+
+      properties: {
+        active: {
+          type: Boolean,
+          value: false,
+          reflectToAttribute: true
         },
-        
-        update: function(){
+        persoon: {
+          type: Object
+        },
+        gebruiker:{
+          type: Object
+        },
+        _rol: {
+          type: String,
+        },
+        rooster:{
+          type: Array,
+          value: []
+        },
+        weekDagenVertalingen:{
+          type: Object,
+          value:
+            {
+              'MONDAY':'Maandag',
+              'TUESDAY':'Dinsdag',
+              'WEDNESDAY':'Woensdag',
+              'THURSDAY':'Donderdag',
+              'FRIDAY':'Vrijdag',
+              'SATURDAY':'Zaterdag',
+              'SUNDAY':'Zondag'
+            }
+        },
+        //zoeken naar json file//
+      ajax_rooster_student_start: function() {
 
-          //Ingelogde gebruiker ophalen
-          this.gebruiker = JSON.parse(localStorage.getItem("gebruiker"));
+        this.$.ajax_rooster_student.contentType="application/json";
+        this.$.ajax_rooster_student.body={
+          "klascode":"TICT-SIE-"+this.persoon.groepId
+        };
+        this.$.ajax_rooster_student.generateRequest();
+      },
+      //leest de json file uit//
+      ajax_rooster_student_handler: function(request) {
+        this.rooster = request.detail.response;
+      },
 
-          //Als gebruiker niet is ingelogd terug sturen naar login scherm
-          if(this.gebruiker == null) {
-            this.$.redirect_login.click();
+      ajax_rooster_docent_start: function() {
 
-            return;
-          }
+        this.$.ajax_rooster_docent.contentType="application/json";
+        this.$.ajax_rooster_docent.body={
+          "gebruikersnaam":this.gebruiker.gebruikersnaam
+        };
+        this.$.ajax_rooster_docent.generateRequest();
+      },
 
-          //Admin naar admin scherm toe sturen
-          if(this.gebruiker.rol =! 'admin'){
-            this.$.redirect_home.click();
+      ajax_rooster_docent_handler: function(request) {
+        this.rooster = request.detail.response;
+      },
 
-            return;
-          }
+      getDag: function(dag){
+        return this.weekDagenVertalingen[dag];
+      },
 
+      printDag: function(dag){
+        var printdag = true;
+
+        if (dag == this.vorigedag){
+          printdag = false;
         }
 
-      })
+        this.vorigedag = dag;
 
-  </script>
+        return printdag;
+      },
+      printWeek: function(week){
+        var printweek = true;
+
+        if(week == this.vorigeweek){
+          printweek = false;
+        }
+
+        this.vorigeweek = week;
+
+        return printweek;
+      },
+      not: function(bool){
+        return !bool;
+      },
+
+      padNummer(nr){
+        var str = "" + nr;
+        var pad = "00";
+        return pad.substring(0, pad.length - str.length) + str;
+      },
+
+      ajax_haal_persoon: function(){
+        this.$.ajax_haal_persoon.contentType="application/json";
+        this.$.ajax_haal_persoon.body={
+          "gebruikersnaam":this.gebruiker.gebruikersnaam
+        };
+        this.$.ajax_haal_persoon.generateRequest();
+      },
+
+      ajax_persoon_handler: function(request){
+        this.persoon = request.detail.response;
+
+        if(this.gebruiker.rol=="student"){
+          this.ajax_rooster_student_start();
+        }
+
+        if(this.gebruiker.rol=="docent"){
+          this.ajax_rooster_docent_start();
+        }
+      },
+
+      _itemSelected : function(e) {
+        var selectedItem = e.target.selectedItem;
+        if (selectedItem) {
+          this.dagDeel = selectedItem.innerText;
+        }
+      },
+
+      //Functie om te kijken of de docent aanwezig is via de statussen en begin/eind datum/tijd van de les
+      docentAanwezig: function(docent, beginDatum, eindDatum){
+        if(docent.ziek) return "afwezig";
+
+        for (var i = 0; i < docent.statussen.length; i++) {
+            if((docent.statussen[i].datum.day == beginDatum.date.day &&
+              docent.statussen[i].datum.month == beginDatum.date.month &&
+              docent.statussen[i].datum.year == beginDatum.date.year) ||
+              (docent.statussen[i].datum.day == eindDatum.date.day &&
+              docent.statussen[i].datum.month == eindDatum.date.month &&
+              docent.statussen[i].datum.year == eindDatum.date.year)){
+
+                if(docent.statussen[i].dagdeel=="Hele dag") return "afwezig";
+
+                if(docent.statussen[i].dagdeel=="Ochtend"){
+                  if((beginDatum.time.hour>=8 && beginDatum.time.hour<12) || (eindDatum.time.hour>=8 && eindDatum.time.hour<12)) return "afwezig";
+                }
+
+                if(docent.statussen[i].dagdeel=="Middag"){
+                  if((beginDatum.time.hour>=12 && beginDatum.time.hour<19) || (eindDatum.time.hour>=12 && eindDatum.time.hour<19)) return "afwezig";
+                }
+            }
+        }
+
+        return "";
+      },
+
+      update: function() {
+        //Ingelogde gebruiker ophalen
+        this.gebruiker = JSON.parse(localStorage.getItem("gebruiker"));
+
+        //Als gebruiker niet is ingelogd terug sturen naar login scherm
+        if(this.gebruiker == null) {
+          this.$.redirect_login.click();
+
+          return;
+        }
+
+        //Admin naar admin scherm toe sturen
+        if(this.gebruiker.rol == 'admin'){
+          this.$.redirect_admin.click();
+
+          return;
+        }
+
+        //Meer informatie over ingelogde gebruiker ophalen
+        this.ajax_haal_persoon();
+        this._rol = this.gebruiker.rol;
+        console.log(this._rol);
+      },
+
+      check_rol: function(str1, str2) {
+        // console.log("check_rol: " + str1 + " met: " + str2);
+        return (str1==str2);
+      }}
+
+    })
+
+</script>
 
 </dom-module>

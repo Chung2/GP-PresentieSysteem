@@ -22,7 +22,7 @@
         <br><br>
 
         <paper-card class="holder" elevation="2">
-
+          <!-- maak brainy tables aan met gegeven uit de json file de Studenten -->
           <brainy-table items="[[item.deStudenten]]" page-size="[[item.deStudenten.length]]" details-enabled>
             <brainy-table-column name="Voornaam" sort-by="item.voornaam" width="35px">
               <template>[[item.voornaam]]</template>
