@@ -77,8 +77,9 @@
 
              <template is="row-detail">
                <div>
-                 <paper-button class="red" on-tap="ajax_zet_status_onClick">Afwezig melden</paper-button>
-                 <paper-button class="green" on-tap="ajax_beter_melden_onClick">Aanwezig melden</paper-button>
+                 <paper-button class="red" on-tap="ajax_zet_status_afwezig_onClick">Afwezig melden</paper-button>
+                 <paper-button class="red" on-tap="ajax_zet_status_aanwezig_onClick">Aanwezig melden</paper-button>
+                 <paper-button class="green" on-tap="ajax_beter_melden_onClick">Beter melden</paper-button>
                </div>
              </template>
 
@@ -106,11 +107,19 @@
     </iron-ajax>
 
     <iron-ajax
-      id="ajax_zet_status"
+      id="ajax_zet_status_afwezig"
       method="POST"
       url="/persoon/zetstatus"
       handle-as="json"
-      on-response="ajax_zet_status_handler">
+      on-response="ajax_zet_status_afwezig_handler">
+    </iron-ajax>
+
+    <iron-ajax
+      id="ajax_zet_status_aanwezig"
+      method="POST"
+      url="/persoon/zetstatus"
+      handle-as="json"
+      on-response="ajax_zet_status_aanwezig_handler">
     </iron-ajax>
 
     <iron-ajax
@@ -222,20 +231,37 @@
           return "";
         },
 
-        ajax_zet_status_onClick: function(e){
-          if(this.dagDeel=="") alert("geen dagdeel gekozen!");
-
-          this.$.ajax_zet_status.contentType="application/json";
-          this.$.ajax_zet_status.body={
+        ajax_zet_status_afwezig_onClick: function(e){
+          this.$.ajax_zet_status_afwezig.contentType="application/json";
+          this.$.ajax_zet_status_afwezig.body={
             "gebruikersnaam":e.model.item.gebruikersnaam,
             "dagdeel":this.getDagdeel(),
             "datum":this.padNummer(this.les.beginTijd.date.day)+"-"+this.padNummer(this.les.beginTijd.date.month)+"-"+this.les.beginTijd.date.year,
             "status":"Afwezig"
           };
-          this.$.ajax_zet_status.generateRequest();
+          this.$.ajax_zet_status_afwezig.generateRequest();
         },
 
-        ajax_zet_status_handler: function(request) {
+        ajax_zet_status_afwezig_handler: function(request) {
+          var response = request.detail.response;
+          if("succes" in response){
+            this.update();
+          }
+        },
+
+        ajax_zet_status_aanwezig_onClick: function(e){
+          console.log("aanwezig");
+          this.$.ajax_zet_status_aanwezig.contentType="application/json";
+          this.$.ajax_zet_status_aanwezig.body={
+            "gebruikersnaam":e.model.item.gebruikersnaam,
+            "dagdeel":this.getDagdeel(),
+            "datum":this.padNummer(this.les.beginTijd.date.day)+"-"+this.padNummer(this.les.beginTijd.date.month)+"-"+this.les.beginTijd.date.year,
+            "status":"Aanwezig"
+          };
+          this.$.ajax_zet_status_aanwezig.generateRequest();
+        },
+
+        ajax_zet_status_aanwezig_handler: function(request) {
           var response = request.detail.response;
           if("succes" in response){
             this.update();

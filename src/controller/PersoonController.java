@@ -130,6 +130,36 @@ public class PersoonController implements Handler{
           	}
           	break;
           	
+          case "Aanwezig": 
+          	if (request.get("datum") != null && request.get("dagdeel") != null){
+            	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+      				formatter = formatter.withLocale( Locale.GERMANY );
+      				LocalDate date = LocalDate.parse(request.get("datum").getAsString(), formatter);
+            	
+      				if (informatieSysteem.getStudent(request.get("gebruikersnaam").getAsString()) != null){
+      					Student student = informatieSysteem.getStudent(request.get("gebruikersnaam").getAsString());
+      					
+      					student.verwijderStatus(date, request.get("dagdeel").getAsString());
+      					
+      					conversation.sendJSONMessage("{\"succes\":\"Status aangepast\"}");
+      					
+      					return;
+      				}
+      				
+      				if (informatieSysteem.getDocent(request.get("gebruikersnaam").getAsString()) != null){
+      					Docent docent = informatieSysteem.getDocent(request.get("gebruikersnaam").getAsString());
+      					
+      					docent.verwijderStatus(date, request.get("dagdeel").getAsString());
+      					
+      					conversation.sendJSONMessage("{\"succes\":\"Status aangepast\"}");
+      					
+      					return;
+      				}
+          	}else{
+          		conversation.sendJSONMessage("{\"error\":\"Geen datum of dagdeel gevonden\"}");
+          	}
+          	break;
+          	
     			default: 
     				conversation.sendJSONMessage("{\"error\":\"Status bestaat niet\"}");
 

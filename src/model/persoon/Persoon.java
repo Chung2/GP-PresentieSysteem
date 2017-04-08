@@ -57,6 +57,17 @@ public abstract class Persoon {
 		
 		statussen.add(status);
 	}
+	
+	public void verwijderStatus(LocalDate datum, String dagdeel){
+		Status status = new Status("Afwezig", datum, dagdeel);
+		
+		for (Status s : statussen) {
+  		if(s.equals(status)) {
+  			statussen.remove(s);
+  			break;
+  		}
+		}
+	}
 
 	public String getVolledigeAchternaam() {
 		String lVolledigeAchternaam="";

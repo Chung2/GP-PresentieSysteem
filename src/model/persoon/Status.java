@@ -36,7 +36,7 @@ public class Status {
 			Status andereStatus = (Status)obj;
 			
 			if(status.equals(andereStatus.getStatus()) &&
-				 datum == andereStatus.getDatum() &&
+				 datum.equals(andereStatus.getDatum()) &&
 				 dagdeel.equals(andereStatus.getDagdeel())) return true;
 		}
 		
