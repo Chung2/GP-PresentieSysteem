@@ -43,8 +43,6 @@ public class PersoonController implements Handler{
 		JsonParser parser = new JsonParser();
 		Gson gson = new Gson();
 		
-		System.out.println(conversation.getRequestBodyAsString());
-		
 		if (conversation.getRequestBodyAsString() == null){
 			conversation.sendJSONMessage("{\"error\":\"Geen json data mee gegeven\"}");
 			
@@ -154,8 +152,6 @@ public class PersoonController implements Handler{
 			
 			return;
 		}
-		
-		System.out.println(conversation.getRequestBodyAsString());
 		
 		try {
 			JsonObject request = parser.parse(conversation.getRequestBodyAsString()).getAsJsonObject();
