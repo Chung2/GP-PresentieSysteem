@@ -60,6 +60,11 @@
         login_handler: function(request){
           var response = request.detail.response
 
+          if (response.rol == "undefined") {
+            this.$.email_element.invalid = true;
+            this.$.wachtwoord_element.invalid = true;
+          }
+
           if (response.rol != 'undefined'){
             this.gebruiker = {"gebruikersnaam":response.gebruikersnaam,"rol":response.rol};
 
@@ -76,7 +81,7 @@
         _checkForEnter: function (e) {
           if (e.currentTarget.id == "email_element") {
             if (e.keyCode === 13) {
-              this.$.wachtwoord_element.focus(); 
+              this.$.wachtwoord_element.focus();
             }
           } else if (e.keyCode === 13) {
             this.loginOnClick();    // forceer een klik
