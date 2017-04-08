@@ -155,6 +155,8 @@ public class PersoonController implements Handler{
 			return;
 		}
 		
+		System.out.println(conversation.getRequestBodyAsString());
+		
 		try {
 			JsonObject request = parser.parse(conversation.getRequestBodyAsString()).getAsJsonObject();
 			
