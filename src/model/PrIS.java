@@ -3,6 +3,7 @@ package model;
 import java.util.ArrayList;
 
 import model.klas.Klas;
+import model.persoon.Admin;
 import model.persoon.Docent;
 import model.persoon.Persoon;
 import model.persoon.Status;
@@ -27,6 +28,7 @@ import java.util.Locale;
 
 public class PrIS {
 	private ArrayList<Docent> deDocenten;
+	private ArrayList<Admin> deAdmins;
 	private ArrayList<Student> deStudenten;
 	private ArrayList<Klas> deKlassen;
 	private ArrayList<Lokaal> deLokalen;
@@ -58,6 +60,7 @@ public class PrIS {
 	 */
 	public PrIS() {
 		deDocenten = new ArrayList<Docent>();
+		deAdmins = new ArrayList<Admin>();
 		deStudenten = new ArrayList<Student>();
 		deKlassen = new ArrayList<Klas>();
 		deLokalen = new ArrayList<Lokaal>();
@@ -72,6 +75,9 @@ public class PrIS {
 
 		// Inladen docenten
 		vulDocenten(deDocenten);
+		
+		// Inladen admins
+		vulAdmins(deAdmins);
 
 		// Inladen lokalen
 		vulLokalen(deLokalen);
@@ -288,6 +294,14 @@ public class PrIS {
 				}
 			}
 		}
+		
+		for (Admin a : deAdmins) {
+			if (a.getGebruikersnaam().equals(gebruikersnaam)) {
+				if (a.komtWachtwoordOvereen(wachtwoord)) {
+					return "admin";
+				}
+			}
+		}
 
 		return "undefined";
 	}
@@ -313,6 +327,34 @@ public class PrIS {
 				pDocenten.add(new Docent(voornaam, tussenvoegsel, achternaam, "geheim", gebruikersnaam, 1));
 
 				// System.out.println(gebruikersnaam);
+
+			}
+
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void vulAdmins(ArrayList<Admin> pAdmins) {
+		String csvFile = "././CSV/admins.csv";
+
+		String line = "";
+		String cvsSplitBy = ",";
+
+		try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
+
+			while ((line = br.readLine()) != null) {
+
+				// use comma as separator
+				String[] element = line.split(cvsSplitBy);
+				String gebruikersnaam = element[0].toLowerCase();
+				String voornaam = element[1];
+				String tussenvoegsel = "";
+				String achternaam = "";
+
+				pAdmins.add(new Admin(voornaam, tussenvoegsel, achternaam, "geheim", gebruikersnaam));
 
 			}
 

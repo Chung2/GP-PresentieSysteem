@@ -3,6 +3,8 @@
 <dom-module id="my-admin">
 <link rel="import" type="css" href="../../styles/adminStyle.css">
   <template>
+    <a id="redirect_login" href="#/login"></a>
+    <a id="redirect_home" href="#/home"></a>
 
     <div class="container">
       <h1>Admin</h1>
@@ -23,10 +25,28 @@
             type: Boolean,
             value: false,
             reflectToAttribute: true
+          },
+          gebruiker:{
+            type: Object
           }
         },
         update: function(){
-          
+          //Ingelogde gebruiker ophalen
+          this.gebruiker = JSON.parse(localStorage.getItem("gebruiker"));
+
+          //Als gebruiker niet is ingelogd terug sturen naar login scherm
+          if(this.gebruiker == null) {
+            this.$.redirect_login.click();
+
+            return;
+          }
+
+          //Admin naar admin scherm toe sturen
+          if(this.gebruiker.rol =! 'admin'){
+            this.$.redirect_home.click();
+
+            return;
+          }
         }
 
       })

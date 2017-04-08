@@ -3,6 +3,9 @@
 <dom-module id="my-roosters">
 <!-- <link rel="import" type="css" href="../../styles/.css"> -->
   <template>
+    <a id="redirect_login" href="#/login"></a>
+    <a id="redirect_home" href="#/home"></a>
+
     <h1>Roosters</h1>
   </template>
 
@@ -12,7 +15,30 @@
 
         is: 'my-roosters',
 
+        properties: {
+          gebruiker:{
+            type: Object
+          }
+        },
+        
         update: function(){
+
+          //Ingelogde gebruiker ophalen
+          this.gebruiker = JSON.parse(localStorage.getItem("gebruiker"));
+
+          //Als gebruiker niet is ingelogd terug sturen naar login scherm
+          if(this.gebruiker == null) {
+            this.$.redirect_login.click();
+
+            return;
+          }
+
+          //Admin naar admin scherm toe sturen
+          if(this.gebruiker.rol =! 'admin'){
+            this.$.redirect_home.click();
+
+            return;
+          }
 
         }
 

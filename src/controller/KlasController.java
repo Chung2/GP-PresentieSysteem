@@ -24,21 +24,16 @@ public class KlasController implements Handler{
 			ophalenKlas(conversation);
 		}
 		
-//		if (conversation.getRequestedURI().startsWith("/klas/slb")) {
-//			ophalenSlb(conversation);
-//		}
-		
 		if (conversation.getRequestedURI().startsWith("/klassen/info")) {
 			alleKlassenOphalen(conversation);
 		}
 	}
 	
 	private void alleKlassenOphalen(Conversation conversation) {
-		//TODO:getAlleKlasCodes: informatieSysteem.getKlas(klascode);
 		Gson gson = new Gson();
 		String jsonOut = "";
 		
-		jsonOut = gson.toJson(informatieSysteem.getKlassen()); //hardcoded een klas, als voorbeeld
+		jsonOut = gson.toJson(informatieSysteem.getKlassen());
 		
 		conversation.sendJSONMessage(jsonOut);
 
@@ -53,8 +48,6 @@ public class KlasController implements Handler{
 			
 			return;
 		}
-		
-		System.out.println(conversation.getRequestBodyAsString());
 		
 	  JsonObject request = parser.parse(conversation.getRequestBodyAsString()).getAsJsonObject();
 		String jsonOut = "";

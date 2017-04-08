@@ -2,8 +2,10 @@
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 
 <dom-module id="my-klassen">
-<link rel="import" type="css" href="../../styles/mainStyle.css">
+  <link rel="import" type="css" href="../../styles/mainStyle.css">
   <template>
+    <a id="redirect_login" href="#/login"></a>
+    <a id="redirect_home" href="#/home"></a>
 
     <iron-ajax
         id="ajax_klassen"
@@ -83,6 +85,12 @@
 
         is: 'my-klassen',
 
+        properties: {
+          gebruiker:{
+            type: Object
+          }
+        },
+
         ajax_klassen_start: function(){
           this.$.ajax_klassen.contentType="application/json";
           this.$.ajax_klassen.body={
@@ -93,12 +101,28 @@
 
         ajax_klassen_handler: function(request){
 
-          this.klassen =
-            request.detail.response;
+          this.klassen = request.detail.response;
 
         },
 
         update: function() {
+          //Ingelogde gebruiker ophalen
+          this.gebruiker = JSON.parse(localStorage.getItem("gebruiker"));
+
+          //Als gebruiker niet is ingelogd terug sturen naar login scherm
+          if(this.gebruiker == null) {
+            this.$.redirect_login.click();
+
+            return;
+          }
+
+          //Admin naar admin scherm toe sturen
+          if(this.gebruiker.rol =! 'admin'){
+            this.$.redirect_home.click();
+
+            return;
+          }
+
           this.ajax_klassen_start();
           console.log(this.deStudenten);
         },
