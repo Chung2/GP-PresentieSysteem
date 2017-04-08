@@ -69,3 +69,11 @@ paper-button.green {
 brainy-tr-detail{
   padding: 10px;
 }
+
+/*paper-button{
+  display: block;
+}*/
+
+paper-button[hidden]{
+  display: none;
+}

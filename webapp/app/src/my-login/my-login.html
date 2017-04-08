@@ -9,8 +9,8 @@
     <div class="container">
       <paper-card elevation="2">
         <img src="../../images/hulogo.png" class="huLogo">
-        <paper-input id="email_element" label="gebruikersnaam" value="{{username}}"></paper-input>
-        <paper-input id="wachtwoord_element" label="wachtwoord" type="password" value="{{_password}}"></paper-input>
+        <paper-input on-keydown="_checkForEnter" id="email_element" label="gebruikersnaam" value="{{username}}"></paper-input>
+        <paper-input on-keydown="_checkForEnter" id="wachtwoord_element" label="wachtwoord" type="password" value="{{_password}}"></paper-input>
         <paper-button on-tap="loginOnClick" id="login_button_element">Login</paper-button>
       </paper-card>
     </div>
@@ -71,7 +71,17 @@
               this.$.redirect_admin.click();
             }
           }
-        }
+        },
+
+        _checkForEnter: function (e) {
+          if (e.currentTarget.id == "email_element") {
+            if (e.keyCode === 13) {
+              this.$.wachtwoord_element.focus(); 
+            }
+          } else if (e.keyCode === 13) {
+            this.loginOnClick();    // forceer een klik
+          }
+        },
 
       })
 

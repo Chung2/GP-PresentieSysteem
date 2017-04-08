@@ -31,10 +31,9 @@
 
     <paper-header-panel main>
       <paper-toolbar>
-
-        <div style="font-size: 20px;">StudentHUb</div>
-        <div class="title">[[_routeData.page]]</div>
-
+        <paper-button on-tap="_backOnClick" hidden$="[[check_login()]]"><iron-icon icon="icons:arrow-back"></iron-icon></paper-button>
+        <div style="font-size: 20px; margin:auto; text-align:center;">StudentHUb - [[_routeData.page]]</div>
+        <paper-button on-tap="_logout" hidden$="[[check_login()]]">logout</paper-button>
       </paper-toolbar>
 
       <div class="container">
@@ -150,6 +149,21 @@
           this.set('_route.path', '/login');
         }
       },
+
+      _backOnClick: function(){
+        history.go(-1);
+      },
+
+      _logout: function(){
+        localStorage.removeItem("gebruiker");
+        this.set('_route.path', '/login');
+      },
+
+      // check_login: function(str1, str2) {
+      //   var url = window.location.href.split("/");
+      //     if (url[url.length-1] == "login") return true;
+      //     return false;
+      // },
 
     })
 
