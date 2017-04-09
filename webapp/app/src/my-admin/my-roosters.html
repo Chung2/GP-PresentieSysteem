@@ -3,6 +3,38 @@
 <dom-module id="my-roosters">
   <link rel="import" type="css" href="../../styles/homeStyle.css">
   <template>
+
+    <div class="keuze-drop">
+      <paper-dropdown-menu id="dd_klas" label="Klas" on-iron-select="_itemSelected">
+        <paper-listbox class="dropdown-content">
+          <paper-item></paper-item>
+          <paper-item></paper-item>
+          <paper-item></paper-item>
+          <paper-item></paper-item>
+          <paper-item></paper-item>
+          <paper-item></paper-item>
+        </paper-listbox>
+      </paper-dropdown-menu>
+    </div>
+
+    <div class="keuze-drop">
+      <paper-dropdown-menu id="dd_docent" label="Docent" on-iron-select="_itemSelected">
+        <paper-listbox class="dropdown-content">
+          <paper-item></paper-item>
+          <paper-item></paper-item>
+          <paper-item></paper-item>
+          <paper-item></paper-item>
+          <paper-item></paper-item>
+          <paper-item></paper-item>
+          <paper-item></paper-item>
+          <paper-item></paper-item>
+          <paper-item></paper-item>
+          <paper-item></paper-item>
+          <paper-item></paper-item>
+        </paper-listbox>
+      </paper-dropdown-menu>
+    </div>
+
     <a id="redirect_login" href="#/login"></a>
     <a id="redirect_home" href="#/home"></a>
 
