@@ -175,7 +175,7 @@
 
           if(vandaag.getHours()>=8 && vandaag.getHours()<12) return "Ochtend";
 
-          if(vandaag.getHours()>=12 && vandaag.getHours()<19) return "Avond";
+          if(vandaag.getHours()>=12 && vandaag.getHours()<19) return "Middag";
 
           return "Hele dag";
         },
@@ -221,7 +221,6 @@
         },
 
         ajax_zet_status_afwezig_onClick: function(e){
-
           var vandaag = new Date();
 
           this.$.ajax_zet_status_afwezig.contentType="application/json";
@@ -236,6 +235,7 @@
 
         ajax_zet_status_afwezig_handler: function(request) {
           var response = request.detail.response;
+
           if("succes" in response){
             this.update();
           }

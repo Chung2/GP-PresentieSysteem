@@ -166,7 +166,7 @@
         getDagdeel(){
           if((this.les.beginTijd.time.hour>=8 && this.les.beginTijd.time.hour<12) || (this.les.eindTijd.time.hour>=8 && this.les.eindTijd.time.hour<12)) return "Ochtend";
 
-          if((this.les.beginTijd.time.hour>=12 && this.les.beginTijd.time.hour<19) || (this.les.eindTijd.time.hour>=12 && this.les.eindTijd.time.hour<19)) return "Avond";
+          if((this.les.beginTijd.time.hour>=12 && this.les.beginTijd.time.hour<19) || (this.les.eindTijd.time.hour>=12 && this.les.eindTijd.time.hour<19)) return "Middag";
 
           return "Hele dag";
         },
@@ -250,7 +250,6 @@
         },
 
         ajax_zet_status_aanwezig_onClick: function(e){
-          console.log("aanwezig");
           this.$.ajax_zet_status_aanwezig.contentType="application/json";
           this.$.ajax_zet_status_aanwezig.body={
             "gebruikersnaam":e.model.item.gebruikersnaam,
@@ -269,8 +268,6 @@
         },
 
         ajax_beter_melden_onClick: function(e){
-          console.log(e.model.item.gebruikersnaam);
-
           this.$.ajax_beter_melden.contentType="application/json";
           this.$.ajax_beter_melden.body={
             "gebruikersnaam":e.model.item.gebruikersnaam,
