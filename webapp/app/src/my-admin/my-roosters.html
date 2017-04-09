@@ -4,7 +4,9 @@
   <link rel="import" type="css" href="../../styles/homeStyle.css">
   <template>
 
-    <div class="keuze-drop">
+    <h2>Kies een klas/docent voor het gewenste rooster</h2>
+
+    <div class="keuze-drop" style="margin-left:0;">
       <paper-dropdown-menu id="dd_klas" label="Klas" on-iron-select="_klasSelected">
         <paper-listbox class="dropdown-content">
           <template is="dom-repeat" items="{{klassen}}">
@@ -12,10 +14,8 @@
           </template>
         </paper-listbox>
       </paper-dropdown-menu>
-    </div>
 
-    <div class="keuze-drop">
-      <paper-dropdown-menu id="dd_docent" label="Docent" on-iron-select="_docentSelected">
+      <paper-dropdown-menu id="dd_docent" label="Docent" on-iron-select="_docentSelected" style="margin-left:10px;">
         <paper-listbox class="dropdown-content">
           <template is="dom-repeat" items="{{docenten}}">
             <paper-item>{{item.gebruikersnaam}}</paper-item>
