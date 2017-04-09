@@ -40,10 +40,14 @@ public class PersoonController implements Handler{
 	}
 	
 	private void zetStatus(Conversation conversation) {
+		//JsonParser maken om een json string naar een object om te zetten
 		JsonParser parser = new JsonParser();
+		//Gson object maken voor het parsen van json
 		Gson gson = new Gson();
 		
+		//Kijk of er een json string is mee gegeven
 		if (conversation.getRequestBodyAsString() == null){
+			//Error terug sturen naar browser dat er geen data mee is gegeven
 			conversation.sendJSONMessage("{\"error\":\"Geen json data mee gegeven\"}");
 			
 			return;
@@ -55,8 +59,11 @@ public class PersoonController implements Handler{
 			if (request.get("gebruikersnaam") != null && request.get("status") != null){
 				String status = request.get("status").getAsString();
 				
+				//Kijken wat voor een status er mee is gegeven
         switch (status) {
-          case "Beter":  
+        	//Persoon beter melden
+          case "Beter":
+          	//Kijk of 
     				if (informatieSysteem.getStudent(request.get("gebruikersnaam").getAsString()) != null){
     					Student student = informatieSysteem.getStudent(request.get("gebruikersnaam").getAsString());
     					
@@ -78,6 +85,7 @@ public class PersoonController implements Handler{
     				}
           	break;
           	
+          //Persoon ziek melden
           case "Ziek":  
     				if (informatieSysteem.getStudent(request.get("gebruikersnaam").getAsString()) != null){
     					Student student = informatieSysteem.getStudent(request.get("gebruikersnaam").getAsString());
@@ -99,7 +107,7 @@ public class PersoonController implements Handler{
     					return;
     				}
           	break;
-          	
+          //Persoon op afwezig zetten
           case "Afwezig": 
           	if (request.get("datum") != null && request.get("dagdeel") != null){
             	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
@@ -126,10 +134,11 @@ public class PersoonController implements Handler{
       					return;
       				}
           	}else{
+          		//Error terug sturen naar browser dat er geen datum of dagdeel is mee gegeven
           		conversation.sendJSONMessage("{\"error\":\"Geen datum of dagdeel gevonden\"}");
           	}
           	break;
-          	
+          //Persoon op aanwezig zetten
           case "Aanwezig": 
           	if (request.get("datum") != null && request.get("dagdeel") != null){
             	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
@@ -174,7 +183,9 @@ public class PersoonController implements Handler{
 	}
 	
 	private void persoonInfo(Conversation conversation){
+		//JsonParser maken om een json string naar een object om te zetten
 		JsonParser parser = new JsonParser();
+		//Gson object maken voor het parsen van json
 		Gson gson = new Gson();
 		
 		if (conversation.getRequestBodyAsString() == null){
@@ -224,20 +235,26 @@ public class PersoonController implements Handler{
 	}
 	
 	private void alleStudenten(Conversation conversation){
+		//Gson object maken voor het parsen van json
 		Gson gson = new Gson();
 		String jsonOut = "";
 		
+		//Json string maken van een java object
 		jsonOut = gson.toJson(informatieSysteem.getStudenten()); 
 		
+		//Json terug sturen naar de browser
 		conversation.sendJSONMessage(jsonOut);
 	}
 	
 	private void alleDocenten(Conversation conversation){
+		//Gson object maken voor het parsen van json
 		Gson gson = new Gson();
 		String jsonOut = "";
 		
+		//Json string maken van een java object
 		jsonOut = gson.toJson(informatieSysteem.getDocenten()); 
 		
+		//Json terug sturen naar de browser
 		conversation.sendJSONMessage(jsonOut);
 	}
 }
