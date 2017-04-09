@@ -5,32 +5,21 @@
   <template>
 
     <div class="keuze-drop">
-      <paper-dropdown-menu id="dd_klas" label="Klas" on-iron-select="_itemSelected">
+      <paper-dropdown-menu id="dd_klas" label="Klas" on-iron-select="_klasSelected">
         <paper-listbox class="dropdown-content">
-          <paper-item></paper-item>
-          <paper-item></paper-item>
-          <paper-item></paper-item>
-          <paper-item></paper-item>
-          <paper-item></paper-item>
-          <paper-item></paper-item>
+          <template is="dom-repeat" items="{{klassen}}">
+            <paper-item>{{item.klasCode}}</paper-item>
+          </template>
         </paper-listbox>
       </paper-dropdown-menu>
     </div>
 
     <div class="keuze-drop">
-      <paper-dropdown-menu id="dd_docent" label="Docent" on-iron-select="_itemSelected">
+      <paper-dropdown-menu id="dd_docent" label="Docent" on-iron-select="_docentSelected">
         <paper-listbox class="dropdown-content">
-          <paper-item></paper-item>
-          <paper-item></paper-item>
-          <paper-item></paper-item>
-          <paper-item></paper-item>
-          <paper-item></paper-item>
-          <paper-item></paper-item>
-          <paper-item></paper-item>
-          <paper-item></paper-item>
-          <paper-item></paper-item>
-          <paper-item></paper-item>
-          <paper-item></paper-item>
+          <template is="dom-repeat" items="{{docenten}}">
+            <paper-item>{{item.gebruikersnaam}}</paper-item>
+          </template>
         </paper-listbox>
       </paper-dropdown-menu>
     </div>
@@ -52,6 +41,22 @@
       url="/rooster/docent"
       handle-as="json"
       on-response="ajax_rooster_docent_handler">
+    </iron-ajax>
+
+    <iron-ajax
+      id="ajax_docenten"
+      method="POST"
+      url="/docenten/info"
+      handle-as="json"
+      on-response="ajax_docenten_handler">
+    </iron-ajax>
+
+    <iron-ajax
+        id="ajax_klassen"
+        method="POST"
+        url="/klassen/info"
+        handle-as="json"
+        on-response="ajax_klassen_handler">
     </iron-ajax>
 
     <template is="dom-repeat" items="{{rooster.alleLessen}}">
@@ -127,7 +132,7 @@
 
         this.$.ajax_rooster_student.contentType="application/json";
         this.$.ajax_rooster_student.body={
-          "klascode":"TICT-SIE-V1D"
+          "klascode":this.klas
         };
         this.$.ajax_rooster_student.generateRequest();
       },
@@ -140,7 +145,7 @@
 
         this.$.ajax_rooster_docent.contentType="application/json";
         this.$.ajax_rooster_docent.body={
-          "gebruikersnaam":"peter.schuler@hu.nl"
+          "gebruikersnaam":this.docent
         };
         this.$.ajax_rooster_docent.generateRequest();
       },
@@ -219,6 +224,51 @@
         return "";
       },
 
+      ajax_docenten_start: function(){
+        this.$.ajax_docenten.contentType="application/json";
+        this.$.ajax_docenten.body={
+        };
+
+        this.$.ajax_docenten.generateRequest();
+      },
+
+      ajax_docenten_handler: function(request){
+
+        this.docenten = request.detail.response;
+      },
+
+      ajax_klassen_start: function(){
+        this.$.ajax_klassen.contentType="application/json";
+        this.$.ajax_klassen.body={
+        };
+
+          this.$.ajax_klassen.generateRequest();
+      },
+
+      ajax_klassen_handler: function(request){
+
+        this.klassen = request.detail.response;
+
+      },
+
+      _docentSelected : function(e) {
+        var selectedItem = e.target.selectedItem;
+        if (selectedItem) {
+          this.docent = selectedItem.innerText;
+
+          this.ajax_rooster_docent_start();
+        }
+      },
+
+      _klasSelected : function(e) {
+        var selectedItem = e.target.selectedItem;
+        if (selectedItem) {
+          this.klas = selectedItem.innerText;
+
+          this.ajax_rooster_student_start();
+        }
+      },
+
       update: function() {
         //Ingelogde gebruiker ophalen
         this.gebruiker = JSON.parse(localStorage.getItem("gebruiker"));
@@ -237,7 +287,8 @@
           return;
         }
 
-        this.ajax_rooster_student_start();
+        this.ajax_klassen_start();
+        this.ajax_docenten_start();
       },
 
       check_rol: function(str1, str2) {
