@@ -257,6 +257,8 @@
           this.docent = selectedItem.innerText;
 
           this.ajax_rooster_docent_start();
+
+          this.$.dd_klas._setSelectedItem();
         }
       },
 
@@ -266,6 +268,8 @@
           this.klas = selectedItem.innerText;
 
           this.ajax_rooster_student_start();
+
+          this.$.dd_docent._setSelectedItem();
         }
       },
 
