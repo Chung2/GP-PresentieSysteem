@@ -158,36 +158,44 @@
           }
         },
 
+        //Functie om het rooster van een student op halen
         ajax_rooster_student_start: function() {
 
           this.$.ajax_rooster_student.contentType="application/json";
+          //Klas mee geven aan back-end
           this.$.ajax_rooster_student.body={
             "klascode":"TICT-SIE-"+this.persoon.groepId
           };
           this.$.ajax_rooster_student.generateRequest();
         },
 
+        //Rooster weergeven na het ajax request
         ajax_rooster_student_handler: function(request) {
           this.rooster = request.detail.response;
         },
 
+        //Functie om het rooster van een docent op halen
         ajax_rooster_docent_start: function() {
 
           this.$.ajax_rooster_docent.contentType="application/json";
+          //Gebruikersnaam van docent mee geven aan back-end
           this.$.ajax_rooster_docent.body={
             "gebruikersnaam":this.gebruiker.gebruikersnaam
           };
           this.$.ajax_rooster_docent.generateRequest();
         },
 
+        //Rooster weergeven van het ajax request
         ajax_rooster_docent_handler: function(request) {
           this.rooster = request.detail.response;
         },
 
+        //Dag vertalen naar nederlands
         getDag: function(dag){
           return this.weekDagenVertalingen[dag];
         },
 
+        //Dag uitprinten als deze nog niet uit is geprint erboven
         printDag: function(dag){
           var printdag = true;
 
@@ -199,6 +207,8 @@
 
           return printdag;
         },
+
+        //Week uitprinten als deze nog niet uit is geprint erboven
         printWeek: function(week){
           var printweek = true;
 
@@ -210,18 +220,24 @@
 
           return printweek;
         },
+
+        //Not functie gemaakt omdat polymer geen ! ondersteunt in een dom-if
         not: function(bool){
           return !bool;
         },
 
+        //Nummer uitpadden naar 2 lang zodat datums goed worden mee gegeven en weer gegeven
         padNummer(nr){
           var str = "" + nr;
           var pad = "00";
           return pad.substring(0, pad.length - str.length) + str;
         },
 
+        //Ziek melden event voor een persoon
         ajax_ziek_melden_onClick: function(){
           this.$.ajax_ziek_melden.contentType="application/json";
+
+          //Gebruikersnaam en status mee geven
           this.$.ajax_ziek_melden.body={
             "gebruikersnaam":this.gebruiker.gebruikersnaam,
             "status":"Ziek"
@@ -229,15 +245,21 @@
           this.$.ajax_ziek_melden.generateRequest();
         },
 
+        //Kijken of het ziek melden is gelukt
         ajax_ziek_melden_handler: function(request) {
           var response = request.detail.response;
           if("succes" in response){
+
+            //Data updaten op het scherm
             this.update();
           }
         },
 
+        //Beter melden event voor een persoon
         ajax_beter_melden_onClick: function(){
           this.$.ajax_beter_melden.contentType="application/json";
+
+          //Gebruikersnaam en status mee geven aan back-end
           this.$.ajax_beter_melden.body={
             "gebruikersnaam":this.gebruiker.gebruikersnaam,
             "status":"Beter"
@@ -245,17 +267,24 @@
           this.$.ajax_beter_melden.generateRequest();
         },
 
+        //Kijken of het beter melden is gelukt
         ajax_beter_melden_handler: function(request) {
           var response = request.detail.response;
           if("succes" in response){
+
+            //Data updaten op het scherm
             this.update();
           }
         },
 
+        //Afwezig melden event voor een persoon
         ajax_zet_status_onClick: function(){
+          //Kijken of er een dagdeel is geselecteerd
           if(this.dagDeel=="") alert("geen dagdeel gekozen!");
 
           this.$.ajax_zet_status.contentType="application/json";
+
+          //Gebruikersnaam, Dagdeel, Datum en Status mee geven aan back-end
           this.$.ajax_zet_status.body={
             "gebruikersnaam":this.gebruiker.gebruikersnaam,
             "dagdeel":this.dagDeel,
@@ -265,22 +294,29 @@
           this.$.ajax_zet_status.generateRequest();
         },
 
+        //Kijken of het zetten van de status is gelukt
         ajax_zet_status_handler: function(request) {
           var response = request.detail.response;
           if("succes" in response){
+            //Scherm updaten met nieuwe data
             this.update();
           }
         },
 
+        //Persoon ophalen die ingelogd is
         ajax_haal_persoon: function(){
           this.$.ajax_haal_persoon.contentType="application/json";
+
+          //Gebruikersnaam mee geven
           this.$.ajax_haal_persoon.body={
             "gebruikersnaam":this.gebruiker.gebruikersnaam
           };
           this.$.ajax_haal_persoon.generateRequest();
         },
 
+        //Rooster weergeven van ingelogde gebruiker
         ajax_persoon_handler: function(request){
+          //Persoon vullen met response
           this.persoon = request.detail.response;
 
           if(this.gebruiker.rol=="student"){
@@ -292,18 +328,24 @@
           }
         },
 
+        //Dagdeel dropdown event
         _itemSelected : function(e) {
           var selectedItem = e.target.selectedItem;
           if (selectedItem) {
+            //Als er een dagdeel is geselecteerd deze opslaan
             this.dagDeel = selectedItem.innerText;
           }
         },
 
         //Functie om te kijken of de docent aanwezig is via de statussen en begin/eind datum/tijd van de les
         docentAanwezig: function(docent, beginDatum, eindDatum){
+          //Als de docent ziek is afwezig terug geven
           if(docent.ziek) return "afwezig";
 
+          //Door statussen heen lopen van een docent
           for (var i = 0; i < docent.statussen.length; i++) {
+
+              //Bij de huidige status kijken of het op dezelfde dag is
               if((docent.statussen[i].datum.day == beginDatum.date.day &&
                 docent.statussen[i].datum.month == beginDatum.date.month &&
                 docent.statussen[i].datum.year == beginDatum.date.year) ||
@@ -311,18 +353,22 @@
                 docent.statussen[i].datum.month == eindDatum.date.month &&
                 docent.statussen[i].datum.year == eindDatum.date.year)){
 
+                  //Als het op dezelfde dag is en de status op "Hele dag" staat afwezig terug geven
                   if(docent.statussen[i].dagdeel=="Hele dag") return "afwezig";
 
+                  //Als het dagdeel Ochtend is kijken of de tijden hierbinnen vallen. Als dit zo is afwezig terug geven
                   if(docent.statussen[i].dagdeel=="Ochtend"){
                     if((beginDatum.time.hour>=8 && beginDatum.time.hour<12) || (eindDatum.time.hour>=8 && eindDatum.time.hour<12)) return "afwezig";
                   }
 
+                  //Als het dagdeel Middag is kijken of de tijden hierbinnen vallen. Als dit zo is afwezig terug geven
                   if(docent.statussen[i].dagdeel=="Middag"){
                     if((beginDatum.time.hour>=12 && beginDatum.time.hour<19) || (eindDatum.time.hour>=12 && eindDatum.time.hour<19)) return "afwezig";
                   }
               }
           }
 
+          //Lege string returnen als geen van de condities waar is
           return "";
         },
 
@@ -349,6 +395,7 @@
           this._rol = this.gebruiker.rol;
         },
 
+        //Check of twee rollen gelijk zijn
         check_rol: function(str1, str2) {
 	        return (str1==str2);
 	      },

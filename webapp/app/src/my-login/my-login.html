@@ -48,8 +48,12 @@
             value: "geheim"
           }
         },
+
+        //Login knop event
         loginOnClick: function(){
           this.$.ajax_login.contentType="application/json";
+
+          //Gebruikersnaam en Password mee geven aan back-end
           this.$.ajax_login.body={
             "username":this.username,
             "password":this._password
@@ -57,19 +61,25 @@
           this.$.ajax_login.generateRequest();
         },
 
+        //Kijken of het inloggen is gelukt
         login_handler: function(request){
           var response = request.detail.response
 
+          //Inloggen is niet gelukt invoer velden rood maken
           if (response.rol == "undefined") {
             this.$.email_element.invalid = true;
             this.$.wachtwoord_element.invalid = true;
           }
 
+          //Inloggen gelukt
           if (response.rol != 'undefined'){
+            //Gebruiker Json object vullen
             this.gebruiker = {"gebruikersnaam":response.gebruikersnaam,"rol":response.rol};
 
+            //Ingelogde gebruiker opslaan in de browser storage
             localStorage.setItem("gebruiker", '{"gebruikersnaam":"'+response.gebruikersnaam+'","rol":"'+response.rol+'"}');
 
+            //Gebruiker naar de juiste pagina sturen
             if(response.rol != 'admin'){
               this.$.redirect_home.click();
             }else{
@@ -78,9 +88,11 @@
           }
         },
 
+        //Enter click event inplaats van het klikken van de login button
         _checkForEnter: function (e) {
           if (e.currentTarget.id == "email_element") {
             if (e.keyCode === 13) {
+              //Focussen op wachtwoord invoerveld
               this.$.wachtwoord_element.focus();
             }
           } else if (e.keyCode === 13) {
