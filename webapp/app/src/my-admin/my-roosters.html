@@ -1,7 +1,7 @@
 <link rel="import" href="../../elements/elements.html">
 
 <dom-module id="my-roosters">
-  <link rel="import" type="css" href="../../styles/roostersStyle.css">
+  <link rel="import" type="css" href="../../styles/homeStyle.css">
   <template>
     <a id="redirect_login" href="#/login"></a>
     <a id="redirect_home" href="#/home"></a>
@@ -22,11 +22,33 @@
       on-response="ajax_rooster_docent_handler">
     </iron-ajax>
 
-    <brainy-table items="[[item.rooster]]">
+    <template is="dom-repeat" items="{{rooster.alleLessen}}">
+
+      <template is="dom-if" if="{{printWeek(item.week)}}">
+        <h1>Week {{item.week}}</h1>
+      </template>
+
+      <template is="dom-if" if="{{printDag(item.dag)}}">
+        <h2>{{getDag(item.dag)}}</h2>
+      </template>
+
+      <paper-card class$="{{docentAanwezig(item.huidigeDocent, item.beginTijd, item.eindTijd)}} holder" elevation="2">
+        {{item.huidigeVak.code}}<br>
+        {{item.klasCode}} | {{item.huidigeDocent.gebruikersnaam}}<br>
+        {{padNummer(item.beginTijd.time.hour)}}:{{padNummer(item.beginTijd.time.minute)}}-{{padNummer(item.eindTijd.time.hour)}}:{{padNummer(item.eindTijd.time.minute)}} | {{item.huidigeLokaal.naam}}<br>
+        {{padNummer(item.beginTijd.date.day)}}-{{padNummer(item.beginTijd.date.month)}}-{{item.beginTijd.date.year}}<br>
+
+        <!--<a name="klasInfo" href="#/home/klasInfo/{{item.beginTijd.date.year}}-{{padNummer(item.beginTijd.date.month)}}-{{padNummer(item.beginTijd.date.day)}}/{{padNummer(item.beginTijd.time.hour)}}:{{padNummer(item.beginTijd.time.minute)}}/{{padNummer(item.eindTijd.time.hour)}}:{{padNummer(item.eindTijd.time.minute)}}/{{item.klasCode}}/{{item.huidigeVak.code}}"  hidden$="[[check_rol(_rol, 'student')]]">
+          <paper-fab class="button" mini icon="reply" disabled$="[[check_rol(_rol, 'student')]]"></paper-fab>
+        </a>-->
+      </paper-card>
+    </template>
+
+    <!--<brainy-table items="[[item.rooster]]">
               <brainy-table-column name="huidigeVak" sort-by="item.huidigeVak" width="35px">
                 <template>[[item]]</template>
               </brainy-table-column>
-    </brainy-table>
+    </brainy-table>-->
   </template>
 
 <script>
@@ -67,12 +89,13 @@
               'SUNDAY':'Zondag'
             }
         },
+      },
         //zoeken naar json file//
       ajax_rooster_student_start: function() {
 
         this.$.ajax_rooster_student.contentType="application/json";
         this.$.ajax_rooster_student.body={
-          "klascode":"TICT-SIE-"+this.persoon.groepId
+          "klascode":"TICT-SIE-V1D"
         };
         this.$.ajax_rooster_student.generateRequest();
       },
@@ -85,7 +108,7 @@
 
         this.$.ajax_rooster_docent.contentType="application/json";
         this.$.ajax_rooster_docent.body={
-          "gebruikersnaam":this.gebruiker.gebruikersnaam
+          "gebruikersnaam":"peter.schuler@hu.nl"
         };
         this.$.ajax_rooster_docent.generateRequest();
       },
@@ -128,26 +151,6 @@
         var str = "" + nr;
         var pad = "00";
         return pad.substring(0, pad.length - str.length) + str;
-      },
-
-      ajax_haal_persoon: function(){
-        this.$.ajax_haal_persoon.contentType="application/json";
-        this.$.ajax_haal_persoon.body={
-          "gebruikersnaam":this.gebruiker.gebruikersnaam
-        };
-        this.$.ajax_haal_persoon.generateRequest();
-      },
-
-      ajax_persoon_handler: function(request){
-        this.persoon = request.detail.response;
-
-        if(this.gebruiker.rol=="student"){
-          this.ajax_rooster_student_start();
-        }
-
-        if(this.gebruiker.rol=="docent"){
-          this.ajax_rooster_docent_start();
-        }
       },
 
       _itemSelected : function(e) {
@@ -196,22 +199,19 @@
         }
 
         //Admin naar admin scherm toe sturen
-        if(this.gebruiker.rol == 'admin'){
-          this.$.redirect_admin.click();
+        if(this.gebruiker.rol =! 'admin'){
+          this.$.redirect_home.click();
 
           return;
         }
 
-        //Meer informatie over ingelogde gebruiker ophalen
-        this.ajax_haal_persoon();
-        this._rol = this.gebruiker.rol;
-        console.log(this._rol);
+        this.ajax_rooster_student_start();
       },
 
       check_rol: function(str1, str2) {
         // console.log("check_rol: " + str1 + " met: " + str2);
         return (str1==str2);
-      }}
+      }
 
     })
 

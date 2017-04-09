@@ -1,7 +1,7 @@
 <link rel="import" href="../../elements/elements.html">
 
 <dom-module id="my-klassen">
-  <link rel="import" type="css" href="../../styles/mainStyle.css">
+  <link rel="import" type="css" href="../../styles/infoStyle.css">
   <template>
     <a id="redirect_login" href="#/login"></a>
     <a id="redirect_home" href="#/home"></a>
@@ -14,6 +14,30 @@
         on-response="ajax_klassen_handler">
     </iron-ajax>
 
+    <iron-ajax
+      id="ajax_zet_status_afwezig"
+      method="POST"
+      url="/persoon/zetstatus"
+      handle-as="json"
+      on-response="ajax_zet_status_afwezig_handler">
+    </iron-ajax>
+
+    <iron-ajax
+      id="ajax_zet_status_aanwezig"
+      method="POST"
+      url="/persoon/zetstatus"
+      handle-as="json"
+      on-response="ajax_zet_status_aanwezig_handler">
+    </iron-ajax>
+
+    <iron-ajax
+      id="ajax_beter_melden"
+      method="POST"
+      url="/persoon/zetstatus"
+      handle-as="json"
+      on-response="ajax_beter_melden_handler">
+    </iron-ajax>
+
     <div>
       <template is="dom-repeat" items="{{klassen}}">
         <h1>{{item.naam}}</h1>
@@ -21,8 +45,8 @@
         Aantal studenten: {{item.deStudenten.length}}
         <br><br>
 
-        <paper-card class="holder" elevation="2">
-          <!-- maak brainy tables aan met gegeven uit de json file de Studenten -->
+        <!--<paper-card class="holder" elevation="2">
+
           <brainy-table items="[[item.deStudenten]]" page-size="[[item.deStudenten.length]]" details-enabled>
             <brainy-table-column name="Voornaam" sort-by="item.voornaam" width="35px">
               <template>[[item.voornaam]]</template>
@@ -69,6 +93,57 @@
              <div no-results>No records found</div>
           </brainy-table>
 
+        </paper-card>-->
+
+        <paper-card class="holder" elevation="2">
+
+          <brainy-table items="[[item.deStudenten]]" page-size="[[item.deStudenten.length]]" details-enabled>
+            <brainy-table-column name="Voornaam" sort-by="item.voornaam" width="35px">
+              <template><div class$="[[studentAanwezig(item)]]">[[item.voornaam]]</div></template>
+            </brainy-table-column>
+
+            <brainy-table-column name="Tussenvoegsel" width="45px">
+              <template><div class$="[[studentAanwezig(item)]]">[[item.tussenvoegsel]]</div></template>
+            </brainy-table-column>
+
+            <brainy-table-column name="Achternaam" width="45px">
+              <template><div class$="[[studentAanwezig(item)]]">[[item.achternaam]]</div></template>
+            </brainy-table-column>
+
+            <brainy-table-column name="E-mail" width="150px">
+              <template><div class$="[[studentAanwezig(item)]]">[[item.gebruikersnaam]]</div></template>
+            </brainy-table-column>
+
+            <brainy-table-column name="StudentNr" width="30px">
+              <template><div class$="[[studentAanwezig(item)]]">[[item.studentNummer]]</div></template>
+            </brainy-table-column>
+
+            <!--<brainy-table-column name="Aanwezig" width="30px">
+              <template>[[studentAanwezig(item)]]</template>
+            </brainy-table-column>-->
+
+            <brainy-table-column width="30px" align-right flex="0">
+              <template>
+                <template is="dom-if" if="[[!expanded]]">
+                  <iron-icon icon="icons:expand-more"></iron-icon>
+                </template>
+                <template is="dom-if" if="[[expanded]]">
+                  <iron-icon icon="icons:expand-less"></iron-icon>
+                </template>
+              </template>
+            </brainy-table-column>
+
+             <template is="row-detail">
+               <div>
+                 <paper-button class="red" on-tap="ajax_zet_status_afwezig_onClick">Afwezig melden</paper-button>
+                 <paper-button class="red" on-tap="ajax_zet_status_aanwezig_onClick">Aanwezig melden</paper-button>
+                 <paper-button class="green" on-tap="ajax_beter_melden_onClick">Beter melden</paper-button>
+               </div>
+             </template>
+
+             <div no-results>No records found</div>
+          </brainy-table>
+
         </paper-card>
 
       </template>
@@ -89,6 +164,22 @@
           }
         },
 
+        padNummer(nr){
+          var str = "" + nr;
+          var pad = "00";
+          return pad.substring(0, pad.length - str.length) + str;
+        },
+
+        getDagdeel(){
+          var vandaag = new Date();
+
+          if(vandaag.getHours()>=8 && vandaag.getHours()<12) return "Ochtend";
+
+          if(vandaag.getHours()>=12 && vandaag.getHours()<19) return "Avond";
+
+          return "Hele dag";
+        },
+
         ajax_klassen_start: function(){
           this.$.ajax_klassen.contentType="application/json";
           this.$.ajax_klassen.body={
@@ -101,6 +192,90 @@
 
           this.klassen = request.detail.response;
 
+        },
+
+        //Functie om te kijken of een student aanwezig is
+        studentAanwezig: function(student){
+          if(student.ziek) return "afwezig";
+
+          var vandaag = new Date();
+
+          for (var i = 0; i < student.statussen.length; i++) {
+              if(student.statussen[i].datum.day == vandaag.getDate() &&
+                student.statussen[i].datum.month == vandaag.getMonth() &&
+                student.statussen[i].datum.year == vandaag.getFullYear()){
+
+                  if(student.statussen[i].dagdeel=="Hele dag") return "afwezig";
+
+                  if(student.statussen[i].dagdeel=="Ochtend"){
+                    if(vandaag.getHours()>=8 && vandaag.getHours()<12) return "afwezig";
+                  }
+
+                  if(student.statussen[i].dagdeel=="Middag"){
+                    if(vandaag.getHours()>=12 && vandaag.getHours()<19) return "afwezig";
+                  }
+              }
+          }
+
+          return "";
+        },
+
+        ajax_zet_status_afwezig_onClick: function(e){
+
+          var vandaag = new Date();
+
+          this.$.ajax_zet_status_afwezig.contentType="application/json";
+          this.$.ajax_zet_status_afwezig.body={
+            "gebruikersnaam":e.model.item.gebruikersnaam,
+            "dagdeel":this.getDagdeel(),
+            "datum":this.padNummer(vandaag.getDate())+"-"+this.padNummer(vandaag.getMonth())+"-"+vandaag.getFullYear(),
+            "status":"Afwezig"
+          };
+          this.$.ajax_zet_status_afwezig.generateRequest();
+        },
+
+        ajax_zet_status_afwezig_handler: function(request) {
+          var response = request.detail.response;
+          if("succes" in response){
+            this.update();
+          }
+        },
+
+        ajax_zet_status_aanwezig_onClick: function(e){
+
+          var vandaag = new Date();
+
+          this.$.ajax_zet_status_aanwezig.contentType="application/json";
+          this.$.ajax_zet_status_aanwezig.body={
+            "gebruikersnaam":e.model.item.gebruikersnaam,
+            "dagdeel":this.getDagdeel(),
+            "datum":this.padNummer(vandaag.getDate())+"-"+this.padNummer(vandaag.getMonth())+"-"+vandaag.getFullYear(),
+            "status":"Aanwezig"
+          };
+          this.$.ajax_zet_status_aanwezig.generateRequest();
+        },
+
+        ajax_zet_status_aanwezig_handler: function(request) {
+          var response = request.detail.response;
+          if("succes" in response){
+            this.update();
+          }
+        },
+
+        ajax_beter_melden_onClick: function(e){
+          this.$.ajax_beter_melden.contentType="application/json";
+          this.$.ajax_beter_melden.body={
+            "gebruikersnaam":e.model.item.gebruikersnaam,
+            "status":"Beter"
+          };
+          this.$.ajax_beter_melden.generateRequest();
+        },
+
+        ajax_beter_melden_handler: function(request) {
+          var response = request.detail.response;
+          if("succes" in response){
+            this.update();
+          }
         },
 
         update: function() {

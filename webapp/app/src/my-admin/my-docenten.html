@@ -1,7 +1,7 @@
 <link rel="import" href="../../elements/elements.html">
 
 <dom-module id="my-docenten">
-  <link rel="import" type="css" href="../../styles/mainStyle.css">
+  <link rel="import" type="css" href="../../styles/infoStyle.css">
   <template>
     <a id="redirect_login" href="#/login"></a>
     <a id="redirect_home" href="#/home"></a>
@@ -14,25 +14,45 @@
       on-response="ajax_docenten_handler">
     </iron-ajax>
 
+    <iron-ajax
+      id="ajax_zet_status_afwezig"
+      method="POST"
+      url="/persoon/zetstatus"
+      handle-as="json"
+      on-response="ajax_zet_status_afwezig_handler">
+    </iron-ajax>
+
+    <iron-ajax
+      id="ajax_zet_status_aanwezig"
+      method="POST"
+      url="/persoon/zetstatus"
+      handle-as="json"
+      on-response="ajax_zet_status_aanwezig_handler">
+    </iron-ajax>
+
+    <iron-ajax
+      id="ajax_beter_melden"
+      method="POST"
+      url="/persoon/zetstatus"
+      handle-as="json"
+      on-response="ajax_beter_melden_handler">
+    </iron-ajax>
+
     <h1>Docenten</h1>
 
     <paper-card class="holder" elevation="2">
 
       <brainy-table items="[[docenten]]" page-size="[[docenten.length]]" details-enabled>
         <brainy-table-column name="Voornaam" sort-by="item.voornaam">
-          <template>[[item.voornaam]]</template>
+          <template><div class$="[[docentAanwezig(item)]]">[[item.voornaam]]</div></template>
         </brainy-table-column>
 
         <brainy-table-column name="Tussenvoegsel">
-          <template>[[item.tussenvoegsel]]</template>
+          <template><div class$="[[docentAanwezig(item)]]">[[item.tussenvoegsel]]</div></template>
         </brainy-table-column>
 
         <brainy-table-column name="Achternaam">
-          <template>[[item.achternaam]]</template>
-        </brainy-table-column>
-
-        <brainy-table-column name="Ziek">
-          <template>[[item.ziek]]</template>
+          <template><div class$="[[docentAanwezig(item)]]">[[item.achternaam]]</div></template>
         </brainy-table-column>
 
         <brainy-table-column width="30px" align-right flex="0">
@@ -48,8 +68,9 @@
 
          <template is="row-detail">
            <div>
-             <paper-button class="red" on-tap="ajax_zet_status_onClick">Afwezig melden</paper-button>
-             <paper-button class="green" on-tap="ajax_beter_melden_onClick">Aanwezig melden</paper-button>
+             <paper-button class="red" on-tap="ajax_zet_status_afwezig_onClick">Afwezig melden</paper-button>
+             <paper-button class="red" on-tap="ajax_zet_status_aanwezig_onClick">Aanwezig melden</paper-button>
+             <paper-button class="green" on-tap="ajax_beter_melden_onClick">Beter melden</paper-button>
            </div>
          </template>
 
@@ -69,6 +90,106 @@
     properties: {
       gebruiker:{
         type: Object
+      }
+    },
+
+    padNummer(nr){
+      var str = "" + nr;
+      var pad = "00";
+      return pad.substring(0, pad.length - str.length) + str;
+    },
+
+    getDagdeel(){
+      var vandaag = new Date();
+
+      if(vandaag.getHours()>=8 && vandaag.getHours()<12) return "Ochtend";
+
+      if(vandaag.getHours()>=12 && vandaag.getHours()<19) return "Avond";
+
+      return "Hele dag";
+    },
+
+    //Functie om te kijken of een docent aanwezig is
+    docentAanwezig: function(docent){
+      if(docent.ziek) return "afwezig";
+
+      var vandaag = new Date();
+
+      for (var i = 0; i < docent.statussen.length; i++) {
+          if(docent.statussen[i].datum.day == vandaag.getDate() &&
+            docent.statussen[i].datum.month == vandaag.getMonth() &&
+            docent.statussen[i].datum.year == vandaag.getFullYear()){
+
+              if(docent.statussen[i].dagdeel=="Hele dag") return "afwezig";
+
+              if(docent.statussen[i].dagdeel=="Ochtend"){
+                if(vandaag.getHours()>=8 && vandaag.getHours()<12) return "afwezig";
+              }
+
+              if(docent.statussen[i].dagdeel=="Middag"){
+                if(vandaag.getHours()>=12 && vandaag.getHours()<19) return "afwezig";
+              }
+          }
+      }
+
+      return "";
+    },
+
+    ajax_zet_status_afwezig_onClick: function(e){
+
+      var vandaag = new Date();
+
+      this.$.ajax_zet_status_afwezig.contentType="application/json";
+      this.$.ajax_zet_status_afwezig.body={
+        "gebruikersnaam":e.model.item.gebruikersnaam,
+        "dagdeel":this.getDagdeel(),
+        "datum":this.padNummer(vandaag.getDate())+"-"+this.padNummer(vandaag.getMonth())+"-"+vandaag.getFullYear(),
+        "status":"Afwezig"
+      };
+      this.$.ajax_zet_status_afwezig.generateRequest();
+    },
+
+    ajax_zet_status_afwezig_handler: function(request) {
+      var response = request.detail.response;
+      if("succes" in response){
+        this.update();
+      }
+    },
+
+    ajax_zet_status_aanwezig_onClick: function(e){
+
+      var vandaag = new Date();
+
+      this.$.ajax_zet_status_aanwezig.contentType="application/json";
+      this.$.ajax_zet_status_aanwezig.body={
+        "gebruikersnaam":e.model.item.gebruikersnaam,
+        "dagdeel":this.getDagdeel(),
+        "datum":this.padNummer(vandaag.getDate())+"-"+this.padNummer(vandaag.getMonth())+"-"+vandaag.getFullYear(),
+        "status":"Aanwezig"
+      };
+      this.$.ajax_zet_status_aanwezig.generateRequest();
+    },
+
+    ajax_zet_status_aanwezig_handler: function(request) {
+      var response = request.detail.response;
+      if("succes" in response){
+        this.update();
+      }
+    },
+
+    ajax_beter_melden_onClick: function(e){
+      this.$.ajax_beter_melden.contentType="application/json";
+      this.$.ajax_beter_melden.body={
+        "gebruikersnaam":e.model.item.gebruikersnaam,
+        "status":"Beter"
+      };
+      this.$.ajax_beter_melden.generateRequest();
+    },
+
+    ajax_beter_melden_handler: function(request) {
+      var response = request.detail.response;
+      if("succes" in response){
+        this.update();
       }
     },
 
