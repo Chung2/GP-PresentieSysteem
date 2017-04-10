@@ -59,7 +59,7 @@
         <h2>{{getDag(item.dag)}}</h2>
       </template>
 
-      <paper-card class$="{{docentAanwezig(item.huidigeDocent, item.beginTijd, item.eindTijd)}} holder" elevation="2">
+      <paper-card class$="{{docentAanwezig(item.huidigeDocent, item.beginTijd, item.eindTijd)}} {{studentAanwezig(item.beginTijd, item.eindTijd)}} holder" elevation="2">
         {{item.huidigeVak.code}}<br>
         {{item.klasCode}} | {{item.huidigeDocent.gebruikersnaam}}<br>
         {{padNummer(item.beginTijd.time.hour)}}:{{padNummer(item.beginTijd.time.minute)}}-{{padNummer(item.eindTijd.time.hour)}}:{{padNummer(item.eindTijd.time.minute)}} | {{item.huidigeLokaal.naam}}<br>
@@ -358,6 +358,45 @@
             //Als er een dagdeel is geselecteerd deze opslaan
             this.dagDeel = selectedItem.innerText;
           }
+        },
+
+        //Functie om te kijken of de docent aanwezig is via de statussen en begin/eind datum/tijd van de les
+        studentAanwezig: function(beginDatum, eindDatum){
+          var student = this.persoon;
+
+          console.log(student);
+
+          //Als de student ziek is afwezig terug geven
+          if(student.ziek) return "studentAfwezig";
+
+          //Door statussen heen lopen van een docent
+          for (var i = 0; i < student.statussen.length; i++) {
+
+              //Bij de huidige status kijken of het op dezelfde dag is
+              if((student.statussen[i].datum.day == beginDatum.date.day &&
+                student.statussen[i].datum.month == beginDatum.date.month &&
+                student.statussen[i].datum.year == beginDatum.date.year) ||
+                (student.statussen[i].datum.day == eindDatum.date.day &&
+                student.statussen[i].datum.month == eindDatum.date.month &&
+                student.statussen[i].datum.year == eindDatum.date.year)){
+
+                  //Als het op dezelfde dag is en de status op "Hele dag" staat afwezig terug geven
+                  if(student.statussen[i].dagdeel=="Hele dag") return "studentAfwezig";
+
+                  //Als het dagdeel Ochtend is kijken of de tijden hierbinnen vallen. Als dit zo is afwezig terug geven
+                  if(student.statussen[i].dagdeel=="Ochtend"){
+                    if((beginDatum.time.hour>=8 && beginDatum.time.hour<12) || (eindDatum.time.hour>=8 && eindDatum.time.hour<12)) return "studentAfwezig";
+                  }
+
+                  //Als het dagdeel Middag is kijken of de tijden hierbinnen vallen. Als dit zo is afwezig terug geven
+                  if(student.statussen[i].dagdeel=="Middag"){
+                    if((beginDatum.time.hour>=12 && beginDatum.time.hour<19) || (eindDatum.time.hour>=12 && eindDatum.time.hour<19)) return "studentAfwezig";
+                  }
+              }
+          }
+
+          //Lege string returnen als geen van de condities waar is
+          return "";
         },
 
         //Functie om te kijken of de docent aanwezig is via de statussen en begin/eind datum/tijd van de les
