@@ -131,12 +131,14 @@
           }
         },
 
+        //Nummer uitpadden naar 2 lang zodat datums goed worden mee gegeven en weer gegeven
         padNummer(nr){
           var str = "" + nr;
           var pad = "00";
           return pad.substring(0, pad.length - str.length) + str;
         },
 
+        //Functie om de huidige dagdeel op halen
         getDagdeel(){
           if((this.les.beginTijd.time.hour>=8 && this.les.beginTijd.time.hour<12) || (this.les.eindTijd.time.hour>=8 && this.les.eindTijd.time.hour<12)) return "Ochtend";
 
@@ -145,23 +147,29 @@
           return "Hele dag";
         },
 
+        //Alle data van de huidige klas ophalen
         ajax_klas_start: function(){
           this.$.ajax_klas.contentType="application/json";
+          //Klascode mee geven naar back-end
           this.$.ajax_klas.body={
             "klascode":this.les.klasCode
           };
           this.$.ajax_klas.generateRequest();
         },
 
+        //Klas in een variabel opslaan
         ajax_klas_handler: function(request){
           this.klas = request.detail.response;
         },
 
+        //Huidige les ophalen uit URL
         ajax_les_start: function(){
           //Data uit URL lezen
           var url = window.location.href.split("/").slice(6, 12);
 
           this.$.ajax_les.contentType="application/json";
+
+          //Data mee sturen naar back-end
           this.$.ajax_les.body={
             "datum":url[0],
             "beginTijd":url[1],
@@ -172,6 +180,7 @@
           this.$.ajax_les.generateRequest();
         },
 
+        //Les in een variabel opslaan
         ajax_les_handler: function(request){
           this.les = request.detail.response;
 
@@ -180,9 +189,12 @@
 
         //Functie om te kijken of een student aanwezig is
         studentAanwezig: function(student){
+          //Als de student ziek is afwezig terug geven
           if(student.ziek) return "afwezig";
 
+          //Door statussen heen lopen van een student
           for (var i = 0; i < student.statussen.length; i++) {
+              //Bij de huidige status kijken of het op dezelfde dag is
               if((student.statussen[i].datum.day == this.les.beginTijd.date.day &&
                 student.statussen[i].datum.month == this.les.beginTijd.date.month &&
                 student.statussen[i].datum.year == this.les.beginTijd.date.year) ||
@@ -190,23 +202,30 @@
                 student.statussen[i].datum.month == this.les.eindTijd.date.month &&
                 student.statussen[i].datum.year == this.les.eindTijd.date.year)){
 
+                  //Als het op dezelfde dag is en de status op "Hele dag" staat afwezig terug geven
                   if(student.statussen[i].dagdeel=="Hele dag") return "afwezig";
 
+                  //Als het dagdeel Ochtend is kijken of de tijden hierbinnen vallen. Als dit zo is afwezig terug geven
                   if(student.statussen[i].dagdeel=="Ochtend"){
                     if((this.les.beginTijd.time.hour>=8 && this.les.beginTijd.time.hour<12) || (this.les.eindTijd.time.hour>=8 && this.les.eindTijd.time.hour<12)) return "afwezig";
                   }
 
+                  //Als het dagdeel Middag is kijken of de tijden hierbinnen vallen. Als dit zo is afwezig terug geven
                   if(student.statussen[i].dagdeel=="Middag"){
                     if((this.les.beginTijd.time.hour>=12 && this.les.beginTijd.time.hour<19) || (this.les.eindTijd.time.hour>=12 && this.les.eindTijd.time.hour<19)) return "afwezig";
                   }
               }
           }
 
+          //Lege string returnen als geen van de condities waar is
           return "";
         },
 
+        //Afwezig melden event voor een persoon
         ajax_zet_status_afwezig_onClick: function(e){
           this.$.ajax_zet_status_afwezig.contentType="application/json";
+
+          //Gebruikersnaam, Dagdeel, Datum en Status mee geven aan back-end
           this.$.ajax_zet_status_afwezig.body={
             "gebruikersnaam":e.model.item.gebruikersnaam,
             "dagdeel":this.getDagdeel(),
@@ -216,15 +235,20 @@
           this.$.ajax_zet_status_afwezig.generateRequest();
         },
 
+        //Kijken of het zetten van de status is gelukt
         ajax_zet_status_afwezig_handler: function(request) {
           var response = request.detail.response;
           if("succes" in response){
+            //Scherm updaten met nieuwe data
             this.update();
           }
         },
 
+        //Aanwezig melden event voor een persoon
         ajax_zet_status_aanwezig_onClick: function(e){
           this.$.ajax_zet_status_aanwezig.contentType="application/json";
+
+          //Gebruikersnaam, Dagdeel, Datum en Status mee geven aan back-end
           this.$.ajax_zet_status_aanwezig.body={
             "gebruikersnaam":e.model.item.gebruikersnaam,
             "dagdeel":this.getDagdeel(),
@@ -234,15 +258,20 @@
           this.$.ajax_zet_status_aanwezig.generateRequest();
         },
 
+        //Kijken of het zetten van de status is gelukt
         ajax_zet_status_aanwezig_handler: function(request) {
           var response = request.detail.response;
           if("succes" in response){
+            //Scherm updaten met nieuwe data
             this.update();
           }
         },
 
+        //Student beter melden als hij niet meer ziek is
         ajax_beter_melden_onClick: function(e){
           this.$.ajax_beter_melden.contentType="application/json";
+
+          //Gebruikersnaam en Status mee geven aan back-end
           this.$.ajax_beter_melden.body={
             "gebruikersnaam":e.model.item.gebruikersnaam,
             "status":"Beter"
@@ -250,9 +279,11 @@
           this.$.ajax_beter_melden.generateRequest();
         },
 
+        //Kijken of het beter melden is gelukt
         ajax_beter_melden_handler: function(request) {
           var response = request.detail.response;
           if("succes" in response){
+            //Scherm updaten met nieuwe data
             this.update();
           }
         },
@@ -282,6 +313,7 @@
             return;
           }
 
+          //Les ophalen vanuit URL
           this.ajax_les_start();
         },
 

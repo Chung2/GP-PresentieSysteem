@@ -3,6 +3,8 @@
 <dom-module id="my-roosters">
   <link rel="import" type="css" href="../../styles/homeStyle.css">
   <template>
+    <a id="redirect_login" href="#/login"></a>
+    <a id="redirect_home" href="#/home"></a>
 
     <h2>Kies een klas/docent voor het gewenste rooster</h2>
 
@@ -23,9 +25,6 @@
         </paper-listbox>
       </paper-dropdown-menu>
     </div>
-
-    <a id="redirect_login" href="#/login"></a>
-    <a id="redirect_home" href="#/home"></a>
 
     <iron-ajax
       id="ajax_rooster_student"
@@ -74,18 +73,8 @@
         {{item.klasCode}} | {{item.huidigeDocent.gebruikersnaam}}<br>
         {{padNummer(item.beginTijd.time.hour)}}:{{padNummer(item.beginTijd.time.minute)}}-{{padNummer(item.eindTijd.time.hour)}}:{{padNummer(item.eindTijd.time.minute)}} | {{item.huidigeLokaal.naam}}<br>
         {{padNummer(item.beginTijd.date.day)}}-{{padNummer(item.beginTijd.date.month)}}-{{item.beginTijd.date.year}}<br>
-
-        <!--<a name="klasInfo" href="#/home/klasInfo/{{item.beginTijd.date.year}}-{{padNummer(item.beginTijd.date.month)}}-{{padNummer(item.beginTijd.date.day)}}/{{padNummer(item.beginTijd.time.hour)}}:{{padNummer(item.beginTijd.time.minute)}}/{{padNummer(item.eindTijd.time.hour)}}:{{padNummer(item.eindTijd.time.minute)}}/{{item.klasCode}}/{{item.huidigeVak.code}}"  hidden$="[[check_rol(_rol, 'student')]]">
-          <paper-fab class="button" mini icon="reply" disabled$="[[check_rol(_rol, 'student')]]"></paper-fab>
-        </a>-->
       </paper-card>
     </template>
-
-    <!--<brainy-table items="[[item.rooster]]">
-              <brainy-table-column name="huidigeVak" sort-by="item.huidigeVak" width="35px">
-                <template>[[item]]</template>
-              </brainy-table-column>
-    </brainy-table>-->
   </template>
 
 <script>
@@ -127,37 +116,48 @@
             }
         },
       },
-        //zoeken naar json file//
+
+      //Klas ophalen via ajax
       ajax_rooster_student_start: function() {
 
         this.$.ajax_rooster_student.contentType="application/json";
+
+        //Klascode mee geven aan de back-end
         this.$.ajax_rooster_student.body={
           "klascode":this.klas
         };
         this.$.ajax_rooster_student.generateRequest();
       },
-      //leest de json file uit//
+      //Rooster weergeven op scherm
       ajax_rooster_student_handler: function(request) {
+        //Rooster variabel vullen met response
         this.rooster = request.detail.response;
       },
 
+      //Docent ophalen via ajax
       ajax_rooster_docent_start: function() {
 
         this.$.ajax_rooster_docent.contentType="application/json";
+
+        //Gebruikersnaam mee geven aan back-end
         this.$.ajax_rooster_docent.body={
           "gebruikersnaam":this.docent
         };
         this.$.ajax_rooster_docent.generateRequest();
       },
 
+      //Rooster op het scherm weergeven
       ajax_rooster_docent_handler: function(request) {
+        //Rooster variabel vullen  met response
         this.rooster = request.detail.response;
       },
 
+      //Dag vertalen van engels naar nederlands
       getDag: function(dag){
         return this.weekDagenVertalingen[dag];
       },
 
+      //Kijken of dezelfde dag al eerder erboven is geprint
       printDag: function(dag){
         var printdag = true;
 
@@ -169,6 +169,8 @@
 
         return printdag;
       },
+
+      //Kijken of dezelfde week al eerder erboven is geprint
       printWeek: function(week){
         var printweek = true;
 
@@ -180,28 +182,27 @@
 
         return printweek;
       },
+
+      //Not boolean toegevoegd omdat polymer ! niet ondersteunt in een dom-if
       not: function(bool){
         return !bool;
       },
 
+      //Nummers uitpadden met 00 zodat datums goed worden mee gegeven en weergegeven
       padNummer(nr){
         var str = "" + nr;
         var pad = "00";
         return pad.substring(0, pad.length - str.length) + str;
       },
 
-      _itemSelected : function(e) {
-        var selectedItem = e.target.selectedItem;
-        if (selectedItem) {
-          this.dagDeel = selectedItem.innerText;
-        }
-      },
-
       //Functie om te kijken of de docent aanwezig is via de statussen en begin/eind datum/tijd van de les
       docentAanwezig: function(docent, beginDatum, eindDatum){
+        //Als de docent ziek is afwezig terug geven
         if(docent.ziek) return "afwezig";
 
+        //Door statussen heen lopen van een docent
         for (var i = 0; i < docent.statussen.length; i++) {
+            //Bij de huidige status kijken of het op dezelfde dag is
             if((docent.statussen[i].datum.day == beginDatum.date.day &&
               docent.statussen[i].datum.month == beginDatum.date.month &&
               docent.statussen[i].datum.year == beginDatum.date.year) ||
@@ -209,12 +210,15 @@
               docent.statussen[i].datum.month == eindDatum.date.month &&
               docent.statussen[i].datum.year == eindDatum.date.year)){
 
+                //Als het op dezelfde dag is en de status op "Hele dag" staat afwezig terug geven
                 if(docent.statussen[i].dagdeel=="Hele dag") return "afwezig";
 
+                //Als het dagdeel Ochtend is kijken of de tijden hierbinnen vallen. Als dit zo is afwezig terug geven
                 if(docent.statussen[i].dagdeel=="Ochtend"){
                   if((beginDatum.time.hour>=8 && beginDatum.time.hour<12) || (eindDatum.time.hour>=8 && eindDatum.time.hour<12)) return "afwezig";
                 }
 
+                //Als het dagdeel Middag is kijken of de tijden hierbinnen vallen. Als dit zo is afwezig terug geven
                 if(docent.statussen[i].dagdeel=="Middag"){
                   if((beginDatum.time.hour>=12 && beginDatum.time.hour<19) || (eindDatum.time.hour>=12 && eindDatum.time.hour<19)) return "afwezig";
                 }
@@ -224,6 +228,7 @@
         return "";
       },
 
+      //Alle docenten ophalen via ajax
       ajax_docenten_start: function(){
         this.$.ajax_docenten.contentType="application/json";
         this.$.ajax_docenten.body={
@@ -232,11 +237,13 @@
         this.$.ajax_docenten.generateRequest();
       },
 
+      //Docenten weergeven in dropbox
       ajax_docenten_handler: function(request){
-
+        //Docenten
         this.docenten = request.detail.response;
       },
 
+      //Alle klassen ophalen via ajax
       ajax_klassen_start: function(){
         this.$.ajax_klassen.contentType="application/json";
         this.$.ajax_klassen.body={
@@ -245,15 +252,19 @@
           this.$.ajax_klassen.generateRequest();
       },
 
+      //Klassen weergeven in dropbox
       ajax_klassen_handler: function(request){
 
         this.klassen = request.detail.response;
 
       },
 
+      //Update functie van docenten dropbox
       _docentSelected : function(e) {
+        //Geselecteerde item uit dropbox lezen
         var selectedItem = e.target.selectedItem;
         if (selectedItem) {
+          //Docent ophalen en weergeven op scherm
           this.docent = selectedItem.innerText;
 
           this.ajax_rooster_docent_start();
@@ -262,9 +273,12 @@
         }
       },
 
+      //Update functie van klassen dropbox
       _klasSelected : function(e) {
+        //Geselecteerde item uit dropbox lezen
         var selectedItem = e.target.selectedItem;
         if (selectedItem) {
+          //Klas ophalen en weergeven op scherm
           this.klas = selectedItem.innerText;
 
           this.ajax_rooster_student_start();
@@ -273,6 +287,7 @@
         }
       },
 
+      //Update functie bij het opstarten van het scherm
       update: function() {
         //Ingelogde gebruiker ophalen
         this.gebruiker = JSON.parse(localStorage.getItem("gebruiker"));
@@ -285,7 +300,7 @@
         }
 
         //Admin naar admin scherm toe sturen
-        if(this.gebruiker.rol =! 'admin'){
+        if(this.gebruiker.rol != 'admin'){
           this.$.redirect_home.click();
 
           return;
