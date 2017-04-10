@@ -3,6 +3,8 @@
 <dom-module id="my-roosters">
   <link rel="import" type="css" href="../../styles/homeStyle.css">
   <template>
+    <a id="redirect_login" href="#/login"></a>
+    <a id="redirect_home" href="#/home"></a>
 
     <h2>Kies een klas/docent voor het gewenste rooster</h2>
 
@@ -23,9 +25,6 @@
         </paper-listbox>
       </paper-dropdown-menu>
     </div>
-
-    <a id="redirect_login" href="#/login"></a>
-    <a id="redirect_home" href="#/home"></a>
 
     <iron-ajax
       id="ajax_rooster_student"
@@ -74,18 +73,8 @@
         {{item.klasCode}} | {{item.huidigeDocent.gebruikersnaam}}<br>
         {{padNummer(item.beginTijd.time.hour)}}:{{padNummer(item.beginTijd.time.minute)}}-{{padNummer(item.eindTijd.time.hour)}}:{{padNummer(item.eindTijd.time.minute)}} | {{item.huidigeLokaal.naam}}<br>
         {{padNummer(item.beginTijd.date.day)}}-{{padNummer(item.beginTijd.date.month)}}-{{item.beginTijd.date.year}}<br>
-
-        <!--<a name="klasInfo" href="#/home/klasInfo/{{item.beginTijd.date.year}}-{{padNummer(item.beginTijd.date.month)}}-{{padNummer(item.beginTijd.date.day)}}/{{padNummer(item.beginTijd.time.hour)}}:{{padNummer(item.beginTijd.time.minute)}}/{{padNummer(item.eindTijd.time.hour)}}:{{padNummer(item.eindTijd.time.minute)}}/{{item.klasCode}}/{{item.huidigeVak.code}}"  hidden$="[[check_rol(_rol, 'student')]]">
-          <paper-fab class="button" mini icon="reply" disabled$="[[check_rol(_rol, 'student')]]"></paper-fab>
-        </a>-->
       </paper-card>
     </template>
-
-    <!--<brainy-table items="[[item.rooster]]">
-              <brainy-table-column name="huidigeVak" sort-by="item.huidigeVak" width="35px">
-                <template>[[item]]</template>
-              </brainy-table-column>
-    </brainy-table>-->
   </template>
 
 <script>
