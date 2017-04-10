@@ -207,6 +207,7 @@
     },
 
     update: function() {
+      console.log("test");
       //Ingelogde gebruiker ophalen
       this.gebruiker = JSON.parse(localStorage.getItem("gebruiker"));
 
@@ -217,8 +218,8 @@
         return;
       }
 
-      //Admin naar admin scherm toe sturen
-      if(this.gebruiker.rol =! 'admin'){
+      //persoon naar admin scherm toe sturen
+      if(this.gebruiker.rol != 'admin'){
         this.$.redirect_home.click();
 
         return;
