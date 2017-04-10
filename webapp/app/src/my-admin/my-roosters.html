@@ -75,6 +75,9 @@
         {{padNummer(item.beginTijd.date.day)}}-{{padNummer(item.beginTijd.date.month)}}-{{item.beginTijd.date.year}}<br>
       </paper-card>
     </template>
+    <template is="dom-if" if="[[_roosterLeeg()]]">
+      <center><h1>Geen rooster geselecteerd</h1></center>
+    </template>
   </template>
 
 <script>
@@ -226,6 +229,12 @@
         }
 
         return "";
+      },
+
+      _roosterLeeg: function(){
+        console.log(this.rooster.alleLessen);
+        if(this.rooster.alleLessen == null) return true;
+        return false;
       },
 
       //Alle docenten ophalen via ajax
