@@ -75,8 +75,10 @@
         {{padNummer(item.beginTijd.date.day)}}-{{padNummer(item.beginTijd.date.month)}}-{{item.beginTijd.date.year}}<br>
       </paper-card>
     </template>
-    <template is="dom-if" if="[[_roosterLeeg()]]">
-      <center><h1>Geen rooster geselecteerd</h1></center>
+
+
+    <template is="dom-if" if="[[roosterLeeg]]">
+      <center><h1 style="margin-top: 20%">Geen rooster geselecteerd</h1></center>
     </template>
   </template>
 
@@ -104,6 +106,10 @@
         rooster:{
           type: Array,
           value: []
+        },
+        roosterLeeg:{
+          type: Boolean,
+          value: true
         },
         weekDagenVertalingen:{
           type: Object,
@@ -231,12 +237,6 @@
         return "";
       },
 
-      _roosterLeeg: function(){
-        console.log(this.rooster.alleLessen);
-        if(this.rooster.alleLessen == null) return true;
-        return false;
-      },
-
       //Alle docenten ophalen via ajax
       ajax_docenten_start: function(){
         this.$.ajax_docenten.contentType="application/json";
@@ -279,6 +279,8 @@
           this.ajax_rooster_docent_start();
 
           this.$.dd_klas._setSelectedItem();
+
+          this.roosterLeeg = false;
         }
       },
 
@@ -293,6 +295,8 @@
           this.ajax_rooster_student_start();
 
           this.$.dd_docent._setSelectedItem();
+
+          this.roosterLeeg = false;
         }
       },
 
