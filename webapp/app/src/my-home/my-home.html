@@ -305,7 +305,6 @@
         //Afwezig melden event voor een persoon
         ajax_zet_status_onClick: function(){
           //Kijken of er een dagdeel is geselecteerd
-          console.log(this.dagDeel);
           if(this.dagDeel == undefined) this.$._geenDagDeel.open();
 
           this.datum = this.padNummer(this.gekozenDatum.getDate())+"-"+this.padNummer(this.gekozenDatum.getMonth()+1)+"-"+this.gekozenDatum.getFullYear();
