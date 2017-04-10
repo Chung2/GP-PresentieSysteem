@@ -110,12 +110,14 @@
           }
         },
 
+        //Nummers uitpadden met 00 zodat roosters goed worden mee gegeven en uitgeprint
         padNummer(nr){
           var str = "" + nr;
           var pad = "00";
           return pad.substring(0, pad.length - str.length) + str;
         },
 
+        //Huidige dagdeel ophalen
         getDagdeel(){
           var vandaag = new Date();
 
@@ -126,6 +128,7 @@
           return "Hele dag";
         },
 
+        //Alle klassen ophalen via ajax
         ajax_klassen_start: function(){
           this.$.ajax_klassen.contentType="application/json";
           this.$.ajax_klassen.body={
@@ -134,29 +137,37 @@
             this.$.ajax_klassen.generateRequest();
         },
 
+        //Klassen op scherm weergeven
         ajax_klassen_handler: function(request){
 
+          //Klassen in variabel zetten vanuit response
           this.klassen = request.detail.response;
-
         },
 
         //Functie om te kijken of een student aanwezig is
         studentAanwezig: function(student){
+          //Als de student ziek is afwezig terug geven
           if(student.ziek) return "afwezig";
 
+          //Huidige dag ophalen
           var vandaag = new Date();
 
+          //Door statussen heel lopen van student
           for (var i = 0; i < student.statussen.length; i++) {
+              //Kijken of de status op dezelfde datum valt
               if(student.statussen[i].datum.day == vandaag.getDate() &&
                 student.statussen[i].datum.month == vandaag.getMonth() &&
                 student.statussen[i].datum.year == vandaag.getFullYear()){
 
+                  //Als dagdeel op hele dag staat gelijk afwezig terug sturen
                   if(student.statussen[i].dagdeel=="Hele dag") return "afwezig";
 
+                  //Als dagdeel op ochtend staat kijken of de huidige tijd hierbinnen valt
                   if(student.statussen[i].dagdeel=="Ochtend"){
                     if(vandaag.getHours()>=8 && vandaag.getHours()<12) return "afwezig";
                   }
 
+                  //Als dagdeel op middag staat kijken of de huidige tijd hierbinnen valt
                   if(student.statussen[i].dagdeel=="Middag"){
                     if(vandaag.getHours()>=12 && vandaag.getHours()<19) return "afwezig";
                   }
@@ -166,10 +177,13 @@
           return "";
         },
 
+        //Student afwezig zetten via Ajax
         ajax_zet_status_afwezig_onClick: function(e){
+          //Huidige datum ophalen
           var vandaag = new Date();
 
           this.$.ajax_zet_status_afwezig.contentType="application/json";
+          //Data van gebruiker mee geven aan ajax
           this.$.ajax_zet_status_afwezig.body={
             "gebruikersnaam":e.model.item.gebruikersnaam,
             "dagdeel":this.getDagdeel(),
@@ -179,19 +193,23 @@
           this.$.ajax_zet_status_afwezig.generateRequest();
         },
 
+        //Data weergeven op scherm
         ajax_zet_status_afwezig_handler: function(request) {
           var response = request.detail.response;
 
           if("succes" in response){
+            //Als het afwezig zetten is gelukt dit weergeven op scherm
             this.update();
           }
         },
 
+        //Student aanwezig zetten via Ajax
         ajax_zet_status_aanwezig_onClick: function(e){
-
+          //Huidige datum ophalen
           var vandaag = new Date();
 
           this.$.ajax_zet_status_aanwezig.contentType="application/json";
+          //Data van gebruiker mee geven aan ajax
           this.$.ajax_zet_status_aanwezig.body={
             "gebruikersnaam":e.model.item.gebruikersnaam,
             "dagdeel":this.getDagdeel(),
@@ -201,15 +219,19 @@
           this.$.ajax_zet_status_aanwezig.generateRequest();
         },
 
+        //Data weergeven op scherm
         ajax_zet_status_aanwezig_handler: function(request) {
           var response = request.detail.response;
           if("succes" in response){
+            //Als het aanwezig zetten is gelukt dit weergeven op scherm
             this.update();
           }
         },
 
+        //Student beter melden als hij niet meer ziek is
         ajax_beter_melden_onClick: function(e){
           this.$.ajax_beter_melden.contentType="application/json";
+          //Data van gebruiker mee geven aan ajax
           this.$.ajax_beter_melden.body={
             "gebruikersnaam":e.model.item.gebruikersnaam,
             "status":"Beter"
@@ -217,9 +239,11 @@
           this.$.ajax_beter_melden.generateRequest();
         },
 
+        //Data weergeven op scherm
         ajax_beter_melden_handler: function(request) {
           var response = request.detail.response;
           if("succes" in response){
+            //Als het beter melden is gelukt scherm updaten
             this.update();
           }
         },
@@ -242,6 +266,7 @@
             return;
           }
 
+          //Klassen weergeven op scherm via ajax
           this.ajax_klassen_start();
         },
       })
