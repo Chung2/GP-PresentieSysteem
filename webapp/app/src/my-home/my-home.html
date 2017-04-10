@@ -14,6 +14,11 @@
                  duration="5000"
                  text="Je bent afwezig gemeld op [[datum]] voor de [[dagDeel]]."></paper-toast>
 
+    <paper-toast id="_geenDagDeel"
+                 class="fit-bottom"
+                 duration="5000"
+                 text="Je hebt geen dag deel gekozen"></paper-toast>
+
     <paper-toast id="_ziekGemeld"
                   class="fit-bottom"
                   duration="5000"
@@ -172,7 +177,7 @@
             value: new Date()
           },
           dagDeel:{
-            type: String
+            type: String,
           }
         },
 
@@ -300,7 +305,8 @@
         //Afwezig melden event voor een persoon
         ajax_zet_status_onClick: function(){
           //Kijken of er een dagdeel is geselecteerd
-          if(this.dagDeel=="") alert("geen dagdeel gekozen!");
+          console.log(this.dagDeel);
+          if(this.dagDeel == undefined) this.$._geenDagDeel.open();
 
           this.datum = this.padNummer(this.gekozenDatum.getDate())+"-"+this.padNummer(this.gekozenDatum.getMonth()+1)+"-"+this.gekozenDatum.getFullYear();
 
