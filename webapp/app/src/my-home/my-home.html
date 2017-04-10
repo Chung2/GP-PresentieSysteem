@@ -9,6 +9,24 @@
     <iron-media-query query="(max-width: 980px)" query-matches="{{tablet}}"></iron-media-query>
     <iron-media-query query="(max-width: 510px)" query-matches="{{phone}}"></iron-media-query>
 
+    <paper-toast id="_afwezigGemeld"
+                 class="fit-bottom"
+                 duration="5000"
+                 text="Je bent afwezig gemeld op [[datum]] voor de [[dagDeel]]."></paper-toast>
+
+    <paper-toast id="_ziekGemeld"
+                  class="fit-bottom"
+                  duration="5000"
+                  horizontalAlign="center"
+                  text="Je bent ziek gemeld."></paper-toast>
+
+    <paper-toast id="_beterGemeld"
+                 class="fit-bottom"
+                 duration="5000"
+                 horizontalAlign="center"
+                 text="Je bent beter gemeld."></paper-toast>
+
+
     <div class="afwezig-keuze" tablet-layout$="{{tablet}}" phone-layout$="{{phone}}">
       <div class="keuze-button">
         <paper-button id="btn_ziek_melden" class="red" on-tap="ajax_ziek_melden_onClick" disabled$="{{persoon.ziek}}">Ziek melden</paper-button>
@@ -252,6 +270,7 @@
 
             //Data updaten op het scherm
             this.update();
+            this.$._ziekGemeld.open();
           }
         },
 
@@ -274,6 +293,7 @@
 
             //Data updaten op het scherm
             this.update();
+            this.$._beterGemeld.open();
           }
         },
 
@@ -282,13 +302,15 @@
           //Kijken of er een dagdeel is geselecteerd
           if(this.dagDeel=="") alert("geen dagdeel gekozen!");
 
+          this.datum = this.padNummer(this.gekozenDatum.getDate())+"-"+this.padNummer(this.gekozenDatum.getMonth()+1)+"-"+this.gekozenDatum.getFullYear();
+
           this.$.ajax_zet_status.contentType="application/json";
 
           //Gebruikersnaam, Dagdeel, Datum en Status mee geven aan back-end
           this.$.ajax_zet_status.body={
             "gebruikersnaam":this.gebruiker.gebruikersnaam,
             "dagdeel":this.dagDeel,
-            "datum":this.padNummer(this.gekozenDatum.getDate())+"-"+this.padNummer(this.gekozenDatum.getMonth()+1)+"-"+this.gekozenDatum.getFullYear(),
+            "datum":this.datum,
             "status":"Afwezig"
           };
           this.$.ajax_zet_status.generateRequest();
@@ -300,6 +322,7 @@
           if("succes" in response){
             //Scherm updaten met nieuwe data
             this.update();
+            this.$._afwezigGemeld.open();
           }
         },
 
