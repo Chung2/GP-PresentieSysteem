@@ -84,6 +84,21 @@
                  <paper-button class="red" on-tap="ajax_zet_status_afwezig_onClick">Afwezig melden</paper-button>
                  <paper-button class="green" on-tap="ajax_zet_status_aanwezig_onClick">Aanwezig melden</paper-button>
                  <paper-button class="green" on-tap="ajax_beter_melden_onClick">Beter melden</paper-button>
+                 <h3>Statussen</h3>
+                 <table>
+                   <tr>
+                     <th>Status</th>
+                     <th>Datum</th>
+                     <th>Dagdeel</th>
+                   </tr>
+                   <template is="dom-repeat" items="{{item.statussen}}">
+                     <tr>
+                       <td>{{item.status}}</td>
+                       <td>{{padNummer(item.datum.day)}}-{{padNummer(item.datum.month)}}-{{item.datum.year}}</td>
+                       <td>{{item.dagdeel}}</td>
+                     </tr>
+                   </template>
+                 </table>
                </div>
              </template>
 
