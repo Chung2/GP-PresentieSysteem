@@ -29,7 +29,6 @@ public class Klas {
 	public ArrayList<Student> getStudenten() {
 		return this.deStudenten;
 	}
-	
 	public boolean bevatStudent(Student pStudent) {
 		for (Student lStudent : this.getStudenten()) {
 			if (lStudent==pStudent) {

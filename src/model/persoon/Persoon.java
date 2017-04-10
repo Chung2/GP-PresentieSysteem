@@ -40,14 +40,17 @@ public abstract class Persoon {
 		return this.gebruikersnaam;
 	}
 	
+	//methode meld ziek
 	public void ziekMelden(){
 		ziek=true;
 	}
 	
+	//methode meld beter
 	public void beterMelden(){
 		ziek=false;
 	}
 	
+	//methode zet nieuwe status
 	public void nieuweStatus(String naam, LocalDate datum, String dagdeel){
 		Status status = new Status(naam, datum, dagdeel);
 		
@@ -58,6 +61,7 @@ public abstract class Persoon {
 		statussen.add(status);
 	}
 	
+	//methode verwijder de status van de student
 	public void verwijderStatus(LocalDate datum, String dagdeel){
 		Status status = new Status("Afwezig", datum, dagdeel);
 		
@@ -69,6 +73,7 @@ public abstract class Persoon {
 		}
 	}
 
+	//methode geeeft volledige achternaam terug
 	public String getVolledigeAchternaam() {
 		String lVolledigeAchternaam="";
 		if (this.tussenvoegsel != null && this.tussenvoegsel != "" && this.tussenvoegsel.length() > 0) {
@@ -78,6 +83,7 @@ public abstract class Persoon {
 		return lVolledigeAchternaam;
 	}
 
+	//methode kijkt of wachtwoord overeenkom
 	public boolean komtWachtwoordOvereen(String pWachtwoord) {
 		boolean lStatus = false;
 		if (this.getWachtwoord().equals(pWachtwoord)) {
