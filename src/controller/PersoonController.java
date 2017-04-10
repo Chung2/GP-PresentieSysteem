@@ -20,7 +20,7 @@ public class PersoonController implements Handler{
 	public PersoonController(PrIS infoSys) {
 		informatieSysteem = infoSys;
 	}
-	
+	//methode linkt json file aan een url
 	public void handle(Conversation conversation) {
 	  if (conversation.getRequestedURI().startsWith("/persoon/zetstatus")) {
 	  	zetStatus(conversation);
@@ -39,6 +39,7 @@ public class PersoonController implements Handler{
 		}
 	}
 	
+	//methode verandert de status van de persoon
 	private void zetStatus(Conversation conversation) {
 		//JsonParser maken om een json string naar een object om te zetten
 		JsonParser parser = new JsonParser();
@@ -182,12 +183,13 @@ public class PersoonController implements Handler{
     }
 	}
 	
+	//methode geeft json file van persoon info terug
 	private void persoonInfo(Conversation conversation){
 		//JsonParser maken om een json string naar een object om te zetten
 		JsonParser parser = new JsonParser();
 		//Gson object maken voor het parsen van json
 		Gson gson = new Gson();
-		
+		//check of de string niet leeg is
 		if (conversation.getRequestBodyAsString() == null){
 			conversation.sendJSONMessage("{\"error\":\"Geen json data mee gegeven\"}");
 			
@@ -195,21 +197,28 @@ public class PersoonController implements Handler{
 		}
 		
 		try {
+			//maakt er een json Object van de meegeven data
 			JsonObject request = parser.parse(conversation.getRequestBodyAsString()).getAsJsonObject();
 			
+			//check of de data niet null is
 			if (request.get("gebruikersnaam") != null){
-				
+				//check of de json kan worden aangemaakt
 				if (informatieSysteem.getStudent(request.get("gebruikersnaam").getAsString()) != null){
+					//maakt een nieuw student object aan
 					Student student = informatieSysteem.getStudent(request.get("gebruikersnaam").getAsString());
 					
+					//maak json file aan en stuurt naar polymer
 					conversation.sendJSONMessage(gson.toJson(student));
 					
 					return;
 				}
 				
+				//check of de object niet leeg is
 				if (informatieSysteem.getDocent(request.get("gebruikersnaam").getAsString()) != null){
+					//maakt docent object aan
 					Docent docent = informatieSysteem.getDocent(request.get("gebruikersnaam").getAsString());
 					
+					//maak json file aan en stuurt naar polymer
 					conversation.sendJSONMessage(gson.toJson(docent));
 					
 					return;
@@ -217,23 +226,28 @@ public class PersoonController implements Handler{
 				
 				
 			}
-			
+			//check of de object niet leeg is
 			if (request.get("studentNummer") != null){
+				
+				//check of het object niet leeg is
 				if (informatieSysteem.getStudent(request.get("naam").getAsInt()) != null){
+					//maak student object aan
 					Student student = informatieSysteem.getStudent(request.get("naam").getAsInt());
 					
+					//maak van object een json file
 					conversation.sendJSONMessage(gson.toJson(student));
-					
+				
 					return;
 				}
 			}
     } catch (Exception ex) {
     	ex.printStackTrace();
     }
-		
+		//stuurt error code
 		conversation.sendJSONMessage("{\"error\":\"Geen persoon gevonden\"}");
 	}
 	
+	//methode void maakt json file van alle studenten
 	private void alleStudenten(Conversation conversation){
 		//Gson object maken voor het parsen van json
 		Gson gson = new Gson();
@@ -246,6 +260,7 @@ public class PersoonController implements Handler{
 		conversation.sendJSONMessage(jsonOut);
 	}
 	
+	//methode maakt json file van alle docenten
 	private void alleDocenten(Conversation conversation){
 		//Gson object maken voor het parsen van json
 		Gson gson = new Gson();

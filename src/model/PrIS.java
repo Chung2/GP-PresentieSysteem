@@ -126,7 +126,8 @@ public class PrIS {
 		String lString = Integer.toString(lJaar) + "-" + lMaandStr + "-" + lDagStr;
 		return lString;
 	}
-
+	
+	//geeft docent terug door gebruikersnaam mee te geven
 	public Docent getDocent(String gebruikersnaam) {
 		Docent resultaat = null;
 
@@ -139,7 +140,8 @@ public class PrIS {
 
 		return resultaat;
 	}
-
+	
+	//methode geeft klas terug met de meegeven student
 	public Klas getKlasVanStudent(Student pStudent) {
 		// used
 		for (Klas lKlas : deKlassen) {
@@ -149,7 +151,8 @@ public class PrIS {
 		}
 		return null;
 	}
-
+	
+	//methode geeft klas terug
 	public Klas getKlas(String klasCode) {
 		for (Klas k : deKlassen) {
 			if (k.getKlasCode().equals(klasCode)) {
@@ -164,6 +167,7 @@ public class PrIS {
 		return deKlassen;
 	}
 
+	//methode geeft rooster terug van docent
 	public Rooster getRoosterDocent(String gebruikersNaam) {
 		ArrayList<Les> docentLessen = new ArrayList<Les>();
 
@@ -179,6 +183,7 @@ public class PrIS {
 		return roosterDocent;
 	}
 
+	//methode geeft rooster van klas terug
 	public Rooster getRoosterKlas(String klasCode) {
 		ArrayList<Les> klasLessen = new ArrayList<Les>();
 
@@ -191,14 +196,19 @@ public class PrIS {
 
 		return roosterKlas;
 	}
-
+	
+	//methode geeft specifiek les terug door de gegevens van datum, begintijd, eindtijd, klascode, vak 
 	public Les getLes(String datum, String beginTijd, String eindTijd, String klasCode, String vakCode) {
+		
+		//zet datum om naar de formaat 'yyyy-MM-dd HH:mm'
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 		formatter = formatter.withLocale(Locale.GERMANY);
-
+		
+		//zet de string om naar localdate object
 		LocalDateTime beginDatum = LocalDateTime.parse(datum + " " + beginTijd, formatter);
 		LocalDateTime eindDatum = LocalDateTime.parse(datum + " " + eindTijd, formatter);
 		
+		//zoekt naar specifieke les met de meegeven data
 		for (Les les : deLessen) {
 			if (les.getBeginTijd().equals(beginDatum) && les.getEindTijd().equals(eindDatum)
 					&& les.getHuidigeKlas().getKlasCode().equals(klasCode)	&& les.getHuidigeVak().getCode().equals(vakCode)){
@@ -207,7 +217,8 @@ public class PrIS {
 		}
 		return null;
 	}
-
+	
+	//methode geeft rooster van student terug
 	public ArrayList<Les> getRoosterStudent(Student gebruikersnaam) {
 		ArrayList<Les> roosterKlas = new ArrayList<Les>();
 
@@ -218,11 +229,13 @@ public class PrIS {
 		}
 		return roosterKlas;
 	}
-
+	
+	//methode geeft alle rooster terug
 	public Rooster getRooster() {
 		return hetRooster;
 	}
-
+	
+	//methode geeft student terug door het meegeven van de gebruikersnaam
 	public Student getStudent(String pGebruikersnaam) {
 		Student lGevondenStudent = null;
 
@@ -236,6 +249,7 @@ public class PrIS {
 		return lGevondenStudent;
 	}
 
+	//methode geeft student terug door het meegeven van de studentnummer
 	public Student getStudent(int pStudentNummer) {
 		// used
 		Student lGevondenStudent = null;
@@ -249,7 +263,7 @@ public class PrIS {
 
 		return lGevondenStudent;
 	}
-
+	//methode geeft vak terug
 	public Vak getVak(String naam) {
 		for (Vak v : deVakken) {
 			if (v.getCode().equals(naam)) {
@@ -259,7 +273,8 @@ public class PrIS {
 
 		return null;
 	}
-
+	
+	//methode geeft lokaal terug
 	public Lokaal getLokaal(String naam) {
 		for (Lokaal l : deLokalen) {
 			if (l.getNaam().equals(naam)) {
@@ -277,7 +292,7 @@ public class PrIS {
 	public ArrayList<Docent> getDocenten() {
 		return deDocenten;
 	}
-
+	//methode login
 	public String login(String gebruikersnaam, String wachtwoord) {
 		for (Docent d : deDocenten) {
 			if (d.getGebruikersnaam().equals(gebruikersnaam)) {
@@ -306,6 +321,7 @@ public class PrIS {
 		return "undefined";
 	}
 
+	//methode lijst met docenten
 	private void vulDocenten(ArrayList<Docent> pDocenten) {
 		String csvFile = "././CSV/docenten.csv";
 
@@ -336,7 +352,7 @@ public class PrIS {
 			e.printStackTrace();
 		}
 	}
-	
+	//methode vult lijst met admin
 	private void vulAdmins(ArrayList<Admin> pAdmins) {
 		String csvFile = "././CSV/admins.csv";
 

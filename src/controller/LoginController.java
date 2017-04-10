@@ -37,7 +37,7 @@ class LoginController implements Handler {
 	 * @param conversation - alle informatie over het request
 	 */
 	private void login(Conversation conversation) {
-		System.out.println(conversation.getRequestBodyAsString());
+		//System.out.println(conversation.getRequestBodyAsString());
 		
 		JsonObject lJsonObjIn = (JsonObject) conversation.getRequestBodyAsJSON();
 		
