@@ -89,3 +89,7 @@ paper-button.red[disabled], paper-button.green[disabled]{
   margin-top: 10px;
   margin-left: 0;
 }
+
+.studentAfwezig{
+  opacity: 0.5;
+}

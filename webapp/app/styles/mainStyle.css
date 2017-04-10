@@ -32,15 +32,9 @@
 
 .error-404{
   width: 100%;
-}
-
-.error-404:hover{
-  text-align: center;
-  font-size: 200px;
-  -ms-transform: rotate(360deg);
-  -webkit-transform: rotate(360deg);
-  transform: rotate(360deg);
-  transition: 5s;
+  font-size: 95px;
+  margin: 0;
+  padding: 0;
 }
 
 a.iron-selected{
