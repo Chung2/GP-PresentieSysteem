@@ -80,11 +80,11 @@
             </brainy-table-column>
 
              <template is="row-detail">
-               <div>
+               <div class="achnor">
                  <paper-button class="red" on-tap="ajax_zet_status_afwezig_onClick">Afwezig melden</paper-button>
                  <paper-button class="green" on-tap="ajax_zet_status_aanwezig_onClick">Aanwezig melden</paper-button>
                  <paper-button class="green" on-tap="ajax_beter_melden_onClick">Beter melden</paper-button>
-                 <h3>Statussen</h3>
+                 <h3>Log</h3>
                  <table>
                    <tr>
                      <th>Status</th>
@@ -121,8 +121,8 @@
 
         properties: {
           gebruiker:{
-            type: Object
-          }
+            type: Object,
+          },
         },
 
         //Nummers uitpadden met 00 zodat roosters goed worden mee gegeven en uitgeprint
