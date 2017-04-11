@@ -71,21 +71,23 @@
              <paper-button class="red" on-tap="ajax_zet_status_afwezig_onClick">Afwezig melden</paper-button>
              <paper-button class="green" on-tap="ajax_zet_status_aanwezig_onClick">Aanwezig melden</paper-button>
              <paper-button class="green" on-tap="ajax_beter_melden_onClick">Beter melden</paper-button>
-             <h3>Statussen</h3>
-             <table>
-               <tr>
-                 <th>Status</th>
-                 <th>Datum</th>
-                 <th>Dagdeel</th>
-               </tr>
-               <template is="dom-repeat" items="{{item.statussen}}">
+             <template is="dom-if" if="[[statussenGevuld(item.statussen.length)]]">
+               <h3>Statussen</h3>
+               <table>
                  <tr>
-                   <td>{{item.status}}</td>
-                   <td>{{padNummer(item.datum.day)}}-{{padNummer(item.datum.month)}}-{{item.datum.year}}</td>
-                   <td>{{item.dagdeel}}</td>
+                   <th>Status</th>
+                   <th>Datum</th>
+                   <th>Dagdeel</th>
                  </tr>
-               </template>
-             </table>
+                 <template is="dom-repeat" items="{{item.statussen}}">
+                   <tr>
+                     <td>{{item.status}}</td>
+                     <td>{{padNummer(item.datum.day)}}-{{padNummer(item.datum.month)}}-{{item.datum.year}}</td>
+                     <td>{{item.dagdeel}}</td>
+                   </tr>
+                 </template>
+               </table>
+             </template>
            </div>
          </template>
 
@@ -124,6 +126,14 @@
       if(vandaag.getHours()>=12 && vandaag.getHours()<19) return "Middag";
 
       return "Hele dag";
+    },
+
+
+    //Kijk of de statussen array is gevuld
+    statussenGevuld(aantal){
+      if(aantal>0) return true;
+
+      return false;
     },
 
     //Functie om te kijken of een docent aanwezig is
