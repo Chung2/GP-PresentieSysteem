@@ -149,7 +149,9 @@ public class PersoonController implements Handler{
       				if (informatieSysteem.getStudent(request.get("gebruikersnaam").getAsString()) != null){
       					Student student = informatieSysteem.getStudent(request.get("gebruikersnaam").getAsString());
       					
-      					student.verwijderStatus(date, request.get("dagdeel").getAsString());
+      					student.verwijderStatus(date, "Ochtend");
+      					student.verwijderStatus(date, "Middag");
+      					student.verwijderStatus(date, "Hele dag");
       					
       					conversation.sendJSONMessage("{\"succes\":\"Status aangepast\"}");
       					
@@ -159,7 +161,9 @@ public class PersoonController implements Handler{
       				if (informatieSysteem.getDocent(request.get("gebruikersnaam").getAsString()) != null){
       					Docent docent = informatieSysteem.getDocent(request.get("gebruikersnaam").getAsString());
       					
-      					docent.verwijderStatus(date, request.get("dagdeel").getAsString());
+      					docent.verwijderStatus(date, "Ochtend");
+      					docent.verwijderStatus(date, "Middag");
+      					docent.verwijderStatus(date, "Hele dag");
       					
       					conversation.sendJSONMessage("{\"succes\":\"Status aangepast\"}");
       					
